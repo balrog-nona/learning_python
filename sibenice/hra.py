@@ -1,0 +1,3 @@
+import sibenice
+
+sibenice.sibenice()
