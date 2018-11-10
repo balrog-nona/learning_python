@@ -10,7 +10,7 @@ slovnik = ["antarctica", "denmark", "belgium", "greenland", "germany", "romania"
 
 
 def volba_slova(seznam):
-    random.shuffle(seznam)    
+    random.shuffle(seznam) # je to tu navic, choice by uplne stacilo   
     slovo = random.choice(seznam)
     return slovo
 
@@ -25,7 +25,7 @@ def prepis_pole(pole, index, pismeno):
     return pole
 
 
-def tah_hrace(slovo, pole, pismeno):
+def tah_hrace(slovo, pole, pismeno): # dala by se pridat feature, ze by prvni pismeno bylo capital, jako normalne nazev statu...
     if pismeno in slovo:
         pocet = slovo.count(pismeno)
         delka_slova = len(slovo)        
@@ -69,6 +69,7 @@ def sibenice():
         obrazek = None
         slovo = volba_slova(slovnik)        
         pole = tvorba_pole(slovo)
+        clear() # vycisteni obrazovky pred hrou
         print(pole)
             
         pokracovat = True
@@ -78,7 +79,7 @@ def sibenice():
                 vstup = input("Zadej pismeno: ")
                 zadani, pismeno = osetreni_vstupu(vstup)
             trefil, pole = tah_hrace(slovo, pole, pismeno)
-            clear()
+            clear() # vycisteni obrazovky po tahu
             print(pole)
             
             if trefil == 1:
