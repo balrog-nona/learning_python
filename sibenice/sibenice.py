@@ -25,7 +25,7 @@ def prepis_pole(pole, index, pismeno):
     return pole
 
 
-def tah_hrace(slovo, pole, pismeno): # dala by se pridat feature, ze by prvni pismeno bylo capital, jako normalne nazev statu...
+def tah_hrace(slovo, pole, pismeno):
     if pismeno in slovo:
         pocet = slovo.count(pismeno)
         delka_slova = len(slovo)        
@@ -34,7 +34,9 @@ def tah_hrace(slovo, pole, pismeno): # dala by se pridat feature, ze by prvni pi
             index = slovo.index(pismeno)
             slovo = slovo[index + 1:]                
             index += rozdil                                
-            pole = prepis_pole(pole, index, pismeno)                
+            pole = prepis_pole(pole, index, pismeno)
+        if pole[0].isalpha():
+            pole = pole.capitalize() # velke pismeno pro staty                
         return 1, pole                
     else:
         return 0, pole
@@ -92,7 +94,7 @@ def sibenice():
                 print(obrazek)
             if len(obrazky) == 0:
                 print("Konec hry - jsi obesenec!")
-                print("Hledane slovo: {}".format(slovo))
+                print("Hledane slovo: {}".format(slovo.capitalize()))
                 pokracovat = False
                             
         while True:            
