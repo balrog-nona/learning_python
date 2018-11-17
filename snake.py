@@ -24,10 +24,10 @@ def nakresli_mapu(seznam_souradnic, souradnice_ovoce, iterace, pocet_radku, poce
     if snezene_ovoce == 0 and iterace > 1:
         del seznam_souradnic[0] # zkraceni hada, kdyz nezral
     # print("seznam_souradnic z nakresli_mapu: ", seznam_souradnic)                
-    if snezene_ovoce > 0 and bool(souradnice_ovoce) == False: # tvorba ovoce po sezrani ovoce
+    if snezene_ovoce > 0 and not souradnice_ovoce: # tvorba ovoce po sezrani ovoce
         souradnice_ovoce = tvorba_ovoce(seznam_souradnic, souradnice_ovoce, pocet_radku, pocet_sloupcu)
         # print("tvorim ovoce 1: ", souradnice_ovoce)
-    if bool(souradnice_ovoce) == False: # tvorba ovoce na zacatku hry
+    if not souradnice_ovoce: # tvorba ovoce na zacatku hry
         souradnice_ovoce = tvorba_ovoce(seznam_souradnic, souradnice_ovoce, pocet_radku, pocet_sloupcu)       
     if iterace % 30 == 0: # tvorba ovoce po 30 tazich
         souradnice_ovoce = tvorba_ovoce(seznam_souradnic, souradnice_ovoce, pocet_radku, pocet_sloupcu)

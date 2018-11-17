@@ -90,7 +90,7 @@ def sibenice():
                     print("Vitezis!")
             elif trefil == 0:
                 obrazek, obrazky = vyhodnot_netrefu(obrazky)
-            if bool(obrazek) == True:                
+            if obrazek:                
                 print(obrazek)
             if len(obrazky) == 0:
                 print("Konec hry - jsi obesenec!")

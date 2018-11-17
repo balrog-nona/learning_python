@@ -29,7 +29,7 @@ def tah_hrace(pole, pozice):
 
     
 def piskvorky1d():
-  pole = "--------------------" # je jich 20
+  pole = "-" * 20
   print(pole)
   while True:
     zadani = False
