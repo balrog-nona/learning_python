@@ -1,3 +1,5 @@
+import pytest
+
 abeceda = {
     "I": 1,
     "V": 5,
@@ -15,7 +17,7 @@ vstup = vstup.strip()
 slovo = []
 pokracovat = True
 
-if bool(vstup) == True:
+if vstup:
     for pismeno in vstup:  
         if pismeno in abeceda:        
             slovo.append(pismeno)
@@ -74,7 +76,7 @@ def arab_cislo(slovo, abeceda): # hleda cislo k pripocteni
 
 
 cislo_komplet = 0
-if pokracovat == True:
+if pokracovat:
     while True:
         cislo, index = arab_cislo(slovo, abeceda)
         if index <= 1:
@@ -88,3 +90,5 @@ if pokracovat == True:
         elif index > 1:
             print("Rimske cislo zadano v neplatnem formatu.")
             break
+            
+            

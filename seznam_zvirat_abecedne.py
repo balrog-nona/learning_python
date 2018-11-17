@@ -1,3 +1,5 @@
+import pytest
+
 zvirata = ["pes", "kocka", "andulka", "kralik", "had"]
 
 
@@ -12,5 +14,9 @@ def podle_abecedy(list):
     vysledny_seznam.append(hodnota[1])
   return vysledny_seznam
 
+
+def test_podle_abecedy():
+    assert podle_abecedy(["goat", "cat", "elephant"]) == ["cat", "elephant", "goat"]
+    
 
 print(podle_abecedy(zvirata))
