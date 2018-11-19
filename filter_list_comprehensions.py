@@ -58,6 +58,7 @@ filtered_movies = get_movies("boy")
 for movie in filtered_movies:
     print(movie)
     
-    
-# dalsi moznost: from functool import partial - a to dela to, co filter_movies - zabali fci, aby byla jen o jednom argumentu, coz dokaye pouzit filter
+"""    
+dalsi moznost: from functool import partial - a to dela to, co filter_movies - zabali fci, aby byla jen o jednom argumentu, coz dokaze pouzit filter
+Fce filter_movies bz normalne potrebovala 2 argumenty, ale to neni schopna vzit fce filter. Obeslo se to tim, ze filter_movies o jednom argumentu samo obsahuje jinou fci, ktera je pak to hlavni, co pouzije filter().
 
