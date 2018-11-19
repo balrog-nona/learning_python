@@ -15,6 +15,7 @@ print(slov)
 klice = slov.keys() # zbrusu novy data type
 print(klice)
 print(type(klice))
+print(list(klice))
 hodnoty = slov.values() # tady taky
 print(hodnoty)
 
