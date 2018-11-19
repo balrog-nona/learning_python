@@ -34,7 +34,7 @@ def osetreni_vstupu(vstup):
     vstup = vstup.lower().strip()
     if len(vstup) == 1 and vstup.isalpha():
         return True, vstup 
-    else: # toto haze veluerror primo uzivateli a ukoncuje program - jaky maji tyto vyvolavani smysl?
+    else:
         raise ValueError("Nepovedlo se, zkus to znova.")
         return False, None
 
@@ -70,9 +70,9 @@ def sibenice():
             if pokracovat == False:
                 print("Vitezis!")
         if trefil == 0:
-            dvojice = vyhodnot_netrefu(obrazky) # nebere si globalni promennou
+            dvojice = vyhodnot_netrefu(obrazky)
             obrazek = dvojice[0]
-            obrazky = dvojice[1]
+            obrazky = dvojice[1] # ta fce kolabuje na techto obrazcich, ne na tech ve volani fce. Program se podival na tuto fci globalne a nasel az tady tyto.
             print(obrazek)
             if len(obrazky) == 0:
                 print("Konec hry - jsi obesenec!")

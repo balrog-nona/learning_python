@@ -12,8 +12,9 @@ def vytvor_slovnik(n):
 
 slov = vytvor_slovnik(5)
 print(slov)
-klice = slov.keys() # co je tohle za zvlastni jev?
+klice = slov.keys() # zbrusu novy data type
 print(klice)
+print(type(klice))
 hodnoty = slov.values() # tady taky
 print(hodnoty)
 
@@ -23,7 +24,6 @@ def test_vytvor_slovnik():
     slovnik = vytvor_slovnik(3)
     assert len(slovnik) == 3
     assert slovnik[2] == 4
-    # assert slovnik[4] == 16 # da se nejak otestovat, ze to udela KeyError, kdyz ho nemam nadefinovany jako vyjimku?
     slovnik2 = vytvor_slovnik(8)
     assert len(slovnik2) == 8
     klice = list(slovnik2.keys())
@@ -71,7 +71,7 @@ def test_slovnik_slov():
     
 def vypis_slovnik(d):
     for klic, hodnota in d.items():
-        print(klic, hodnota)
+        print("{}:{}".format(klic, hodnota))
         
 vypis_slovnik(slov)
 

@@ -8,7 +8,7 @@ def test_tvorba_pole():
     pole = sibenice.tvorba_pole("norsko")
     assert len(pole) == 6
     pole = sibenice.tvorba_pole("svedsko")
-    assert pole == "_______"
+    assert pole == "_______" # lepsi toto, bo je to bohatsi
 
 
 def test_prepis_pole():
@@ -19,7 +19,7 @@ def test_prepis_pole():
     assert pole[0] == "q"
     assert pole == "q__"
 
-def test_tah_hrace():    
+def test_tah_hrace():  # lepsi assert sibenice.tah_hrace("pes", "___", "s") == (1, "__s") - zjednoduseni prace  
     zasah, pole = sibenice.tah_hrace("pes", "___", "s")
     assert zasah == 1
     assert pole[2] == "s"

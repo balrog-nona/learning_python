@@ -19,8 +19,7 @@ for movie in filtered_movies:
     print(movie)
 
         
-# varianta tehoz pomoci built-in function filter() - nefunguje, zeptat se na srazu
-"""
+# varianta tehoz pomoci built-in function filter()
 movies = [
     {"name": "The Last Boy Scout", "year": 1991},
     {"name": "Mies vailla menneisyyttä", "year": 2002},
@@ -29,18 +28,17 @@ movies = [
 ]
 
 
-def filter_movies(film, iterable):
-    for item in iterable:
-        if film in item["name"]:
-            return True
-        else:
-            return False   
+def filter_movies(name): # tato fce mi vrati fci, pohrat si doma!
+    def filtruj(film):
+        if name in film["name"].lower():
+            return True # toto vraci az po tom, co to pouzije filter
+    return filtruj # toto vraci pri prvnim pouziti
     
     
-filtered_movies = filter(filter_movies("shark", movies), movies)
+filtered_movies = filter(filter_movies("shark"), movies)
 for movie in filtered_movies:
     print(movie)
-"""
+
 
 # varianta tehoz pomoci list_comprehensions
 def get_movies(name=None):
@@ -56,7 +54,10 @@ def get_movies(name=None):
     else:
         return movies
         
-filtered_movies = get_movies("shark")
+filtered_movies = get_movies("boy")
 for movie in filtered_movies:
     print(movie)
+    
+    
+# dalsi moznost: from functool import partial - a to dela to, co filter_movies - zabali fci, aby byla jen o jednom argumentu, coz dokaye pouzit filter
 

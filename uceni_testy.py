@@ -12,7 +12,7 @@ def over_cislo(cislo):
 
         
        
-def test_over_cislo():      # tohle zkontroluje vzdy jen prvni moznost, pak fce konci a neprovadi se dalsi dve, proc?? 
+def test_over_cislo():      
     with pytest.raises(ValueError):
         over_cislo(55)
     with pytest.raises(ValueError):   
