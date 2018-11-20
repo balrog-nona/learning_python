@@ -1,5 +1,3 @@
-import pytest
-
 abeceda = {
     "I": 1,
     "V": 5,
@@ -17,6 +15,9 @@ vstup = vstup.strip()
 slovo = []
 pokracovat = True
 
+"""
+vstup se da osetrit i pomoci bloku try - except. Try by bylo po pristupu do hodnoty po pouziti klice, except by bylo KeyError.
+"""
 if vstup:
     for pismeno in vstup:  
         if pismeno in abeceda:        
@@ -76,7 +77,7 @@ def arab_cislo(slovo, abeceda): # hleda cislo k pripocteni
 
 
 cislo_komplet = 0
-if pokracovat:
+if pokracovat == True:
     while True:
         cislo, index = arab_cislo(slovo, abeceda)
         if index <= 1:
@@ -90,5 +91,3 @@ if pokracovat:
         elif index > 1:
             print("Rimske cislo zadano v neplatnem formatu.")
             break
-            
-            
