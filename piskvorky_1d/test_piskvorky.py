@@ -42,26 +42,17 @@ def test_tah_pocitace():
     
     
 def test_tah_hrace():
-    pole = "----------o---------"
-    vstup = "-4"
-    assert piskvorky.tah_hrace(pole, vstup) == (0, False, "Cislo uvedeno spatne, vyber 1 - 20.")
-    vstup = "55"
-    assert piskvorky.tah_hrace(pole, vstup) == (0, False, "Cislo uvedeno spatne, vyber 1 - 20.")
-    vstup = "11"
-    assert piskvorky.tah_hrace(pole, vstup) == (0, False, "Hrajes na obsazene pole, zkus to znova.")
-    vstup = "7"
-    assert piskvorky.tah_hrace(pole, vstup) == (6, True, "")
-    vstup = "mlp"
-    assert piskvorky.tah_hrace(pole, vstup) == (0, False, "Zadavas blbosti, zadej cislo!")
-    vstup = " " 
-    assert piskvorky.tah_hrace(pole, vstup) == (0, False, "Zadavas blbosti, zadej cislo!")
-    vstup = "d1"
-    assert piskvorky.tah_hrace(pole, vstup) == (0, False, "Zadavas blbosti, zadej cislo!")
-    vstup = "@#//"
-    assert piskvorky.tah_hrace(pole, vstup) == (0, False, "Zadavas blbosti, zadej cislo!")
-    vstup = ","
-    assert piskvorky.tah_hrace(pole, vstup) == (0, False, "Zadavas blbosti, zadej cislo!")
-    vstup = "a8"
-    assert piskvorky.tah_hrace(pole, vstup) == (0, False, "Zadavas blbosti, zadej cislo!")
-    with pytest.raises(ValueError):
+    pole = "----------o---------"    
+    assert piskvorky.tah_hrace(pole, -4) == (0, False, "Cislo uvedeno spatne, vyber 1 - 20.")    
+    assert piskvorky.tah_hrace(pole, 55) == (0, False, "Cislo uvedeno spatne, vyber 1 - 20.")    
+    assert piskvorky.tah_hrace(pole, 11) == (0, False, "Hrajes na obsazene pole, zkus to znova.")    
+    assert piskvorky.tah_hrace(pole, 7) == (6, True, "")
+    assert piskvorky.tah_hrace(pole, "mlp") == (0, False, "Zadavas blbosti, zadej cislo!")     
+    assert piskvorky.tah_hrace(pole, " ") == (0, False, "Zadavas blbosti, zadej cislo!")    
+    assert piskvorky.tah_hrace(pole, "d1") == (0, False, "Zadavas blbosti, zadej cislo!")    
+    assert piskvorky.tah_hrace(pole, "@#//") == (0, False, "Zadavas blbosti, zadej cislo!")    
+    assert piskvorky.tah_hrace(pole, ",") == (0, False, "Zadavas blbosti, zadej cislo!")    
+    assert piskvorky.tah_hrace(pole, "a8") == (0, False, "Zadavas blbosti, zadej cislo!")
+    with pytest.raises(ValueError):  # neg test
         piskvorky.tah_hrace(pole, "::")
+        

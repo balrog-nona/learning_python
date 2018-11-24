@@ -1,4 +1,4 @@
-from collections import defaultdict  # nejak nefunguji importy
+import collections
 
 
 # creating a dictionary using list function and two lists
@@ -45,14 +45,14 @@ setdefault method returns:
 - default value if key is not in the dictionary and default value is specified (second parameter)
 """
 
-"""
-dict_q = defaultdict(list)  # nejmodernejsi a nejrychlejsi verze, NEFUNGUJE
+
+dict_q = collections.defaultdict(list)  # nejmodernejsi a nejrychlejsi verze, NEFUNGUJE
 for name in names:
     key = len(name)
     dict_q[key].append(name)
 
 print(dict_q)
-"""
+
 
 """
 Poznamky ruzne:
@@ -122,4 +122,3 @@ print(sum([i ** 2 for i in range(10)]))
 rozdil se da chapat tak, ze pokud je to rozepsane na hafo radku a postupne apendovane do seznamu, tak to rika spis
 JAK se to ma udelat, zatimco ve verzi comprehension to rika, CO to ma udelat.
 """
-
