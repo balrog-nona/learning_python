@@ -91,3 +91,4 @@ if pokracovat == True:
         elif index > 1:
             print("Rimske cislo zadano v neplatnem formatu.")
             break
+

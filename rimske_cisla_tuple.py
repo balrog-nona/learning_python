@@ -106,3 +106,4 @@ def test_arab_cislo():
     assert arab_cislo(["X", "X", "V"], abeceda) == (10, 0)
     assert arab_cislo(["I", "I", "X"], abeceda) == (0, 2)
 
+

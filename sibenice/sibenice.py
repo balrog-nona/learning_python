@@ -3,14 +3,17 @@ import pictures
 import os
 
 
-clear = lambda: os.system(['clear','cls'][os.name == 'nt'])
+clear = lambda: os.system(['clear', 'cls'][os.name == 'nt'])
 
 
-slovnik = ["antarctica", "denmark", "belgium", "greenland", "germany", "romania", "portugal", "lithuania", "tanzania", "zimbabwe", "ethiopia", "cameroon", "botswana", "swaziland", "pakistan", "kazakhstan", "mongolia", "georgia", "uzbekistan", "thailand", "vietnam", "indonesia", "philippines", "micronesia", "australia", "vanuatu", "argentina", "paraguay", "venezuela", "colombia", "guatemala", "ecuador", "honduras", "nicaragua"]
+slovnik = ["antarctica", "denmark", "belgium", "greenland", "germany", "romania", "portugal", "lithuania", "tanzania",
+           "zimbabwe", "ethiopia", "cameroon", "botswana", "swaziland", "pakistan", "kazakhstan", "mongolia", "georgia",
+           "uzbekistan", "thailand", "vietnam", "indonesia", "philippines", "micronesia", "australia", "vanuatu",
+           "argentina", "paraguay", "venezuela", "colombia", "guatemala", "ecuador", "honduras", "nicaragua"]
 
 
 def volba_slova(seznam):
-    random.shuffle(seznam) # je to tu navic, choice by uplne stacilo   
+    random.shuffle(seznam)  # je to tu navic, choice by uplne stacilo
     slovo = random.choice(seznam)
     return slovo
 
@@ -29,14 +32,14 @@ def tah_hrace(slovo, pole, pismeno):
     if pismeno in slovo:
         pocet = slovo.count(pismeno)
         delka_slova = len(slovo)        
-        for i in range(pocet): # osetreni vice stejnych pismen
+        for i in range(pocet):  # osetreni vice stejnych pismen
             rozdil = delka_slova - len(slovo)                
             index = slovo.index(pismeno)
             slovo = slovo[index + 1:]                
             index += rozdil                                
             pole = prepis_pole(pole, index, pismeno)
         if pole[0].isalpha():
-            pole = pole.capitalize() # velke pismeno pro staty                
+            pole = pole.capitalize()  # velke pismeno pro staty
         return 1, pole                
     else:
         return 0, pole
@@ -71,7 +74,7 @@ def sibenice():
         obrazek = None
         slovo = volba_slova(slovnik)        
         pole = tvorba_pole(slovo)
-        clear() # vycisteni obrazovky pred hrou
+        clear()  # vycisteni obrazovky pred hrou
         print(pole)
             
         pokracovat = True
@@ -81,7 +84,7 @@ def sibenice():
                 vstup = input("Zadej pismeno: ")
                 zadani, pismeno = osetreni_vstupu(vstup)
             trefil, pole = tah_hrace(slovo, pole, pismeno)
-            clear() # vycisteni obrazovky po tahu
+            clear()  # vycisteni obrazovky po tahu
             print(pole)
             
             if trefil == 1:
@@ -110,11 +113,3 @@ def sibenice():
                 break
             else:
                 print("Neplatne zadani!")
-            
-
-
-
-
-        
-
-
