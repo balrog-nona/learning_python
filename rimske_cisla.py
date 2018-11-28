@@ -38,8 +38,11 @@ def index_nejvetsiho(slovo, abeceda):
         if abeceda[pismeno] > nejvetsi_cislo:
             nejvetsi_cislo = abeceda[pismeno]
             identifikace_pismena = pismeno
+    pocet_nejvyssich = slovo.count(identifikace_pismena)
     index = slovo.index(identifikace_pismena)
-    if index == 0:
+    if pocet_nejvyssich > 3:
+        index_nejvetsiho = 10
+    elif index == 0:
         index_nejvetsiho = index            
     elif index == 1:
         key_0 = slovo[0]

@@ -1,5 +1,3 @@
-import pytest
-
 abeceda = [("I", 1), ("V", 5), ("X", 10), ("L", 50), ("C", 100), ("D", 500), ("M", 1000)]
 
 vstup = input("Zadej rimske cislo: ")
@@ -31,7 +29,10 @@ def index_nejvetsiho(slovo, abeceda):
                 nejvetsi_cislo = prvek[1]
                 identifikace_pismena = pismeno
     index = slovo.index(identifikace_pismena)
-    if index == 0:
+    pocet_nejvyssich = slovo.count(identifikace_pismena)
+    if pocet_nejvyssich > 3:
+        index_nejvetsiho = 10
+    elif index == 0:
         index_nejvetsiho = index            
     elif index == 1:
         znak_0 = slovo[0]
