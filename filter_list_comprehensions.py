@@ -1,7 +1,7 @@
 import functools
 
 
-# 1. pomoci cyklu - zadny programator by to taklhle nedelal
+# 1. pomoci cyklu - zadny programator by to takhle nedelal
 def get_movies(name=None):
     movies = [
         {"name": "The Last Boy Scout", "year": 1991},
@@ -19,7 +19,7 @@ def get_movies(name=None):
         return movies
 
         
-filtered_movies = get_movies("mega")
+filtered_movies = get_movies("/")
 for movie in filtered_movies:
     print(movie)
 
@@ -40,8 +40,8 @@ def filter_movies(name):  # tato fce mi vrati fci
     return filtruj  # toto vraci pri prvnim pouziti; do filter() nemuze jit fce se dvema argumenty
     
     
-filtered_movies = filter(filter_movies("ie"), movies)  # fce do filter nemuze mit () ani dva argumenty
-print(type(filtered_movies))
+filtered_movies = filter(filter_movies("4"), movies)  # fce do filter nemuze mit () ani dva argumenty
+print(type(filtered_movies))  # zbrusu novy data type
 for movie in filtered_movies:
     print(movie)
 """    
@@ -52,14 +52,15 @@ pouzije filter().
 
 
 # 3. varianta tehoz pomoci filter() + partial() from functools
-def filtrovani(name, films):
-    for film in films:
+def filtrovani(name, film):  #
         if name in film["name"].lower():
             return True
+        else:
+            return False
 
 
-temporary = functools.partial(filtrovani, "shark", movies)
-filtered_movies = filter(temporary("shark"), movies)
+temporary = functools.partial(filtrovani, "shark")
+filtered_movies = filter(temporary, movies)  # filter vezme kazdou polozku jednotlive z movies a pouzije filtrovani
 for movie in filtered_movies:
     print(movie)
 
@@ -79,6 +80,6 @@ def get_movies(name=None):
         return movies
 
 
-filtered_movies = get_movies("illa")
+filtered_movies = get_movies("8")
 for movie in filtered_movies:
     print(movie)

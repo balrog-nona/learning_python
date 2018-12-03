@@ -46,7 +46,7 @@ setdefault method returns:
 """
 
 
-dict_q = collections.defaultdict(list)  # nejmodernejsi a nejrychlejsi verze, NEFUNGUJE
+dict_q = collections.defaultdict(list)  # nejmodernejsi a nejrychlejsi verze
 for name in names:
     key = len(name)
     dict_q[key].append(name)
@@ -79,7 +79,7 @@ print(fname, sname, age, email, first, second, third, polozka1, polozka2, polozk
 
 
 # updating multiple state variables
-x, y = 0, 1  # finonacciho posloupnost
+x, y = 0, 1  # fibonacciho posloupnost
 for i in range(4):
     print(x)
     x, y = y, x + y

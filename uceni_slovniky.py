@@ -75,4 +75,3 @@ def vypis_slovnik(d):
         print("{}:{}".format(klic, hodnota))
         
 vypis_slovnik(slov)
-

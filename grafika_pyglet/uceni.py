@@ -57,5 +57,3 @@ vypis = print # fce prirazena do promenne
 vypis("hello")
 print(print)
 """
-
-
