@@ -44,7 +44,7 @@ def index_nejvetsiho(slovo, abeceda):
         index_nejvetsiho = 10
     elif index == 0:
         index_nejvetsiho = index            
-    elif index == 1:
+    elif index == 1: # doplnit ochranu na 5, 50, 500
         key_0 = slovo[0]
         key_1 = slovo[1]
         if abeceda[key_0] >= abeceda[key_1]:
