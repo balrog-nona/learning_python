@@ -129,4 +129,28 @@ slovnik = {"jmeno": "Lucka", "povolani": "drticka odpadu", "zajmy": "kresleni"}
 print("{jmeno} pracuje jako {povolani} a ma rada {zajmy}.".format(**slovnik))
 
 seznam = ["Marek", "Matous", "Lukas", "Jan"]
-print("{0}, {1}, {2} a [3] si sedli a napsali knizku.".format(*seznam))
+print("{0}, {1}, {2} a {3} si sedli a napsali knizku.".format(*seznam))
+
+
+# yield/generators
+def create_generator():
+    mylist = range(3)
+    for i in mylist:
+        yield i * i
+
+mygenerator = create_generator()  # creates a generator
+print(mygenerator)
+for i in mygenerator:
+    print(i)
+
+"""
+Pri volani fce kod z tela fce neprobehne - fce pouze vrati generator object. Ten kod probehne pokazde, kdyz for cyklus
+pouzije ten generator object.
+Poprve, kdyz for cyklus zavola generator object, probehne kod v tele fce od zacatku, az dokud neprijde k yield a pak 
+vrati prvni hodnotu z cyklu. Pak pokazde pri volani fce probehne for cyklus z te fce a vrati dalsi hodnotu, az neni uz
+zadna hodnota k vraceni.
+Generator je povazovan za prazdny, kdyz uz kod nedosahne na yield - napr. kdyz cyklus dojde ke konci nebo uz se
+nenaplnuje podminka.
+Fce, ktere maji yield jsou generator functions.
+modul itertools - manipulates iterables
+"""

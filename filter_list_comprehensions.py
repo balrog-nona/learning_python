@@ -52,7 +52,7 @@ pouzije filter().
 
 
 # 3. varianta tehoz pomoci filter() + partial() from functools
-def filtrovani(name, film):  #
+def filtrovani(name, film):
         if name in film["name"].lower():
             return True
         else:
@@ -83,3 +83,25 @@ def get_movies(name=None):
 filtered_movies = get_movies("8")
 for movie in filtered_movies:
     print(movie)
+
+
+# co dela fce filter()
+def filter(fce, seznam):
+    seznam2 = []
+    for i in seznam:
+        if fce(i):
+            seznam2.append(i)
+    return seznam2
+
+
+def filter(fce, seznam):
+    for i in seznam:
+        if fce(i):
+            yield i  # fce vraci yield, automaticky - bez return
+
+"""
+yield je generator - kdyz ma fce vracet pole/iterable
+yield je keyword, ktere se pouziva jako return, ale fce vrati generator
+yield vi, ze navratova vec bude list a pokazde, kdyz se narazi na yield tak prida do neho polozku
+mene narocne na pamet, tvori polozky az jednu po druhe, ne hned vsechny naraz - nelze iterovat podruhe!
+"""
