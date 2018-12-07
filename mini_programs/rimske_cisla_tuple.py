@@ -30,7 +30,10 @@ def index_nejvetsiho(slovo, abeceda):
                 identifikace_pismena = pismeno
     index = slovo.index(identifikace_pismena)
     pocet_nejvyssich = slovo.count(identifikace_pismena)
-    if pocet_nejvyssich > 3:
+    pocet_V = slovo.count("V")
+    pocet_L = slovo.count("L")
+    pocet_D = slovo.count("D")
+    if pocet_nejvyssich > 3 or pocet_V > 1 or pocet_L > 1 or pocet_D > 1:
         index_nejvetsiho = 10
     elif index == 0:
         index_nejvetsiho = index            

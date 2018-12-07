@@ -39,12 +39,15 @@ def index_nejvetsiho(slovo, abeceda):
             nejvetsi_cislo = abeceda[pismeno]
             identifikace_pismena = pismeno
     pocet_nejvyssich = slovo.count(identifikace_pismena)
+    pocet_V = slovo.count("V")
+    pocet_L = slovo.count("L")
+    pocet_D = slovo.count("D")
     index = slovo.index(identifikace_pismena)
-    if pocet_nejvyssich > 3:
+    if pocet_nejvyssich > 3 or pocet_V > 1 or pocet_L > 1 or pocet_D > 1:
         index_nejvetsiho = 10
     elif index == 0:
         index_nejvetsiho = index            
-    elif index == 1: # doplnit ochranu na 5, 50, 500
+    elif index == 1:
         key_0 = slovo[0]
         key_1 = slovo[1]
         if abeceda[key_0] >= abeceda[key_1]:
