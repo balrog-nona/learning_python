@@ -49,7 +49,7 @@ def zmen_zpatky(t):
     
 pyglet.clock.schedule_once(zmen, 0.2)
     
-pyglet.app.run() # toto je fce, cela smycka udalosti
+pyglet.app.run() # toto je fce, cela smycka udalosti - event loop
 
 
 """

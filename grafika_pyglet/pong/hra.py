@@ -23,6 +23,9 @@ skore = [0, 0]  # skore dvou hracu
 
 
 def nakresli_obdelnik(x1, y1, x2, y2):
+    """Nakresli obdelnik pro dane souradnice.
+    """
+    # pouzijeme volani OpenGl, pro nas asi zatim nejjednodussi
     gl.glBegin(gl.GL_TRIANGLE_FAN)   # zacni kreslit spojene trojuhelniky
     gl.glVertex2f(int(x1), int(y1))  # vrchol A
     gl.glVertex2f(int(x1), int(y2))  # vrchol B
@@ -36,14 +39,20 @@ def vykresli():
     gl.glClear(gl.GL_COLOR_BUFFER_BIT)  # smaz obsah okna (vybarvi na cerno)
     gl.glColor3f(1, 1, 1)  # nastav barvu kresleni na bilou
     obdelnik = nakresli_obdelnik(0, 0, SIRKA, VYSKA)
-    nakresli_obdelnik(
-        pozice_mice[0] - VELIKOST_MICE // 2,
+    nakresli_obdelnik(  # nechapu tuto definici pozice micku
+        pozice_mice[0] - VELIKOST_MICE // 2,  # 0 - 10 se prece dostane do zapornych hodnot...
         pozice_mice[1] - VELIKOST_MICE // 2,
         pozice_mice[0] + VELIKOST_MICE // 2,
-        pozice_mice[1] + VELIKOST_MICE // 2,
-    )   
-        
-    
+        pozice_mice[1] + VELIKOST_MICE // 2,  # proc je tady ta carka? a jinde v () taky
+    )
+    for x, y in [(0, pozice_palek[0]), (SIRKA, pozice_palek[1])]:  # co je x a co y?
+        nakresli_obdelnik(
+        x - TLOUSTKA_PALKY,  # co je x tady? prece nemuzu odecitat od tuple
+        y - DELKA_PALKY // 2,  # to stejne s y
+        x + TLOUSTKA_PALKY,
+        y + DELKA_PALKY // 2,
+        )
+
     
 window = pyglet.window.Window(width=SIRKA, height=VYSKA)
 
@@ -52,9 +61,3 @@ window.push_handlers(
 )
 
 pyglet.app.run()
-    
-
-
-    
-    
-
