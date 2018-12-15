@@ -23,17 +23,26 @@ skore = [0, 0]  # skore dvou hracu
 
 
 def nakresli_obdelnik(x1, y1, x2, y2):
-    """Nakresli obdelnik pro dane souradnice.
+    """Nakresli obdelnik na dane souradnice
+
+    Nazorny diagram::
+
+         y2 - +-----+
+              |/////|
+         y1 - +-----+
+              :     :
+             x1    x2
     """
-    # pouzijeme volani OpenGl, pro nas asi zatim nejjednodussi
+    # Tady pouzivam volani OpenGL, ktere je pro nas zatim asi nejjednodussi
+    # na pouziti
     gl.glBegin(gl.GL_TRIANGLE_FAN)   # zacni kreslit spojene trojuhelniky
-    gl.glVertex2f(int(x1), int(y1))  # vrchol A
-    gl.glVertex2f(int(x1), int(y2))  # vrchol B
-    gl.glVertex2f(int(x2), int(y2))  # vrchol C, nakresli trojuhelnik ABC
-    gl.glVertex2f(int(x2), int(y1))  # vrchol D, nakresli trojuhelnik BCD
+    gl.glVertex2f(int(x1), int(y1))  # souradnice A
+    gl.glVertex2f(int(x1), int(y2))  # souradnice B
+    gl.glVertex2f(int(x2), int(y2))  # souradnice C, nakresli trojuhelnik ABC
+    gl.glVertex2f(int(x2), int(y1))  # souradnice D, nakresli trojuhelnik BCD
     # dalsi souradnice E by nakreslila trojuhelnik CDE, atd.
     gl.glEnd()  # ukonci kresleni trojuhelniku
-    
+
 
 def vykresli():
     gl.glClear(gl.GL_COLOR_BUFFER_BIT)  # smaz obsah okna (vybarvi na cerno)
