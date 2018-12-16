@@ -1,5 +1,4 @@
 import random
-import pictures
 import os
 
 
@@ -61,58 +60,46 @@ def vyhodnot_trefu(pole):
         return True
 
 
-def vyhodnot_netrefu(soubor_obrazku):  
-    na_tisk = obrazky.sibenice()    
-    return na_tisk
-    
+def nacti_soubor(i):
+    with open('sibenice{}.txt'.format(i), encoding="utf-8") as soubor:
+        obsah = soubor.read()
+        return obsah
 
-class Soubory():
-    def __init__(self, file_name, pocet):  # bude sledovat, kolik toho vytiskl
-        self.file_name = file_name
-        self.pocet = pocet
-        self.vytisknuto = 0
-
-    def sibenice(self):  
-        if self.vytisknuto <= self.pocet:
-            with open("sibenice{}.txt".format(self.vytisknuto), encoding="utf-8") as obrazek:
-                return obrazek.read()    
-                
-    def ztrat_zivot(self):
-        self.vytisknuto += 1            
-                       
-        
 
 def sibenice():    
     opakovat = True
-    while opakovat:       
-        obrazky = Soubory("sibenice{}.txt", 10)
+    while opakovat:
         slovo = volba_slova(slovnik)        
         pole = tvorba_pole(slovo)
+        netrefeno = -1
+        obrazek = None
         clear()  # vycisteni obrazovky pred hrou
         print(pole)
             
         pokracovat = True
         while pokracovat:
             zadani = False
-            while zadani == False:
+            while not zadani:
                 vstup = input("Zadej pismeno: ")
                 zadani, pismeno = osetreni_vstupu(vstup)
             trefil, pole = tah_hrace(slovo, pole, pismeno)
+
             clear()  # vycisteni obrazovky po tahu
             print(pole)
-            
+
             if trefil == 1:
                 pokracovat = vyhodnot_trefu(pole)
-                if pokracovat == False:
+                if not pokracovat:
                     print("Vitezis!")
             elif trefil == 0:
-                picture = vyhodnot_netrefu(obrazky)  # musim tu dodat ztrat zivot
-                print(picture)
-            if obrazky.pocet == obrazky.vytisknuto:
-                print("Konec hry - jsi obesenec!")
-                print("Hledane slovo: {}".format(slovo.capitalize()))
+                netrefeno += 1
+                obrazek = nacti_soubor(netrefeno)
+            if obrazek:
+                print(obrazek)
+            if netrefeno == 9:
+                print("Konec hry - jsi obesenec! \nHledane slovo: {}".format(slovo.capitalize()))
                 pokracovat = False
-                            
+
         while True:            
             znova = input("Chces hrat znova? a/n ")
             znova = znova.lower().strip()
@@ -126,4 +113,3 @@ def sibenice():
                 break
             else:
                 print("Neplatne zadani!")
-                
