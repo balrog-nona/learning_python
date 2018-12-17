@@ -46,22 +46,36 @@ def nakresli_obdelnik(x1, y1, x2, y2):
 
 def vykresli():
     gl.glClear(gl.GL_COLOR_BUFFER_BIT)  # smaz obsah okna (vybarvi na cerno)
-    gl.glColor3f(1, 1, 1)  # nastav barvu kresleni na bilou
-    obdelnik = nakresli_obdelnik(0, 0, SIRKA, VYSKA)
-    nakresli_obdelnik(  # nechapu tuto definici pozice micku
-        pozice_mice[0] - VELIKOST_MICE // 2,  # 0 - 10 se prece dostane do zapornych hodnot...
+    gl.glColor3f(1, 0, 1)  # nastav barvu kresleni
+    obdelnik = nakresli_obdelnik(0, 0, SIRKA, VYSKA)  # nakresleni hraciho pole
+    gl.glColor3f(1, 0, 0)  # opet nastavena barva kresleni, aby byly palky videt
+    # nasleduje nakresleni micku
+    nakresli_obdelnik(
+        pozice_mice[0] - VELIKOST_MICE // 2,  # micek je na zacatku z poloviny mimo hraci pole - neni videt cely
         pozice_mice[1] - VELIKOST_MICE // 2,
         pozice_mice[0] + VELIKOST_MICE // 2,
-        pozice_mice[1] + VELIKOST_MICE // 2,  # proc je tady ta carka? a jinde v () taky
+        pozice_mice[1] + VELIKOST_MICE // 2,  # carka je volitelna
     )
-    for x, y in [(0, pozice_palek[0]), (SIRKA, pozice_palek[1])]:  # co je x a co y?
+    for x, y in [(0, pozice_palek[0]), (SIRKA, pozice_palek[1])]:  # nakresleni palek
         nakresli_obdelnik(
-        x - TLOUSTKA_PALKY,  # co je x tady? prece nemuzu odecitat od tuple
-        y - DELKA_PALKY // 2,  # to stejne s y
+            """Vychazi mi z toho, ze palky jsou taky videt jen zpoloviny svoji sirky.
+            """
+        x - TLOUSTKA_PALKY,
+        y - DELKA_PALKY // 2,
         x + TLOUSTKA_PALKY,
         y + DELKA_PALKY // 2,
         )
 
+"""
+x a y znamena x a y z tuple - tyto hodnoty vzniknou, az kdyz se vleze do seznamu a zacina se rozbalovat jednotliva
+tuple - zkusit si to na jednoduchem prikladu:
+for x, y in [(10, 20), (50, 60)]:
+    print(x, y)
+Vytvori to souradnice pro obe palky zaroven.
+    
+Carku za poslednim argumentem nekteri pisou, bo kdyz vkladaji novy radek, tak se nemusi vracet na predchozi a
+dopisovat ji tam.
+"""
     
 window = pyglet.window.Window(width=SIRKA, height=VYSKA)
 
