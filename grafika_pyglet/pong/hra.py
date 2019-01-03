@@ -14,6 +14,7 @@ RYCHLOST_PALKY = RYCHLOST * 1.5  # taky v pixelech za sekundu
 DELKA_PULICI_CARKY = 20
 VELIKOST_FONTU = 42
 ODSAZENI_TEXTU = 30
+# to nahore jsou konstanty - v prubehu hry se nebudou menit; nize jsou globalni promenne
 
 pozice_palek = [VYSKA // 2, VYSKA // 2]  # vertikalni pozice dvou palek
 pozice_mice = [0, 0]  # x, y souradnice micku -- nastavene v reset()
@@ -56,15 +57,29 @@ def vykresli():
         pozice_mice[0] + VELIKOST_MICE // 2,
         pozice_mice[1] + VELIKOST_MICE // 2,  # carka je volitelna
     )
+    # nasleduje vykresleni palek; vychazi mi z toho, ze jsou taky na zacatku videt jen z poloviny svoji sirky
     for x, y in [(0, pozice_palek[0]), (SIRKA, pozice_palek[1])]:  # nakresleni palek
         nakresli_obdelnik(
-            """Vychazi mi z toho, ze palky jsou taky videt jen zpoloviny svoji sirky.
-            """
         x - TLOUSTKA_PALKY,
         y - DELKA_PALKY // 2,
         x + TLOUSTKA_PALKY,
-        y + DELKA_PALKY // 2,
+        y + DELKA_PALKY // 2
         )
+    # nakresleni pulici cary
+    umisteni = 0
+    pauza = 15
+    delka = DELKA_PULICI_CARKY
+    while umisteni < VYSKA:
+        nakresli_obdelnik(
+            SIRKA // 2 - 1,
+            umisteni,
+            SIRKA // 2 + 1,
+            delka
+        )
+        umisteni = umisteni + DELKA_PULICI_CARKY + pauza
+        delka = umisteni + DELKA_PULICI_CARKY
+
+
 
 """
 x a y znamena x a y z tuple - tyto hodnoty vzniknou, az kdyz se vleze do seznamu a zacina se rozbalovat jednotliva
