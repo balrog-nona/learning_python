@@ -245,7 +245,7 @@ def vykresli():
             SIRKA // 2 + 1,
             y + DELKA_PULICI_CARKY)
 
-    # A nakonec vypiseme skore obou hracu - zrejme tady se mi to rozbiji
+    # A nakonec vypiseme skore obou hracu - zrejme tady se mi to rozbiji na domacim PC
     nakresli_text(str(skore[0]),
                   x=ODSAZENI_TEXTU,
                   y=VYSKA - ODSAZENI_TEXTU - VELIKOST_FONTU,
