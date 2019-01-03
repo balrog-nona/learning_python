@@ -82,7 +82,7 @@ def vykresli():
 
 
 """
-x a y znamena x a y z tuple - tyto hodnoty vzniknou, az kdyz se vleze do seznamu a zacina se rozbalovat jednotliva
+k vykresleni palek: x a y znamena x a y z tuple - tyto hodnoty vzniknou, az kdyz se vleze do seznamu a zacina se rozbalovat jednotliva
 tuple - zkusit si to na jednoduchem prikladu:
 for x, y in [(10, 20), (50, 60)]:
     print(x, y)
