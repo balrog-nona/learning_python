@@ -1,6 +1,8 @@
 import pyglet
+import random
 from pyglet import gl
 from pyglet.window import key
+
 
 # Velikost okna (v pixelech)
 SIRKA = 900
@@ -20,6 +22,7 @@ ODSAZENI_TEXTU = 30
 pozice_palek = [VYSKA // 2, VYSKA // 2]  # vertikalni pozice dvou palek
 pozice_mice = [0, 0]  # x, y souradnice micku -- nastavene v reset()
 rychlost_mice = [0, 0]  # x, y slozky rychlosti micku -- nastavene v reset()
+# jak muze mit staticka vec jako souradnice rychlostni aspekt? - rychlost mice
 stisknute_klavesy = set()  # sada stisknutych klaves
 skore = [0, 0]  # skore dvou hracu
 
@@ -148,6 +151,8 @@ def obnov_stav(dt):  # dt je cas posledniho zavolani fce Pygletem
         """
         meni se v prubehu ta promenna pozice palek? vychozi byla [VYSKA // 2, VYSKA // 2]?
         co se s tou promennou deje v prubehu hry?
+        jak to, ze se na staticky prvek, jako jsou souradnice v pozice_palek vaze pohyb? pozice_palek
+        totiz ve fci vykresli slouzi k vykresleni toho obdelniku
         """
 
         # dolni zarazka - kdyz je palka moc dole, nastavime ji na minimum - co se tim mysli?
@@ -158,7 +163,48 @@ def obnov_stav(dt):  # dt je cas posledniho zavolani fce Pygletem
             pozice_palek[cislo_palky] = VYSKA - DELKA_PALKY / 2
         #  zarazky jsou nastavene na DELKA_PALKY / 2 - to by palka mela z poloviny zmizet, ne?
 
+    # pohyb micku
+    pozice_mice[0] += rychlost_mice[0] * dt
+    pozice_mice[1] += rychlost_mice[1] * dt
+    # odraz micku od sten
+    if pozice_mice[1] < VELIKOST_MICE // 2:  # stejne jako v predchozim - micek by mel z pulky zmizet, ne?
+        rychlost_mice[1] = abs(rychlost_mice[1])
+    if pozice_mice[1] > VYSKA - VELIKOST_MICE // 2:
+        rychlost_mice[1] = -abs(rychlost_mice[1])
 
+    palka_min = pozice_mice[1] - VELIKOST_MICE / 2 - DELKA_PALKY / 2
+    palka_max = pozice_mice[1] + VELIKOST_MICE / 2 + DELKA_PALKY / 2
+    # odrazeni vlevo
+    if pozice_mice[0] < TLOUSTKA_PALKY + VELIKOST_MICE / 2:
+        if palka_min < pozice_palek[0] < palka_max:
+            # palka je na spravnem miste, odrazime micek
+            rychlost_mice[0] = abs(rychlost_mice[0])
+        else:
+            # palka je jinde, nez ma byt - hrac prohral
+            skore[1] += 1
+            reset()
+    # odrazeni vpravo
+    if pozice_mice[0] > SIRKA - (TLOUSTKA_PALKY + VELIKOST_MICE / 2):
+        if palka_min < pozice_palek[1] < palka_max:
+            rychlost_mice[0] = -abs(rychlost_mice[0])
+        else:
+            skore[0] += 1
+            reset()
+
+
+def reset():
+    pozice_mice[0] = SIRKA // 2
+    pozice_mice[1] = VYSKA // 2
+    # x-ova rychlost - bud vpravo nebo vlevo
+    if random.randint(0, 1):  # ve zkouska.py to taky funguje, ale nechapu to
+        rychlost_mice[0] = RYCHLOST
+    else:
+        rychlost_mice[0] = -RYCHLOST
+    # y-ova rychlost uplne nahodna - jak to, ze se to nastavuje jako rychlost, kdyz je to cele o smeru...
+    rychlost_mice[1] = random.uniform(-1, 1) * RYCHLOST
+
+
+reset()
 
 window.push_handlers(
     on_draw=vykresli,  # na vykresleni okna pouzij funkci `vykresli`
