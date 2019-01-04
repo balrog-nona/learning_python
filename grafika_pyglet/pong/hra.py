@@ -115,16 +115,49 @@ window = pyglet.window.Window(width=SIRKA, height=VYSKA)
 
 def stisk_klavesy(symbol, modifikatory):
     if symbol == key.UP:
-        stisknute_klavesy.add("nahoru", 1),
-    elif symbol == key.DOWN:
-        stisknute_klavesy.add("dolu", 1),
-    elif symbol == key.W:
-        stisknute_klavesy.add("nahoru", 0),
-    elif symbol == key.S:
-        stisknute_klavesy.add("dolu", 0)
+        stisknute_klavesy.add(("nahoru", 1))  # cislo reprezentuje palku 0-leva, 1-prava
+    if symbol == key.DOWN:
+        stisknute_klavesy.add(("dolu", 1))
+    if symbol == key.W:
+        stisknute_klavesy.add(("nahoru", 0))
+    if symbol == key.S:
+        stisknute_klavesy.add(("dolu", 0))
+    # return stisknute_klavesy - jak to, ze tato fce nic nevraci?
 
 
 def pusteni_klavesy(symbol, modifikatory):
+    if symbol == key.UP:
+        stisknute_klavesy.discard(("nahoru", 1))
+    if symbol == key.DOWN:
+        stisknute_klavesy.discard(("dolu", 1))
+    if symbol == key.W:
+        stisknute_klavesy.discard(("nahoru", 0))
+    if symbol == key.S:
+        stisknute_klavesy.discard(("dolu", 0))
+    # return stisknute_klavesy - to stejne
+
+
+def obnov_stav(dt):  # dt je cas posledniho zavolani fce Pygletem
+    for cislo_palky in (0, 1):
+        # pohyb podle klaves, viz fce stisk_klavesy
+        # proc se to nasobi tim dt? ty palky budou po delsi necinnosti desne rychle, ne?
+        if ("nahoru", cislo_palky) in stisknute_klavesy:
+            pozice_palek[cislo_palky] += RYCHLOST_PALKY * dt
+        if ("dolu", cislo_palky) in stisknute_klavesy:
+            pozice_palek[cislo_palky] -= RYCHLOST_PALKY * dt
+        """
+        meni se v prubehu ta promenna pozice palek? vychozi byla [VYSKA // 2, VYSKA // 2]?
+        co se s tou promennou deje v prubehu hry?
+        """
+
+        # dolni zarazka - kdyz je palka moc dole, nastavime ji na minimum - co se tim mysli?
+        if pozice_palek[cislo_palky] < DELKA_PALKY / 2:
+            pozice_palek[cislo_palky] = DELKA_PALKY / 2
+        # horni zarazka - kdyz je palka moc nahore, nastavime ji na maximum
+        if pozice_palek[cislo_palky] > VYSKA - DELKA_PALKY / 2:
+            pozice_palek[cislo_palky] = VYSKA - DELKA_PALKY / 2
+        #  zarazky jsou nastavene na DELKA_PALKY / 2 - to by palka mela z poloviny zmizet, ne?
+
 
 
 window.push_handlers(
@@ -133,6 +166,7 @@ window.push_handlers(
     on_key_release=pusteni_klavesy,
 )
 
+pyglet.clock.schedule(obnov_stav)
 pyglet.app.run()
 
 
