@@ -136,7 +136,10 @@ def stisk_klavesy(symbol, modifikatory):
         stisknute_klavesy.add(("nahoru", 0))
     if symbol == key.S:
         stisknute_klavesy.add(("dolu", 0))
-    # return stisknute_klavesy - jak to, ze tato fce nic nevraci?
+    """
+    fce v pythonu nemusi nic vracet - kdyz neobsahuje return, tak automaticky vraci Nona, ale telo fce se vzdy
+    provede a provedou se zmeny, ktere telo fce udelalo. Ale s return stisknute_klavesy to taky funguje.
+    """
 
 
 def pusteni_klavesy(symbol, modifikatory):
@@ -148,27 +151,30 @@ def pusteni_klavesy(symbol, modifikatory):
         stisknute_klavesy.discard(("nahoru", 0))
     if symbol == key.S:
         stisknute_klavesy.discard(("dolu", 0))
-    # return stisknute_klavesy - to stejne
 
 
 def reset():
     pozice_mice[0] = SIRKA // 2
     pozice_mice[1] = VYSKA // 2
     # x-ova rychlost - bud vpravo nebo vlevo
-    if random.randint(0, 1):  # ve zkouska.py to taky funguje, ale nechapu to
+    if random.randint(0, 1):  # tady to reaguje na 1 - ekvivalent True! kdyz padne 0, jde na else
         rychlost_mice[0] = RYCHLOST
     else:
-        rychlost_mice[0] = -RYCHLOST  # to nevadi, ze je to zaporne? -200?
-    # y-ova rychlost uplne nahodna - nechapu tu konstrukci nasobeni cisla rychlosti
+        rychlost_mice[0] = -RYCHLOST
+    # y-ova rychlost uplne nahodna - nekdy micek vyleti rychleji a nekdy pomaleji
     rychlost_mice[1] = random.uniform(-1, 1) * RYCHLOST
+    """
+    Pokud by se chtelo zajistit, aby micek vyletel pokazde stejnou rychlosti, musely by se nejak stanovit
+    souradnice, kam byt sel a pomoci sin a cos spocitat, jak by letel.
+    """
 
 
 def obnov_stav(dt):  # dt je cas posledniho zavolani fce Pygletem
     for cislo_palky in (0, 1):
         # pohyb podle klaves, viz fce stisk_klavesy
         if ("nahoru", cislo_palky) in stisknute_klavesy:
-            pozice_palek[cislo_palky] += RYCHLOST_PALKY * dt
-            # bez dt se palky pohybuji trhane, kolik dt muze byt? + jaky ma dt vlastne vyznam
+            pozice_palek[cislo_palky] += RYCHLOST_PALKY * dt  # dt je napr. 0.02 s
+            # bez dt se palky pohybuji trhane
         if ("dolu", cislo_palky) in stisknute_klavesy:
             pozice_palek[cislo_palky] -= RYCHLOST_PALKY * dt
 
@@ -184,16 +190,16 @@ def obnov_stav(dt):  # dt je cas posledniho zavolani fce Pygletem
     pozice_mice[0] += rychlost_mice[0] * dt
     pozice_mice[1] += rychlost_mice[1] * dt  # bez *dt ten micek svisti brutalni rychlosti
     # odraz micku od sten - srovnava se s VELIKOST_MICE // 2, aby se hrana mice dotkla hranice pole
-    if pozice_mice[1] < VELIKOST_MICE // 2:  # jak to, ze to staci bez =?
+    if pozice_mice[1] < VELIKOST_MICE // 2:
         rychlost_mice[1] = abs(rychlost_mice[1])
-    if pozice_mice[1] > VYSKA - VELIKOST_MICE // 2:  # to stejne
+    if pozice_mice[1] > VYSKA - VELIKOST_MICE // 2:
         rychlost_mice[1] = -abs(rychlost_mice[1])
 
     # urceni horniho a dolniho okraje palky na ose y
     palka_min = pozice_mice[1] - VELIKOST_MICE / 2 - DELKA_PALKY / 2
     palka_max = pozice_mice[1] + VELIKOST_MICE / 2 + DELKA_PALKY / 2
     # odrazeni vlevo
-    if pozice_mice[0] < TLOUSTKA_PALKY + VELIKOST_MICE / 2:  # proc tu neni taky =, aji dolu by se hodilo?
+    if pozice_mice[0] < TLOUSTKA_PALKY + VELIKOST_MICE / 2:
         if palka_min < pozice_palek[0] < palka_max:
             # palka je na spravnem miste, odrazime micek
             rychlost_mice[0] = abs(rychlost_mice[0])
@@ -202,7 +208,7 @@ def obnov_stav(dt):  # dt je cas posledniho zavolani fce Pygletem
             skore[1] += 1
             reset()
     # odrazeni vpravo
-    if pozice_mice[0] > SIRKA - (TLOUSTKA_PALKY + VELIKOST_MICE / 2):  # proc tu neni taky =, i dolu by se hodilo?
+    if pozice_mice[0] > SIRKA - (TLOUSTKA_PALKY + VELIKOST_MICE / 2):
         if palka_min < pozice_palek[1] < palka_max:
             rychlost_mice[0] = -abs(rychlost_mice[0])
         else:
@@ -213,12 +219,12 @@ def obnov_stav(dt):  # dt je cas posledniho zavolani fce Pygletem
 reset()
 
 window.push_handlers(
-    on_draw=vykresli,  # jak casto vykresluje tu hru?
+    on_draw=vykresli,  # to vola Pyglet sam pravidelne + urcite, kdyz se manipuluje s oknem
     on_key_press=stisk_klavesy,
     on_key_release=pusteni_klavesy,
 )
 
-pyglet.clock.schedule(obnov_stav)  # jak casto clock.schedule zavola fci obnov_stav?
+pyglet.clock.schedule(obnov_stav)  # jak casto clock.schedule zavola fci obnov_stav? - cca 0.02s
 pyglet.app.run()
 
 
