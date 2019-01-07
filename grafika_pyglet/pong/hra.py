@@ -20,9 +20,20 @@ ODSAZENI_TEXTU = 30
 # to nahore jsou konstanty - v prubehu hry se nebudou menit; nize jsou globalni promenne
 
 pozice_palek = [VYSKA // 2, VYSKA // 2]  # vertikalni pozice dvou palek
-pozice_mice = [0, 0]  # x, y souradnice micku -- nastavene v reset()
+"""
+pozice_palek je vertikalni pozice leve a prave palky. Obe jsou timto zafixovane na stredu vysky, tj. v polovine
+vysky, z tohoto bodu se vzdzcky dopocita souradnice nahoru i dolu, nikoli vsak sirka, protoze ta je pevne dana
+a nemenna. pozice_palek[0] je tedy stred pro levou palku, pozice_palek[1] pro pravou. Obe hodnoty se budou v 
+prubehu hry menit, a to rychlosti. Pres vypocet rychlosti se vypocita novy stred, od ktereho se nakresli cely 
+obdelnik palky.
+"""
+pozice_mice = [0, 0]  # x, y souradnice micku -- nastavene v reset().
+"""
+Jsou to souradnice stredu, od ktereho se vykresluje cely - micek potrebuje dve souradnice pro zjisteni stredu, 
+protoze na rozdil od palek se hybe ve vsech smerech, tedy ma promenlivou polohu na ose x i ose y. 
+Naopak palky jsou na ose x nemenne.
+"""
 rychlost_mice = [0, 0]  # x, y slozky rychlosti micku -- nastavene v reset()
-# jak muze mit staticka vec jako souradnice rychlostni aspekt? - rychlost mice
 stisknute_klavesy = set()  # sada stisknutych klaves
 skore = [0, 0]  # skore dvou hracu
 
@@ -85,18 +96,18 @@ def vykresli():
         )
 
     # nasleduje vykresleni pulici cary - muj vytvor, oficialni reseni je elegantnejsi
-    umisteni = 0
+    umisteni_y1 = 0
     pauza = 15
-    delka = DELKA_PULICI_CARKY
-    while umisteni < VYSKA:
+    delka_y2 = DELKA_PULICI_CARKY
+    while umisteni_y1 < VYSKA:
         nakresli_obdelnik(
             SIRKA // 2 - 1,
-            umisteni,
+            umisteni_y1,
             SIRKA // 2 + 1,
-            delka
+            delka_y2
         )
-        umisteni = umisteni + DELKA_PULICI_CARKY + pauza
-        delka = umisteni + DELKA_PULICI_CARKY
+        umisteni_y1 = umisteni_y1 + DELKA_PULICI_CARKY + pauza
+        delka_y2 = umisteni_y1 + DELKA_PULICI_CARKY
 
     # nasleduje vykresleni skore - oboje jsou zcela videt, takze je nejde nakreslit naraz
     nakresli_text(
@@ -140,42 +151,49 @@ def pusteni_klavesy(symbol, modifikatory):
     # return stisknute_klavesy - to stejne
 
 
+def reset():
+    pozice_mice[0] = SIRKA // 2
+    pozice_mice[1] = VYSKA // 2
+    # x-ova rychlost - bud vpravo nebo vlevo
+    if random.randint(0, 1):  # ve zkouska.py to taky funguje, ale nechapu to
+        rychlost_mice[0] = RYCHLOST
+    else:
+        rychlost_mice[0] = -RYCHLOST  # to nevadi, ze je to zaporne? -200?
+    # y-ova rychlost uplne nahodna - nechapu tu konstrukci nasobeni cisla rychlosti
+    rychlost_mice[1] = random.uniform(-1, 1) * RYCHLOST
+
+
 def obnov_stav(dt):  # dt je cas posledniho zavolani fce Pygletem
     for cislo_palky in (0, 1):
         # pohyb podle klaves, viz fce stisk_klavesy
-        # proc se to nasobi tim dt? ty palky budou po delsi necinnosti desne rychle, ne?
         if ("nahoru", cislo_palky) in stisknute_klavesy:
             pozice_palek[cislo_palky] += RYCHLOST_PALKY * dt
+            # bez dt se palky pohybuji trhane, kolik dt muze byt? + jaky ma dt vlastne vyznam
         if ("dolu", cislo_palky) in stisknute_klavesy:
             pozice_palek[cislo_palky] -= RYCHLOST_PALKY * dt
-        """
-        meni se v prubehu ta promenna pozice palek? vychozi byla [VYSKA // 2, VYSKA // 2]?
-        co se s tou promennou deje v prubehu hry?
-        jak to, ze se na staticky prvek, jako jsou souradnice v pozice_palek vaze pohyb? pozice_palek
-        totiz ve fci vykresli slouzi k vykresleni toho obdelniku
-        """
 
-        # dolni zarazka - kdyz je palka moc dole, nastavime ji na minimum - co se tim mysli?
+        # dolni zarazka - kdyz je palka moc dole, nastavime ji na minimum - tj. aby nemizela
         if pozice_palek[cislo_palky] < DELKA_PALKY / 2:
             pozice_palek[cislo_palky] = DELKA_PALKY / 2
-        # horni zarazka - kdyz je palka moc nahore, nastavime ji na maximum
+        # horni zarazka - kdyz je palka moc nahore, nastavime ji na maximum - tj. aby nemizela
         if pozice_palek[cislo_palky] > VYSKA - DELKA_PALKY / 2:
             pozice_palek[cislo_palky] = VYSKA - DELKA_PALKY / 2
-        #  zarazky jsou nastavene na DELKA_PALKY / 2 - to by palka mela z poloviny zmizet, ne?
+        # zarazky jsou nastavene na DELKA_PALKY / 2 proto, ze to je ten stredovy bod, odkud se palky vykresluji
 
     # pohyb micku
     pozice_mice[0] += rychlost_mice[0] * dt
-    pozice_mice[1] += rychlost_mice[1] * dt
-    # odraz micku od sten
-    if pozice_mice[1] < VELIKOST_MICE // 2:  # stejne jako v predchozim - micek by mel z pulky zmizet, ne?
+    pozice_mice[1] += rychlost_mice[1] * dt  # bez *dt ten micek svisti brutalni rychlosti
+    # odraz micku od sten - srovnava se s VELIKOST_MICE // 2, aby se hrana mice dotkla hranice pole
+    if pozice_mice[1] < VELIKOST_MICE // 2:  # jak to, ze to staci bez =?
         rychlost_mice[1] = abs(rychlost_mice[1])
-    if pozice_mice[1] > VYSKA - VELIKOST_MICE // 2:
+    if pozice_mice[1] > VYSKA - VELIKOST_MICE // 2:  # to stejne
         rychlost_mice[1] = -abs(rychlost_mice[1])
 
+    # urceni horniho a dolniho okraje palky na ose y
     palka_min = pozice_mice[1] - VELIKOST_MICE / 2 - DELKA_PALKY / 2
     palka_max = pozice_mice[1] + VELIKOST_MICE / 2 + DELKA_PALKY / 2
     # odrazeni vlevo
-    if pozice_mice[0] < TLOUSTKA_PALKY + VELIKOST_MICE / 2:
+    if pozice_mice[0] < TLOUSTKA_PALKY + VELIKOST_MICE / 2:  # proc tu neni taky =, aji dolu by se hodilo?
         if palka_min < pozice_palek[0] < palka_max:
             # palka je na spravnem miste, odrazime micek
             rychlost_mice[0] = abs(rychlost_mice[0])
@@ -184,7 +202,7 @@ def obnov_stav(dt):  # dt je cas posledniho zavolani fce Pygletem
             skore[1] += 1
             reset()
     # odrazeni vpravo
-    if pozice_mice[0] > SIRKA - (TLOUSTKA_PALKY + VELIKOST_MICE / 2):
+    if pozice_mice[0] > SIRKA - (TLOUSTKA_PALKY + VELIKOST_MICE / 2):  # proc tu neni taky =, i dolu by se hodilo?
         if palka_min < pozice_palek[1] < palka_max:
             rychlost_mice[0] = -abs(rychlost_mice[0])
         else:
@@ -192,27 +210,15 @@ def obnov_stav(dt):  # dt je cas posledniho zavolani fce Pygletem
             reset()
 
 
-def reset():
-    pozice_mice[0] = SIRKA // 2
-    pozice_mice[1] = VYSKA // 2
-    # x-ova rychlost - bud vpravo nebo vlevo
-    if random.randint(0, 1):  # ve zkouska.py to taky funguje, ale nechapu to
-        rychlost_mice[0] = RYCHLOST
-    else:
-        rychlost_mice[0] = -RYCHLOST
-    # y-ova rychlost uplne nahodna - jak to, ze se to nastavuje jako rychlost, kdyz je to cele o smeru...
-    rychlost_mice[1] = random.uniform(-1, 1) * RYCHLOST
-
-
 reset()
 
 window.push_handlers(
-    on_draw=vykresli,  # na vykresleni okna pouzij funkci `vykresli`
+    on_draw=vykresli,  # jak casto vykresluje tu hru?
     on_key_press=stisk_klavesy,
     on_key_release=pusteni_klavesy,
 )
 
-pyglet.clock.schedule(obnov_stav)
+pyglet.clock.schedule(obnov_stav)  # jak casto clock.schedule zavola fci obnov_stav?
 pyglet.app.run()
 
 
