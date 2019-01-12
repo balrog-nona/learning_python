@@ -16,15 +16,4 @@ for i in range(len(slovo)):
     index -= 26
   sifra += chr(index)
 
-print("Vysledek: ", sifra) 
-
-
-  
-
-
-  
-
-
-
-
-
+print("Vysledek: ", sifra)
