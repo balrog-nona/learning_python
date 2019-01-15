@@ -1,7 +1,7 @@
 import collections
 
 
-# creating a dictionary using list function and two lists
+# creating a dictionary using zip function and two lists
 names = ["girl", "boy"]
 hobbies = ["fitness", "reading"]
 d = dict(zip(names, hobbies))
@@ -115,13 +115,56 @@ with ignored(OSError):
     os.remove("somefile.tmp")
 """
 
-# list comprehensions and generator expressions
+# list comprehensions and generator expressions - tvorba seznamu
 print(sum([i ** 2 for i in range(10)]))
 # funguje i verze bez [] a je to rychlejsi a nezere tolik pameti tvourbou listu
 """
 rozdil se da chapat tak, ze pokud je to rozepsane na hafo radku a postupne apendovane do seznamu, tak to rika spis
 JAK se to ma udelat, zatimco ve verzi comprehension to rika, CO to ma udelat.
 """
+"""
+da se tu pouzit seznam vznikly jakumkoli zpusobem, napr. i vysledek volani glob.glob - to vrati seznam, cili jde provest
+[os.path.realpath(f) for f in glob.glob("../*.xml")]
+"""
+filtrace = [i for i in range(15) if i ** 2 % 5 == 0]  # pri tomto lze i filtorvat podminkou!
+print(filtrace)
+"""
+cela konstrukce muze byt libovolne slozita:
+[f for f in glob.glob("*.py") if os.stat(f).st_size > 6000] - na principu se nic nemeni
+[(os.stat(f).st_size, os.path.realpath(f)) for f in glob.glob("*.xml")] - najde vsechno .xml, pak zjisti velikost 
+kazdeho z nich a pak k nemu vytvori absolutni cestu. Vrati seznam n-tic.
+"""
+
+
+# dictionary comprehension - misto seznamu popisuje vytvoreni slovniku(pomoci iteratoru)
+new_dict = {i:i ** 2 for i in [2, 3, 4, 5]}
+print(new_dict)
+"""
+jinak to lze navazat i na slozitejsi konstrukce, muze to vypadat i totalne hardcore, jako treba v Dive into Python 3,
+lekce 3.4: (pri spusteni glob.glob z adresare, kde se nachazeji ty soubory)
+metadata_dict = {f:os.stat(f) for f in glob.glob("*test*.py")}  - pred : je klic, pak hodnota
+
+humansize_dict = {os.path.splitext(f)[0]:humansize.approximate_size(meta.st_size) for f, meta in metadata_dict.items()
+                                                                                    if meta.st_size > 6000}
+
+vysvetleni k tomuto: metadata_dict je slovnik vytvoreny ze vsech souboru ve slozce, ktere maji v nazvu test
+nasledne se vytvoril humansize_dict tak, ze klicem je nazev souboru bez pripony (bo os.path.splitext() vraci tuple,
+kde je nazev zvlast a pripona zvlast) a hodnota velikost spocitana podle fce, ktera se v te ucebnici pouziva na vice
+mistech. Iteruje se skrz metadata_dict.items(), kde jsou klice nazvy souboru a hodnoty objekty vytvorene pomoci
+os.stat(). meta pak odkazuje prave na objekt vytvoreny timto zpusobem a .st_size je metoda na tomto objektu, pomoci
+ktere se taky zjistuje, jestli je naplnena podminka velikosti vetsi nez 6000.
+"""
+
+uvodni_dict = {"a": 1, "b": 2, "c": 3}
+sranda_dict = {value:key for key, value in uvodni_dict.items()}  # obraceni hodnot na klice a naopak
+print(sranda_dict)
+
+
+# set comprehensions - tvorba mnoziny
+a_set = set(range(10))
+print({x ** 2 for x in a_set})  # zde je vstupem set
+print({x for x in a_set if x % 2 == 0})  # opet lze zaroven filtrovat
+print({2 ** x for x in range(10)})  # zde je vstupem iterable
 
 
 # hvezdicky, slovniky, seznamy
