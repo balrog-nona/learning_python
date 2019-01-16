@@ -75,3 +75,11 @@ def vypis_slovnik(d):
         print("{}:{}".format(klic, hodnota))
         
 vypis_slovnik(slov)
+
+query = "user=nona&database=master&password=parfume=masaki"
+list = query.split("&")
+list = [item.split("=", 1) for item in list]
+a_dict = {item[0]:item[1] for item in list}
+b_dict = dict(list)
+print(a_dict)
+print(b_dict)

@@ -167,13 +167,32 @@ print({x for x in a_set if x % 2 == 0})  # opet lze zaroven filtrovat
 print({2 ** x for x in range(10)})  # zde je vstupem iterable
 
 
-# hvezdicky, slovniky, seznamy
+# string formatting
 slovnik = {"jmeno": "Lucka", "povolani": "drticka odpadu", "zajmy": "kresleni"}
 print("{jmeno} pracuje jako {povolani} a ma rada {zajmy}.".format(**slovnik))
 
 seznam = ["Marek", "Matous", "Lukas", "Jan"]
 print("{0}, {1}, {2} a {3} si sedli a napsali knizku.".format(*seznam))
 
+surname = ["Novak", "Vokoun", "Jagr", "Novakova", "Vokounova", "Jagrova"]
+print("pan {0[2]} + pani {0[5]}".format(surname))  # argumentem je seznam a do neho se da normalne pristupovat
+
+"""
+da se formatovat i pomoci slovniku a klicu; modulu a promennych/fci; tridy a vlastnosti/metod; a kombinaci vseho, pr.:
+import humansize
+import sys
+vypis = "1MB = 1000{0.modules[humansize].SUFFIXES[1000][0]".format(sys)
+vysvetleni tohoto je v Dive into python v kap 4.4.1.
+
++
+FORMAT SPECIFIER
+"{0:.1f} {1}".format(698.24, "GB")
+:.1f upresnuje, jak ma byt dosazovana hodnota formatovana. Dovoli pridat vycpavku z 0 nebo mezer, ridit pocet dese-
+tinnych mist i konvertovat cisla do jine soustavy (sestnactkove apod.)
+: je zacatek specifikatoru a .1 je specifikator - zaokrouhli na nejblizsi desetiny, tj. zobrazi 1 desetinne misto
+f znamena cislo s pevnou radovou carkou
+tento kod vypise misto 698.24 jen 698.2
+"""
 
 # yield/generators
 def create_generator():
