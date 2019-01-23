@@ -125,7 +125,57 @@ ke skupinam, ktere se vytvorily behem analyzy, se da prispupovat metodou groups(
 """
 # print(phone_Pattern.search("800-555-1212-1234").groups()) nebude fungovat, bo regularni vyraz nemysli na klapku
 
-phone_Pattern = re.compile(r'^(\d{3})-(\d{3})-(\d{4})-(\d+)$')
+phone_Pattern = re.compile(r'^(\d{3})-(\d{3})-(\d{4})-(\d+)$')  # + je jedna nebo vice
 print(phone_Pattern.search("800-555-1212-1234").groups())
 # print(phone_Pattern.search("800 555 1212 1234").groups()) vyraz nepocita s tim, ze by cisla byly oddelene jinak nez -
 # print(phone_Pattern.search("800-555-1212").groups())  vyraz vyzaduje cislo i s klapkou
+
+# vyraz myslici i na ruzne oddelovace telefonniho cisla
+phone_Pattern = re.compile(r'^(\d{3})\D+(\d{3})\D+(\d{4})\D+(\d+)$')
+print(phone_Pattern.search("800-555-1212-1234").groups(), 78)
+print(phone_Pattern.search("800 555 1212 1234").groups(), 45)
+# print(phone_Pattern.search("80055512121234").groups(), 12) nefunguje, bo se pozaduji oddelovace
+# print(phone_Pattern.search("800-555-1212").groups(), 23) nefunguje, bo se pozaduje klapka(dalsi cisla)
+
+# vyraz bez oddelovacu a klapky
+phone_Pattern = re.compile(r'^(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
+print(phone_Pattern.search("80055512121234").groups(), 11)
+print(phone_Pattern.search("800.555.1212 x1234").groups(), 15)
+print(phone_Pattern.search("800-555-1212").groups(), 26)
+# print(phone_Pattern.search("(800)555-1212 x1234").groups(), 10) nefunguje, bo se vyzaduje na zacatku hned cislo
+
+# vyraz bez pocatecnich znaku
+phone_Pattern = re.compile(r'^\D*(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
+"""
+vyraz si nebude pamatovat eventualni pocatecni nenumericke znaky, bo to prvni \D* neno v zavorce, zapamatuje si az
+prvni numerickou skupinu
+"""
+print(phone_Pattern.search("(800) 555 1212 ext. 1234").groups(), 17)
+print(phone_Pattern.search("800-555-1212").groups(), 22)  # sanity check, ze se nerozbilo nic, co drive fungovalo
+# print(phone_Pattern.search("work 1-(800) 555.1212 #1234").groups(), 12)
+"""
+to vyse nefunguje, bo se to zaseklo na 1. regularni vyraz predpokladal, ze vsechny znaky pred skutecnym tel. cisledm
+budou nenumericke - work a mezera je v poradku, ale pak je 1 a pomlcka, s cimz vyraz nepocita a vyzaduje trojici cisel
+"""
+
+# vyraz, ktery se neukotvuje na zacatek retezce - finalni verze reseni
+phone_Pattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
+print(phone_Pattern.search("work 1-(800) 555.1212 #1234").groups(), 12)  # sam si najde prvni trojici cisel
+print(phone_Pattern.search("800-555-1212").groups(), 2)  # sanity check
+print(phone_Pattern.search("80055512121234").groups(), 32)
+
+# viceslovna varianta finalniho reseni
+phone_Pattern = re.compile(r"""
+                        # nevazat na zacatek retezce - cislo muze zacit kdekoli
+(\d{3})                 # cislo oblasti ma 3 cislice, napr. 800
+\D*                     # nepovinny oddelovac - libovolny pocet nenumerickych znaku
+(\d{3})                 # cislo hlavni linky ma 3 cislice, napr. 555
+\D*                     # nepovinny oddelovac
+(\d{4})                 # zbytek cisla ma 4 cislice, napr. 1234
+\D*                     # nepovinny oddelovac
+(\d*)                   # nepovinna klapka - libovolny pocet cislic
+$                       # konec retezce
+""", re.VERBOSE)
+
+print(phone_Pattern.search("work 1-(800) 555.1212 #1234").groups(), 100)
+print(phone_Pattern.search("800-555-1212").groups(), 110)
