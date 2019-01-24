@@ -179,3 +179,10 @@ $                       # konec retezce
 
 print(phone_Pattern.search("work 1-(800) 555.1212 #1234").groups(), 100)
 print(phone_Pattern.search("800-555-1212").groups(), 110)
+
+# porovnani dvou metod zapisu regularniho vyrazu
+pattern = '^(\d{3})\D*(\d{3})\D*(\d{4})$'
+print(re.search(pattern, '800.555.1212').groups(), 44)
+
+pattern = re.compile(r'^(\d{3})\D*(\d{3})\D*(\d{4})$')
+print(pattern.search('800.555.1212').groups(), 33)
