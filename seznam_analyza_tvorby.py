@@ -18,7 +18,7 @@ print("kopirovani prirazenim\n{0} {1}".format(x, id(x)))  # obe promenne odkazuj
 print(y, id(y))
 
 
-# 2. kopirovani slicem - velmi bezne
+# 2. kopirovani slicem-velmi bezne
 a = [4, 4, 4, 4, 4]
 b = a[:]
 b.append(7)
