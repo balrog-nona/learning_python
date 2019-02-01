@@ -137,7 +137,7 @@ def stisk_klavesy(symbol, modifikatory):
     if symbol == key.S:
         stisknute_klavesy.add(("dolu", 0))
     """
-    fce v pythonu nemusi nic vracet - kdyz neobsahuje return, tak automaticky vraci Nona, ale telo fce se vzdy
+    fce v pythonu nemusi nic vracet - kdyz neobsahuje return, tak automaticky vraci None, ale telo fce se vzdy
     provede a provedou se zmeny, ktere telo fce udelalo. Ale s return stisknute_klavesy to taky funguje.
     """
 

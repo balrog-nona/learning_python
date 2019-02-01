@@ -13,6 +13,7 @@ window = pyglet.window.Window(width=900, height=900)
 batch = pyglet.graphics.Batch()  # collection for all sprites
 batch.draw()  # drawing all the sprites at once
 
+# coordinates = set() nechci mit jako globalni promennou bo lodi bude vice a kazda musi mit vlastni
 
 class Spaceship:
     def __init__(self):
@@ -30,17 +31,26 @@ class Spaceship:
         self.sprite = pyglet.sprite.Sprite(image, batch=batch)
 
     def tick(self):  # for moving, rotation, managing the ship
-
+        """
+        nemuzu tu mit definovane fce na pressed a released keys bo bych tu metodu nemela jak registrovat dole
+        na push_handlers
+        Kdyz lod bude ovladana skrze metodu, jak sem natahat vsechny potrebne fce? Nebo ty fce budou naopak nejak
+        volat metodu na objektu?
+        """
 
 
 def pressed_keys(self, symbol):
+    # coordinates = set() nemuzu mit bo by se to pokazde vynulovalo
     if symbol == key.UP:
         self.coordinates.add("up")
     if symbol == key.LEFT:
-        coordinates.add("left")
+        self.add("left")
     if symbol == key.RIGHT:
-        coordinates.add("right")
-    return coordinates
+        self.coordinates.add("right")
+    return self.coordinates
+    """
+    toto se self.coordinates je asi blbost bo fce si nepamatuje, na kterem objektu bezi, ne?
+    """
 
 
 def released_keys(symbol):
