@@ -186,3 +186,13 @@ print(re.search(pattern, '800.555.1212').groups(), 44)
 
 pattern = re.compile(r'^(\d{3})\D*(\d{3})\D*(\d{4})$')
 print(pattern.search('800.555.1212').groups(), 33)
+
+
+# vice k nahradam v regularnich vyrazech
+a = re.search('[abc]', 'Mark')  # obsahuje Mark a, b nebo c?
+print(a)  # ano, obsahuje
+d = re.sub('[abc]', 'o', 'Mark')  # najdi a, b nebo c a nahrad ho o
+print(d)
+e = re.sub('[abc]', 'o', 'rock')
+print(e)
+print(re.sub('[abc]', 'o', 'caps'))  # fce sub nahrazuje vsechny shody, nejen prvni!
