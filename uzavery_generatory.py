@@ -110,7 +110,7 @@ def build_match_and_apply_functions(pattern, search, replace):  # vytvari fce dy
         return re.sub(search, replace, word)
     return (matches_rule, apply_rule)
 
-
+# lomitko dole za patterns zajisti, aby to mohl vyraz pokracovat na dalsim radku; lomitko musi byt posledni znak
 patterns = \
     (
         ('[sxz]$',           '$',   'es'),
