@@ -6,8 +6,11 @@ import math
 objects = list()  # for every object in the game
 
 ROTATION_SPEED = 4  # radians per second
+ACCELERATION = 1.5
+WIDTH = 900
+HEIGHT = 900
 
-window = pyglet.window.Window(width=900, height=900)
+window = pyglet.window.Window(width=WIDTH, height=HEIGHT)
 
 
 batch = pyglet.graphics.Batch()  # collection for all sprites
@@ -17,30 +20,38 @@ coordinates = set()
 
 
 class Spaceship:
-    def __init__(self, x, y, file):
-        self.x = x
-        self.y = y
+    def __init__(self, file):
+        self.x = WIDTH // 2
+        self.y = HEIGHT // 2
         self.x_speed = 200
         self.y_speed = 200
         self.rotation = 0
-
-    def picture(self, file):  # prendat do init?
         image = pyglet.image.load(file)
         image.anchor_x = image.width // 2
         image.anchor_y = image.height // 2
         self.sprite = pyglet.sprite.Sprite(image, batch=batch)
 
     def tick(self):  # for moving, rotation, managing the ship
+        # basic movement
+        if "right" in coordinates:
+        if "left" in coordinates:
+        if "forward" in coordinates:
+        self.x = self.x + dt * self.x_speed
+        self.y = self.y + dt * self.y_speed
+        self.rotation = self.rotation + dt * ROTATION_SPEED
+        # moving with acceleration
+        self.x_speed += dt * ACCELERATION * math.cos(self.rotation)
+        self.y_speed += dt * ACCELERATION * math.sin(self.rotation)
         """
         toto si musim dat pak do obnov stav a zaevidovat do neceho, co se vola periodicky
-        metoda se podiva na coordinates a podle toho pohne lodi
         vytvorit pyglet.clock.schedule(metoda) - a tam se navaze metoda
+        neumim vytvorit logiku posunu a otaceni lodi - v pongu se nic netocilo kolem sve osy...
         """
 
 
 def pressed_keys(symbol):
     if symbol == key.UP:
-        coordinates.add("up")
+        coordinates.add("forward")
     if symbol == key.LEFT:
         coordinates.add("left")
     if symbol == key.RIGHT:
@@ -50,7 +61,7 @@ def pressed_keys(symbol):
 
 def released_keys(symbol):
     if symbol == key.UP:
-        coordinates.discard("up")
+        coordinates.discard("forward")
     if symbol == key.LEFT:
         coordinates.discard("left")
     if symbol == key.RIGHT:
@@ -58,15 +69,14 @@ def released_keys(symbol):
     return coordinates
 
 
-ship1 = Spaceship(x=100,y=200,file="NAZEV SOUBORU OBRAZKU")
-ship1.picture(file="NAZEV SOUBORU OBRAZKU")
-
+ship1 = Spaceship(file="NAZEV SOUBORU OBRAZKU")
 objects.append(ship1)
 
 window.push_handlers(
-    on_draw=..., # dodelat nejakou fci a vykresleni objektu
+    on_draw=batch.draw,
     on_key_press=pressed_keys,
     on_key_release=released_keys,
 )
 
+pyglet.clock.schedule(ship1.tick)
 pyglet.app.run()

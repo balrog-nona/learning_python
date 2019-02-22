@@ -93,6 +93,10 @@ v = names[:]
 v = ", ".join(v)
 print(v, type(v))
 
+# unpacking tuple
+for x, y in[(10, 20), (50,60)]:
+    print(x, y)  # vysledkem neni tuple, ale jeji obsah!
+
 
 """
 zajimava knihovna collections - deque kolekce napr.
@@ -181,7 +185,7 @@ print("pan {0[2]} + pani {0[5]}".format(surname))  # argumentem je seznam a do n
 da se formatovat i pomoci slovniku a klicu; modulu a promennych/fci; tridy a vlastnosti/metod; a kombinaci vseho, pr.:
 import humansize
 import sys
-vypis = "1MB = 1000{0.modules[humansize].SUFFIXES[1000][0]".format(sys)
+vypis = "1MB = 1000{0.modules[humansize].SUFFIXES[1000][0]}".format(sys)
 vysvetleni tohoto je v Dive into python v kap 4.4.1.
 
 +
