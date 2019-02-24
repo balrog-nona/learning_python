@@ -29,9 +29,10 @@ class Spaceship:
         image = pyglet.image.load(file)
         image.anchor_x = image.width // 2
         image.anchor_y = image.height // 2
-        self.sprite = pyglet.sprite.Sprite(image, batch=batch)
+        self.sprite = pyglet.sprite.Sprite(image, x=self.x, y=self.y, batch=batch)
+        self.sprite.rotation = self.rotation
 
-    def tick(self):  # for moving, rotation, managing the ship
+    """def tick(self):  # for moving, rotation, managing the ship
         # basic movement
         if "right" in coordinates:
         if "left" in coordinates:
@@ -42,11 +43,12 @@ class Spaceship:
         # moving with acceleration
         self.x_speed += dt * ACCELERATION * math.cos(self.rotation)
         self.y_speed += dt * ACCELERATION * math.sin(self.rotation)
-        """
+        
         toto si musim dat pak do obnov stav a zaevidovat do neceho, co se vola periodicky
         vytvorit pyglet.clock.schedule(metoda) - a tam se navaze metoda
         neumim vytvorit logiku posunu a otaceni lodi - v pongu se nic netocilo kolem sve osy...
-        """
+        
+    """
 
 
 def pressed_keys(symbol):
@@ -69,8 +71,12 @@ def released_keys(symbol):
     return coordinates
 
 
-ship1 = Spaceship(file="NAZEV SOUBORU OBRAZKU")
+ship1 = Spaceship(file="ship.png")
 objects.append(ship1)
+ship1.sprite.scale = 0.3
+
+# ship1.x = 700
+# ship1.sprite.x = ship1.x
 
 window.push_handlers(
     on_draw=batch.draw,
@@ -78,5 +84,5 @@ window.push_handlers(
     on_key_release=released_keys,
 )
 
-pyglet.clock.schedule(ship1.tick)
+# pyglet.clock.schedule(ship1.tick)
 pyglet.app.run()
