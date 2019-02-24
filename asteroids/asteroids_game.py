@@ -1,13 +1,13 @@
 import pyglet
 from pyglet.window import key
-import math
+from math import sin, cos, atan2, sqrt, degrees
 
 
 objects = list()  # for every object in the game
 
-ROTATION_SPEED = 4  # radians per second
+ROTATION_SPEED = 150  # radians per second
 ACCELERATION = 1.5
-WIDTH = 900
+WIDTH = 1200
 HEIGHT = 900
 
 window = pyglet.window.Window(width=WIDTH, height=HEIGHT)
@@ -32,51 +32,49 @@ class Spaceship:
         self.sprite = pyglet.sprite.Sprite(image, x=self.x, y=self.y, batch=batch)
         self.sprite.rotation = self.rotation
 
-    """def tick(self):  # for moving, rotation, managing the ship
-        # basic movement
+    def tick(self, dt):  # for moving, rotation, managing the ship
+        # rotation
         if "right" in coordinates:
+            self.rotation = self.rotation + dt * ROTATION_SPEED
         if "left" in coordinates:
+            self.rotation = self.rotation - dt * ROTATION_SPEED
+        self.sprite.rotation = self.rotation
+        # basic movement
         if "forward" in coordinates:
-        self.x = self.x + dt * self.x_speed
-        self.y = self.y + dt * self.y_speed
-        self.rotation = self.rotation + dt * ROTATION_SPEED
-        # moving with acceleration
+            self.x = self.x + dt * self.x_speed
+            self.y = self.y + dt * self.y_speed
+            # alfa = 90 - degrees(self.sprite.rotation)
+            self.sprite.x = self.x
+            self.sprite.y = self.y
+
+        """# moving with acceleration
         self.x_speed += dt * ACCELERATION * math.cos(self.rotation)
-        self.y_speed += dt * ACCELERATION * math.sin(self.rotation)
-        
-        toto si musim dat pak do obnov stav a zaevidovat do neceho, co se vola periodicky
-        vytvorit pyglet.clock.schedule(metoda) - a tam se navaze metoda
-        neumim vytvorit logiku posunu a otaceni lodi - v pongu se nic netocilo kolem sve osy...
-        
-    """
+        self.y_speed += dt * ACCELERATION * math.sin(self.rotation)"""
 
 
-def pressed_keys(symbol):
+def pressed_keys(symbol, modifiers):
     if symbol == key.UP:
         coordinates.add("forward")
     if symbol == key.LEFT:
         coordinates.add("left")
     if symbol == key.RIGHT:
         coordinates.add("right")
-    return coordinates
+    return coordinates  # voluntary
 
 
-def released_keys(symbol):
+def released_keys(symbol, modifiers):
     if symbol == key.UP:
         coordinates.discard("forward")
     if symbol == key.LEFT:
         coordinates.discard("left")
     if symbol == key.RIGHT:
         coordinates.discard("right")
-    return coordinates
+    return coordinates  # voluntary
 
 
 ship1 = Spaceship(file="ship.png")
 objects.append(ship1)
 ship1.sprite.scale = 0.3
-
-# ship1.x = 700
-# ship1.sprite.x = ship1.x
 
 window.push_handlers(
     on_draw=batch.draw,
@@ -84,5 +82,5 @@ window.push_handlers(
     on_key_release=released_keys,
 )
 
-# pyglet.clock.schedule(ship1.tick)
+pyglet.clock.schedule(ship1.tick)
 pyglet.app.run()
