@@ -94,7 +94,7 @@ v = ", ".join(v)
 print(v, type(v))
 
 # unpacking tuple
-for x, y in[(10, 20), (50,60)]:
+for x, y in[(10, 20), (50, 60)]:
     print(x, y)  # vysledkem neni tuple, ale jeji obsah!
 
 
@@ -141,7 +141,7 @@ kazdeho z nich a pak k nemu vytvori absolutni cestu. Vrati seznam n-tic.
 
 
 # dictionary comprehension - misto seznamu popisuje vytvoreni slovniku(pomoci iteratoru)
-new_dict = {i:i ** 2 for i in [2, 3, 4, 5]}
+new_dict = {i: i ** 2 for i in [2, 3, 4, 5]}
 print(new_dict)
 """
 jinak to lze navazat i na slozitejsi konstrukce, muze to vypadat i totalne hardcore, jako treba v Dive into Python 3,
@@ -160,7 +160,7 @@ ktere se taky zjistuje, jestli je naplnena podminka velikosti vetsi nez 6000.
 """
 
 uvodni_dict = {"a": 1, "b": 2, "c": 3}
-sranda_dict = {value:key for key, value in uvodni_dict.items()}  # obraceni hodnot na klice a naopak
+sranda_dict = {value: key for key, value in uvodni_dict.items()}  # obraceni hodnot na klice a naopak
 print(sranda_dict)
 
 
@@ -180,8 +180,8 @@ print("{0}, {1}, {2} a {3} si sedli a napsali knizku.".format(*seznam))
 
 surname = ["Novak", "Vokoun", "Jagr", "Novakova", "Vokounova", "Jagrova"]
 print("pan {0[2]} + pani {0[5]}".format(surname))  # argumentem je seznam a do neho se da normalne pristupovat
-
 """
+0 odkazuje na prvni argument u format
 da se formatovat i pomoci slovniku a klicu; modulu a promennych/fci; tridy a vlastnosti/metod; a kombinaci vseho, pr.:
 import humansize
 import sys
