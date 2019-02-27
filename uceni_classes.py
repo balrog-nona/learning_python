@@ -86,24 +86,24 @@ for i in range(10):
     print(desetistenna.hod(), end=" ")
 
 
-class Bojovnik:
+class Bojovnik:  # nesoukrome metody se automaticky dedi
 
     def __init__(self, jmeno, zivot, utok, obrana, hraci_kostka):
-        self.__jmeno = jmeno  # atributy jsou neverejne
-        self.__zivot = zivot
-        self.__max_zivot = zivot
-        self.__utok = utok
-        self.__obrana = obrana
-        self.__kostka = hraci_kostka  # instance kostky - tridy kostka
-        self.__zprava = ""
+        self._jmeno = jmeno  # vnitrni atribut
+        self._zivot = zivot
+        self._max_zivot = zivot
+        self._utok = utok
+        self._obrana = obrana
+        self._kostka = hraci_kostka  # instance kostky - tridy kostka
+        self.__zprava = ""  # soukromy atribut
 
     def __str__(self):
-        return str(self.__jmeno)
+        return str(self._jmeno)
 
     def __repr__(self):  # k dymanickemu provadeni kodu
-        return str(self.__jmeno)
+        return str(self._jmeno)
 
-    def __nastav_zpravu(self, zprava):  # privatni metoda, zase __
+    def _nastav_zpravu(self, zprava):  # soukroma metoda s __ by nebzla k dispozici v dedeni; vnitrni metoda _ ano
         self.__zprava = zprava
 
     def vrat_posledni_zpravu(self):  # nastavovani zprav dle tutorialu - podle me zbytecne slozite
@@ -111,31 +111,31 @@ class Bojovnik:
 
     @property  # dekorator, meni metodu na vlastnost??
     def nazivu(self):
-        return self.__zivot > 0  # posoudi a vrati True nebo False
+        return self._zivot > 0  # posoudi a vrati True nebo False
 
     def graficky_zivot(self):  # vykresli procentualni vysi zivota
         celkem = 20
-        pocet = int(self.__zivot / self.__max_zivot * celkem)
+        pocet = int(self._zivot / self._max_zivot * celkem)
         if pocet == 0 and self.nazivu:
             pocet = 1
         return "[{}{}]".format("#" * pocet, " " * (celkem - pocet))
 
     def bran_se(self, uder):
-        zraneni = uder - (self.__obrana + self.__kostka.hod())  # objekt kostka ma k dispozici svoje metody
+        zraneni = uder - (self._obrana + self._kostka.hod())  # objekt kostka ma k dispozici svoje metody
         if zraneni > 0:
-            zprava = "{} utrpel poskozeni {} hp.".format(self.__jmeno, zraneni)
-            self.__zivot -= zraneni
-            if self.__zivot < 0:
-                self.__zivot = 0
+            zprava = "{} utrpel poskozeni {} hp.".format(self._jmeno, zraneni)
+            self._zivot -= zraneni
+            if self._zivot < 0:
+                self._zivot = 0
                 zprava = zprava[:-1] + " a zemrel."
         else:
-            zprava = "{} odrazil utok.".format(self.__jmeno)
-        self.__nastav_zpravu(zprava)
+            zprava = "{} odrazil utok.".format(self._jmeno)
+        self._nastav_zpravu(zprava)
 
     def utoc(self, oponent):
-        uder = self.__utok + self.__kostka.hod()
-        zprava = "{} utoci s uderem za {} hp.".format(self.__jmeno, uder)
-        self.__nastav_zpravu(zprava)
+        uder = self._utok + self._kostka.hod()
+        zprava = "{} utoci s uderem za {} hp.".format(self._jmeno, uder)
+        self._nastav_zpravu(zprava)
         oponent.bran_se(uder)
 
 
@@ -181,8 +181,8 @@ class Arena:
     def zapas(self):
         import random as _random
         print("Vitejte v arene!")
-        print("Dnes se utkaji {} a {}".format(self.__bojovnik1,self.__bojovnik2))
-        print("Zapad muze zacit...", end=" ")
+        print("Dnes se utkaji {} a {}".format(self.__bojovnik1, self.__bojovnik2))
+        print("Zapas muze zacit...", end=" ")
         # prohozeni bojovniku
         if _random.randint(0, 1):  # WOW!
             self.__bojovnik1, self.__bojovnik2 = self.__bojovnik2, self.__bojovnik1
@@ -199,8 +199,35 @@ class Arena:
                 self.__vypis_zpravu(self.__bojovnik1.vrat_posledni_zpravu())
             print("")
 
+
+class Mag(Bojovnik):  # nema pristup k atributum z Bojovnika, ktere jsou soukrome, pouze k vnitrnim
+
+    def __init__(self, jmeno, zivot, utok, obrana, hraci_kostka, mana, magicky_utok):
+        super().__init__(jmeno, zivot, utok, obrana, hraci_kostka)
+        self.__mana = mana
+        self.__max_mana = mana
+        self.__magicky_utok = magicky_utok
+
+    def utoc(self, oponent):  # prekryti metody ze superclass
+        # mana neni naplnena
+        if self.__mana < self.__max_mana:
+            self.__mana += 10
+            if self.__mana > self.__max_mana:
+                self.__mana = self.__max_mana
+            super().utoc(oponent)
+        # magicky utok
+        else:
+            uder = self.__magicky_utok + self._kostka.hod()
+            zprava = "{} pouzil magii za {} hp.".format(self._jmeno, uder)
+            self._nastav_zpravu(zprava)
+            self.__mana = 0
+            oponent.bran_se(uder)
+
+
+
+
 kostka = Kostka(pocet_sten=10)
 zalgoren = Bojovnik(jmeno="Zalgoren", zivot=100, utok=20, obrana=10, hraci_kostka=kostka)
-shadow = Bojovnik(jmeno="Shadow", zivot=60, utok=18, obrana=15, hraci_kostka=kostka)
-arena = Arena(bojovnik1=zalgoren, bojovnik2=shadow, kostka=kostka)
+gandalf = Mag(jmeno="Galdalf", zivot=60, utok=15, obrana=12, hraci_kostka=kostka, mana=30, magicky_utok=45)
+arena = Arena(bojovnik1=zalgoren, bojovnik2=gandalf, kostka=kostka)
 arena.zapas()
