@@ -113,19 +113,22 @@ class Bojovnik:  # nesoukrome metody se automaticky dedi
     def nazivu(self):
         return self._zivot > 0  # posoudi a vrati True nebo False
 
-    def graficky_zivot(self):  # vykresli procentualni vysi zivota
+    def graficky_ukazatel(self, aktualni, maximalni):  # vykresli procentualni vysi zivota
         celkem = 20
-        pocet = int(self._zivot / self._max_zivot * celkem)
+        pocet = int(aktualni / maximalni * celkem)
         if pocet == 0 and self.nazivu:
             pocet = 1
         return "[{}{}]".format("#" * pocet, " " * (celkem - pocet))
+
+    def graficky_zivot(self):
+        return self.graficky_ukazatel(self._zivot, self._max_zivot)
 
     def bran_se(self, uder):
         zraneni = uder - (self._obrana + self._kostka.hod())  # objekt kostka ma k dispozici svoje metody
         if zraneni > 0:
             zprava = "{} utrpel poskozeni {} hp.".format(self._jmeno, zraneni)
             self._zivot -= zraneni
-            if self._zivot < 0:
+            if self._zivot <= 0:
                 self._zivot = 0
                 zprava = zprava[:-1] + " a zemrel."
         else:
@@ -137,6 +140,8 @@ class Bojovnik:  # nesoukrome metody se automaticky dedi
         zprava = "{} utoci s uderem za {} hp.".format(self._jmeno, uder)
         self._nastav_zpravu(zprava)
         oponent.bran_se(uder)
+
+
 
 
 kostka = Kostka(pocet_sten=10)
@@ -166,12 +171,19 @@ class Arena:
         else:
             _subprocess.call(["clear"])
 
+    def __vypis_bojovnika(self, bojovnik):
+        print(bojovnik)
+        print("Zivot: {}".format(bojovnik.graficky_zivot()))
+        if isinstance(bojovnik, Mag):
+            print("Mana: {}".format(bojovnik.graficka_mana()))
+
     def __vykresli(self):
         self.__vycisti_obrazovku()
         print("--------------ARENA-----------------\n")
-        print("Zdravi bojovniku: \n")
-        print("{} {}".format(self.__bojovnik1, self.__bojovnik1.graficky_zivot()))
-        print("{} {}".format(self.__bojovnik2, self.__bojovnik2.graficky_zivot()))
+        print("Bojovnici: \n")
+        self.__vypis_bojovnika(self.__bojovnik1)
+        self.__vypis_bojovnika(self.__bojovnik2)
+        print("")
 
     def __vypis_zpravu(self, zprava):
         import time as _time
@@ -223,11 +235,20 @@ class Mag(Bojovnik):  # nema pristup k atributum z Bojovnika, ktere jsou soukrom
             self.__mana = 0
             oponent.bran_se(uder)
 
-
+    def graficka_mana(self):
+        return self.graficky_ukazatel(self.__mana, self.__max_mana)
 
 
 kostka = Kostka(pocet_sten=10)
 zalgoren = Bojovnik(jmeno="Zalgoren", zivot=100, utok=20, obrana=10, hraci_kostka=kostka)
 gandalf = Mag(jmeno="Galdalf", zivot=60, utok=15, obrana=12, hraci_kostka=kostka, mana=30, magicky_utok=45)
+
+# funkce s dedenim - vraci True/False
+if isinstance(gandalf, Mag):
+    print("{} je mag.".format(gandalf))
+if issubclass(Mag, Bojovnik):
+    print("Mag je subclass Bojovnika.")
+
 arena = Arena(bojovnik1=zalgoren, bojovnik2=gandalf, kostka=kostka)
 arena.zapas()
+
