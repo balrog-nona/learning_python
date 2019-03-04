@@ -117,13 +117,13 @@ ptacisko.vypis()
 
 # Clovek a Pythonista
 class Clovek:  # tuto tridu jsem jen opsala ze zadani
-
-    jmeno = None  # nechapu, nedovoli mi to vytvorit cloveka bez jmena...
-    vek = None
-    unava = 0  # toto vleze automaticky do self.unava?
+    # ty kraviny 3 promenne by tu vubec nemusely byt
+    jmeno = None  # obsolentni
+    vek = None  # obsolentni
+    unava = 0  # toto vleze automaticky do self.unava, bo to bude v metode
 
     # konstruktor
-    def __init__(self, jmeno, vek):
+    def __init__(self, jmeno, vek):  # prepisuje defaultni moznost, proto nebere to z promennych vyse
         self.jmeno = jmeno
         self.vek = vek
 

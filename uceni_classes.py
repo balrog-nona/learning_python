@@ -109,7 +109,7 @@ class Bojovnik:  # nesoukrome metody se automaticky dedi
     def vrat_posledni_zpravu(self):  # nastavovani zprav dle tutorialu - podle me zbytecne slozite
         return self.__zprava
 
-    @property  # dekorator, meni metodu na vlastnost??
+    @property  # dekorator, zde zrejme meni metodu na vlastnost
     def nazivu(self):
         return self._zivot > 0  # posoudi a vrati True nebo False
 
