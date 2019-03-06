@@ -212,3 +212,95 @@ trojuhelnik.obsah()
 
 obsah_stromu = obdelnik.obsah + (4 * trojuhelnik.obsah)
 print("Obsah stromu je {} cm^2.".format(obsah_stromu))
+
+
+# lekce 9
+# prevod stupne a radiany mezi sebou - cviceni ke statice
+class Prevod:
+
+    @staticmethod
+    def na_stupne(radian):  # stacilo math.degrees()
+        return radian * (180 / math.pi)
+
+
+    @staticmethod
+    def na_radian(stupne):  # stacilo math.radians()
+        return stupne * (math.pi / 180)
+
+
+print("6.28 radianu na stupne {}".format(Prevod.na_stupne(6.28)))
+print("90 stupnu na radiany {}".format(Prevod.na_radian(90)))
+
+
+# tovarna na cukrovi
+class Cukrarna:
+
+    @staticmethod
+    def bananove():
+        barva = "zluta"
+        tvar = "kulaty"
+        vaha = 20
+        return barva, tvar, vaha
+
+    @staticmethod
+    def jahodove():
+        barva = "cervena"
+        tvar = "kulaty"
+        vaha = 15
+        return barva, tvar,vaha
+
+    @staticmethod
+    def cokoladove():
+        barva = "hneda"
+        tvar = "hranaty"
+        vaha =25
+        return barva, tvar, vaha
+
+for i in range(4):
+    print("Cukrovi barvy {}, tvaru {} a vahy {}g".format(*Cukrarna.bananove()))
+for i in range(4):
+    print("Cukrovi barvy {}, tvaru {} a vahy {}g".format(*Cukrarna.jahodove()))
+for i in range(4):
+    print("Cukrovi barvy {}, tvaru {} a vahy {}g".format(*Cukrarna.cokoladove()))
+"""
+v jejich reseni je to jinak poskladane, bo to mel byt priklad na navrhovy vzor Factory, coz me se vubec 
+nepovedlo implementovat
+"""
+
+
+# navrhovy vzor Singleton
+class Databaze:
+
+    # instance, ktera se bude vracet
+    __instance = None
+    """
+    toto jsem nasla na netu a trochu upravila, ale nefungovalo mi to spravne dle zadani pro a, b i c
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            print("Vytvarim instanci.")
+            self.jmeno = "SQLite"
+            cls._instance = object.__new__(cls, *args, **kwargs)
+        else:
+            print("Instance uz existuje.")
+        return cls._instance
+    """
+
+    def __new__(self):  # tohle je opsane dle spravneho reseni
+        if not Databaze.__instance:
+            print("Vytvarim instanci.")
+            self.jmeno = "SQLite"
+            Databaze.__instance = self
+        else:
+            print("Instance jiz existuje.")
+        return Databaze.__instance
+
+
+a = Databaze()  # jak to,ze to neni instance?
+b = Databaze()  # proc mi to dole haze, ze se to rovna tride a ne ze je to instance??
+c = Databaze()
+
+
+print("Jmeno databaze a {}, b {}, c {}".format(a.jmeno, b.jmeno, c.jmeno))
+print("Je a instance Databaze? ", isinstance(a, Databaze))  # what the hell
+print("Je b instance Databaze? ", isinstance(b, Databaze))
+print("Je c instance Databaze? ", c is Databaze)
