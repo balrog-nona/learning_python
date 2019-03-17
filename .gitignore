@@ -8,3 +8,5 @@ __pycache__/
 venv/
 .idea/
 uceni_soubory/pisne/
+cycling_calendar/counting_backwards_2016/*.json
+cycling_calendar/counting_backwards_2016/calendar_access.py
