@@ -37,6 +37,7 @@ events = events_result.get('items', [])
 # processing event["description"] using regular expressions - counting total kms
 initial_sum = 11585.0  # total kms up to start_point (27.2.2016)
 
+
 def count_kms(iterable):
     """
     Function takes iterable of dicts, searches for number of kms in the description section of the event in each dict,
@@ -45,19 +46,20 @@ def count_kms(iterable):
     :return: total count of kms in the whole history
     """
     part_count = 0
-    pattern = '\d+[\.?\,?]?\d+?\s?[kK]'
+    pattern = '\d+\.?\d+?\s?[kK]'
     for item in iterable:
-        if "rotoped" in item["summary"]:
+        if "rotoped" in item["summary"] and "description" in item.keys():
             comment_string = re.sub(",", ".", item["description"])
-            kms = re.search(pattern, comment_string).group().lower()
-            kms = kms[:kms.find("k")]
-            kms = float(kms.strip())
-            part_count += kms
+            if re.search(pattern, comment_string):
+                kms = re.search(pattern, comment_string).group().lower()
+                kms = kms[:kms.find("k")]
+                kms = float(kms.strip())
+                part_count += kms
     return part_count + initial_sum
+
 
 total = count_kms(events)
 
-"""
 # creating an event with the result - total kms
 EVENT = {
     "summary": "rotoped soucet",
@@ -67,4 +69,3 @@ EVENT = {
 }
 
 e = SERVICE.events().insert(calendarId=calendar_ID, body=EVENT).execute()  # notification can be made as well
-"""
