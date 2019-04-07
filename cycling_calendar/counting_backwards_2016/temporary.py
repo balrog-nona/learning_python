@@ -1,4 +1,6 @@
 import re
+import datetime
+
 """
 string1 = "15 km"
 string2 = "\n16 x 30/50s\n34.2 km"
@@ -55,5 +57,9 @@ dicts = {"summary": "rotoped", "date": "now"}
 if "description" in dicts.keys():
     print("je tam")
 
+day = datetime.date.today()
+day_string = str(day)
+print(day_string)
+print(type(day_string))
 
 

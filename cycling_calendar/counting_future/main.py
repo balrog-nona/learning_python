@@ -4,10 +4,11 @@ from httplib2 import Http  # HTTP object for signed requests
 from oauth2client import file, client, tools  # for token storage
 import re
 import calendar_access
+import datetime
 
 """
-This script counts how many kms I did on exercise bike counting from 27. 2. 2016 + creates an event on 28.2.2019 to 
-my calendar with the total sum of kms.
+This script counts how many kms I did on exercise bike in my whole life using "rotoped soucet" event in my calendar + 
+creates an event on the last day of every month to my calendar with the total sum of kms.
 
 Video about authorization:
 https://www.youtube.com/watch?v=h-gBeC9Y9cE
@@ -26,16 +27,17 @@ if not credz or credz.invalid:  # if the credentials are missing or invalid
 
 SERVICE = build("calendar", "v3", http=credz.authorize(Http()))  # creating an endpoint to that API; last par signes
 
-# Call the Calendar API
-start_point = "2016-02-27T10:00:00Z"  # in the format necessary according to the documentation
-end_point = "2019-02-28T23:00:00Z"  # counting just until 28.2.2019
-calendar_ID = calendar_access.ID  # calendar Cviceni
-events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=end_point, timeMin=start_point,
-                                      maxResults=10000, singleEvents=True, orderBy='startTime').execute()
-events = events_result.get('items', [])
+# creating dates to use in calling the calendar API
+first_day = datetime.date.today().replace(day=1).isoformat()  # first day of the current month
+last_day = datetime.date.today().isoformat()  # last day of the current month
 
-# processing event["description"] using regular expressions - counting total kms
-initial_sum = 11585.0  # total kms up to start_point (27.2.2016)
+# Calling the Calendar API
+first_day = first_day + "T01:00:00Z"  # the format necessary according to the documentation
+last_day = last_day + "T23:50:00Z"
+calendar_ID = calendar_access.ID  # calendar Cviceni
+events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=last_day, timeMin=first_day,
+                                      maxResults=60, singleEvents=True, orderBy='startTime').execute()
+events = events_result.get('items', [])
 
 
 def count_kms(iterable):
@@ -43,9 +45,9 @@ def count_kms(iterable):
     Function takes iterable of dicts, searches for number of kms in the description section of the event in each dict,
     cuts the word "km" and converts the string of kms into float.
     :param iterable: events from calendar
-    :return: total count of kms in the whole history
+    :return: total count of kms for the current month
     """
-    part_count = 0
+    month_count = 0
     pattern = '\d+\.?\d+?\s?[kK]'
     for item in iterable:
         if "rotoped" in item["summary"] and "description" in item.keys():
@@ -54,20 +56,27 @@ def count_kms(iterable):
                 kms = re.search(pattern, comment_string).group().lower()
                 kms = kms[:kms.find("k")]
                 kms = float(kms.strip())
-                print(kms)
-                part_count += kms
-                print(part_count)
-    return part_count + initial_sum
+                # print(kms)
+                month_count += kms
+                # print(month_count)
+    return month_count
 
 
-total = count_kms(events)
+this_month = count_kms(events)
+
+
+
+total = this_month + sum_up_to_last_month
 
 # creating an event with the result - total kms
+next_month = datetime.date.today().month + 1  # type int
+next_month_first_day = datetime.date.today().replace(month=next_month, day=1).isoformat()
+
 EVENT = {
     "summary": "rotoped soucet",
     "description": "{} km".format(total),
-    "start": {"date": "2019-02-28"},
-    "end": {"date": "2019-03-01"}
+    "start": {"date": datetime.date.today().isoformat()},
+    "end": {"date": next_month_first_day}
 }
 
 e = SERVICE.events().insert(calendarId=calendar_ID, body=EVENT).execute()  # notification can be made as well
