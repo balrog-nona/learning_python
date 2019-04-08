@@ -7,8 +7,8 @@ import calendar_access
 import datetime
 
 """
-This script counts how many kms I did on exercise bike in my whole life using "rotoped soucet" event in my calendar + 
-creates an event on the last day of every month to my calendar with the total sum of kms.
+This script counts how many kms I did on exercise bike during a particular month + using "rotoped soucet" event in my 
+calendar creates an event on the last day of every month to my calendar with the total sum of kms in my whole history.
 
 Video about authorization:
 https://www.youtube.com/watch?v=h-gBeC9Y9cE
@@ -37,7 +37,7 @@ last_day = last_day + "T23:50:00Z"
 calendar_ID = calendar_access.ID  # calendar Cviceni
 events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=last_day, timeMin=first_day,
                                       maxResults=60, singleEvents=True, orderBy='startTime').execute()
-events = events_result.get('items', [])
+events = events_result.get('items', [])  # events from the current month
 
 
 def count_kms(iterable):
@@ -64,6 +64,16 @@ def count_kms(iterable):
 
 this_month = count_kms(events)
 
+# adding the month count to the whole history count
+# 1. accessing the last event called "rotoped soucet" from previous month
+previous_month = datetime.date.today().month -1
+last_day_previous_month =
+# tohle se da obejit, ze nasosam vsechno z minuleho mesice a jen vyberu rotoped soucet, ale neni to elegantni...
+
+
+events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=first_day, timeMin=,
+                                      maxResults=60, singleEvents=True, orderBy='startTime').execute()
+events = events_result.get('items', [])  # events from the current month
 
 
 total = this_month + sum_up_to_last_month
