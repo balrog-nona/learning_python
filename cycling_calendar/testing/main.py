@@ -39,14 +39,19 @@ events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=last_day, 
                                       maxResults=60, singleEvents=True, orderBy='startTime').execute()
 events = events_result.get('items', [])  # events from the current month
 
+# discarting "rotoped soucet" from the list - absolutely unnessesary...
+for event in events:
+    print(event)
+    if "rotoped soucet" in event["summary"]:
+        sum_up_to_last_month = event["description"]
+        sum_up_to_last_month = sum_up_to_last_month[:sum_up_to_last_month.find("k")]
+        sum_up_to_last_month = float(sum_up_to_last_month.strip())
+        event_index = events.index(event)
+del events[event_index]
 
+
+"""
 def count_kms(iterable):
-    """
-    Function takes iterable of dicts, searches for number of kms in the description section of the event in each dict,
-    cuts the word "km" and converts the string of kms into float.
-    :param iterable: events from calendar
-    :return: total count of kms for the current month
-    """
     month_count = 0
     pattern = '\d+\.?\d+?\s?[kK]'
     for item in iterable:
@@ -64,18 +69,17 @@ def count_kms(iterable):
 
 this_month = count_kms(events)
 
-""""
-Accessing the last event called "rotoped soucet" from previous month
-This event has a start date last day of previous month and an end date first day of current month
-"""
+# adding the month count to the whole history count
+# 1. accessing the last event called "rotoped soucet" from previous month
 previous_month = datetime.date.today().month -1
 last_day_previous_month =
-
+# tohle se da obejit, ze nasosam vsechno z minuleho mesice a jen vyberu rotoped soucet, ale neni to elegantni...
 
 
 events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=first_day, timeMin=,
                                       maxResults=60, singleEvents=True, orderBy='startTime').execute()
-events = events_result.get('items', [])
+events = events_result.get('items', [])  # events from the current month
+
 
 total = this_month + sum_up_to_last_month
 
@@ -91,3 +95,4 @@ EVENT = {
 }
 
 e = SERVICE.events().insert(calendarId=calendar_ID, body=EVENT).execute()  # notification can be made as well
+"""
