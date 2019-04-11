@@ -15,12 +15,14 @@ next_month_first_day = datetime.date.today().replace(month=next_month, day=1).is
 print(type(next_month_first_day))
 """
 
-previous_month = datetime.date.today().month -1
-this_day = datetime.date.today()
+"""
+day_one = datetime.date.today().replace(day=1)
+previous_month_number = datetime.date.today().month -1
 last_month = this_day.replace(month=previous_month)
-print(calendar.monthrange(last_month.year, last_month.month))
+last_day = calendar.monthrange(previous_month.year, previous_month.month)[1]
+"""
 
-print(last_month)
-
-unor = datetime.date.today()
-print(calendar.monthrange(unor.year, unor.month))
+last_month_number = datetime.date.today().month - 1
+last_month = datetime.date.today().replace(day=1, month=last_month_number)
+last_day_previous_month = calendar.monthrange(last_month.year, last_month.month)[1]
+print(last_day_previous_month)

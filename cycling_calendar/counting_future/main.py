@@ -5,6 +5,7 @@ from oauth2client import file, client, tools  # for token storage
 import re
 import calendar_access
 import datetime
+import calendar
 
 """
 This script counts how many kms I did on exercise bike during a particular month + using "rotoped soucet" event in my 
@@ -28,17 +29,19 @@ if not credz or credz.invalid:  # if the credentials are missing or invalid
 SERVICE = build("calendar", "v3", http=credz.authorize(Http()))  # creating an endpoint to that API; last par signes
 
 # creating dates to use in calling the calendar API
-first_day = datetime.date.today().replace(day=1).isoformat()  # first day of the current month
-last_day = datetime.date.today().isoformat()  # last day of the current month
+first_day_current_month = datetime.date.today().replace(day=1).isoformat()
+last_day_current_month = datetime.date.today().isoformat()
 
 # Calling the Calendar API
-first_day = first_day + "T01:00:00Z"  # the format necessary according to the documentation
-last_day = last_day + "T23:50:00Z"
+first_day_current_month_time = first_day_current_month + "T01:00:00Z"  # the format necessary according to the doc
+last_day_current_month = last_day_current_month + "T23:50:00Z"
 calendar_ID = calendar_access.ID  # calendar Cviceni
-events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=last_day, timeMin=first_day,
-                                      maxResults=60, singleEvents=True, orderBy='startTime').execute()
+events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=last_day_current_month,
+                                      timeMin=first_day_current_month_time, maxResults=60, singleEvents=True,
+                                      orderBy='startTime').execute()
 events = events_result.get('items', [])  # events from the current month
-
+for event in events:
+    print(event)
 
 def count_kms(iterable):
     """
@@ -63,25 +66,34 @@ def count_kms(iterable):
 
 
 this_month = count_kms(events)
+print(this_month)
 
 """"
 Accessing the last event called "rotoped soucet" from previous month
 This event has a start date last day of previous month and an end date first day of current month
 """
-previous_month = datetime.date.today().month -1
-last_day_previous_month =
+last_month_number = datetime.date.today().month - 1
+last_month = datetime.date.today().replace(day=1, month=last_month_number)
+last_day_previous_month = calendar.monthrange(last_month.year, last_month.month)[1]
+last_day_last_month = datetime.date.today().replace(day=last_day_previous_month, month=last_month_number).isoformat()
+print(last_day_last_month, type(last_day_last_month))
 
-
-
-events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=first_day, timeMin=,
-                                      maxResults=60, singleEvents=True, orderBy='startTime').execute()
+events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=first_day_current_month,
+                                       timeMin=last_day_last_month, maxResults=6, singleEvents=True).execute()
 events = events_result.get('items', [])
+
+for event in events:
+    print(event)
+    if "rotoped soucet" in event["summary"]:
+        sum_up_to_last_month = event["description"]
+        sum_up_to_last_month = sum_up_to_last_month[:sum_up_to_last_month.find("k")]
+        sum_up_to_last_month = float(sum_up_to_last_month.strip())
 
 total = this_month + sum_up_to_last_month
 
 # creating an event with the result - total kms
 next_month = datetime.date.today().month + 1  # type int
-next_month_first_day = datetime.date.today().replace(month=next_month, day=1).isoformat()
+next_month_first_day = datetime.date.today().replace(day=1, month=next_month).isoformat()
 
 EVENT = {
     "summary": "rotoped soucet",
