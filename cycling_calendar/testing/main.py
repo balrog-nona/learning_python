@@ -5,6 +5,7 @@ from oauth2client import file, client, tools  # for token storage
 import re
 import calendar_access
 import datetime
+import calendar
 
 """
 This script counts how many kms I did on exercise bike during a particular month + using "rotoped soucet" event in my 
@@ -32,13 +33,17 @@ first_day = datetime.date.today().replace(day=1).isoformat()  # first day of the
 last_day = datetime.date.today().isoformat()  # last day of the current month
 
 # Calling the Calendar API
-first_day = first_day + "T01:00:00Z"  # the format necessary according to the documentation
+first_day = first_day + "T23:00:00Z"  # the format necessary according to the documentation
 last_day = last_day + "T23:50:00Z"
 calendar_ID = calendar_access.ID  # calendar Cviceni
-events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=last_day, timeMin=first_day,
-                                      maxResults=60, singleEvents=True, orderBy='startTime').execute()
-events = events_result.get('items', [])  # events from the current month
 
+events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax="2019-02-28T01:00:00Z",
+                                      timeMin="2019-02-22T23:00:00Z", maxResults=60, singleEvents=True,
+                                      orderBy='startTime').execute()
+events = events_result.get('items', [])  # events from the current month
+for event in events:
+    print(event)
+"""
 # discarting "rotoped soucet" from the list - absolutely unnessesary...
 for event in events:
     print(event)
@@ -50,7 +55,7 @@ for event in events:
 del events[event_index]
 
 
-"""
+
 def count_kms(iterable):
     month_count = 0
     pattern = '\d+\.?\d+?\s?[kK]'
@@ -68,24 +73,34 @@ def count_kms(iterable):
 
 
 this_month = count_kms(events)
-
+"""
 # adding the month count to the whole history count
 # 1. accessing the last event called "rotoped soucet" from previous month
-previous_month = datetime.date.today().month -1
-last_day_previous_month =
-# tohle se da obejit, ze nasosam vsechno z minuleho mesice a jen vyberu rotoped soucet, ale neni to elegantni...
 
+last_month_number = datetime.date.today().month - 1
+last_month = datetime.date.today().replace(day=1, month=last_month_number)
+last_day_previous_month = calendar.monthrange(last_month.year, last_month.month)[1]
+last_day_last_month = datetime.date.today().replace(day=last_day_previous_month, month=last_month_number).isoformat()
+last_day_last_month = last_day_last_month + "T01:00:00Z"
 
-events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=first_day, timeMin=,
-                                      maxResults=60, singleEvents=True, orderBy='startTime').execute()
-events = events_result.get('items', [])  # events from the current month
+events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=first_day,
+                                       timeMin=last_day_last_month, maxResults=6, singleEvents=True).execute()
+events = events_result.get('items', [])
 
+for event in events:
+    print(event)
+    if "rotoped soucet" in event["summary"]:
+        sum_up_to_last_month = event["description"]
+        sum_up_to_last_month = sum_up_to_last_month[:sum_up_to_last_month.find("k")]
+        sum_up_to_last_month = float(sum_up_to_last_month.strip())
 
-total = this_month + sum_up_to_last_month
+total = 2 + sum_up_to_last_month
+print(total)
 
+"""
 # creating an event with the result - total kms
 next_month = datetime.date.today().month + 1  # type int
-next_month_first_day = datetime.date.today().replace(month=next_month, day=1).isoformat()
+next_month_first_day = datetime.date.today().replace(day=1, month=next_month).isoformat()
 
 EVENT = {
     "summary": "rotoped soucet",

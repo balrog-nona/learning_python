@@ -72,13 +72,14 @@ print(this_month)
 Accessing the last event called "rotoped soucet" from previous month
 This event has a start date last day of previous month and an end date first day of current month
 """
+first_day_current_month_time2 = first_day_current_month + "T23:00:00Z"
 last_month_number = datetime.date.today().month - 1
 last_month = datetime.date.today().replace(day=1, month=last_month_number)
 last_day_previous_month = calendar.monthrange(last_month.year, last_month.month)[1]
 last_day_last_month = datetime.date.today().replace(day=last_day_previous_month, month=last_month_number).isoformat()
-print(last_day_last_month, type(last_day_last_month))
+last_day_last_month = last_day_last_month + "T01:00:00Z"
 
-events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=first_day_current_month,
+events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=first_day_current_month_time2,
                                        timeMin=last_day_last_month, maxResults=6, singleEvents=True).execute()
 events = events_result.get('items', [])
 
@@ -90,6 +91,7 @@ for event in events:
         sum_up_to_last_month = float(sum_up_to_last_month.strip())
 
 total = this_month + sum_up_to_last_month
+print(total)
 
 # creating an event with the result - total kms
 next_month = datetime.date.today().month + 1  # type int
