@@ -5,6 +5,7 @@ from oauth2client import file, client, tools  # for token storage
 import re
 import calendar_access
 import making_date
+import decimal
 
 """
 This script counts how many kms I did on exercise bike during a particular month + using "rotoped soucet" event in my 
@@ -14,6 +15,10 @@ The program will run every last day of the following months.
 
 Video about authorization:
 https://www.youtube.com/watch?v=h-gBeC9Y9cE
+
+Google API documentation:
+https://developers.google.com/api-client-library/python/
+https://developers.google.com/calendar/v3/reference/events
 
 The substantial part of the code was taken from quickstart.py on the Google calendar API website.
 """
@@ -36,6 +41,8 @@ events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=making_dat
                                       orderBy='startTime').execute()
 events = events_result.get('items', [])  # type list
 
+D = decimal.Decimal
+
 
 def count_kms(iterable):
     """
@@ -44,7 +51,7 @@ def count_kms(iterable):
     :param iterable: events from calendar
     :return: total count of kms for the current month
     """
-    month_count = 0
+    month_count = D("0.0")
     pattern = '\d+\.?\d+?\s?[kK]'
     if iterable:
         for item in iterable:
@@ -52,9 +59,8 @@ def count_kms(iterable):
                 comment_string = re.sub(",", ".", item["description"])
                 if re.search(pattern, comment_string):
                     kms = re.search(pattern, comment_string).group().lower()
-                    kms = kms[:kms.find("k")]
-                    kms = float(kms.strip())
-                    month_count += kms
+                    kms = kms[:kms.find("k")].strip()
+                    month_count += D(kms)
     return month_count
 
 
@@ -70,8 +76,8 @@ events2 = events_result2.get('items', [])
 for event in events2:
     if "rotoped soucet" in event["summary"]:
         sum_up_to_last_month = event["description"]
-        sum_up_to_last_month = sum_up_to_last_month[:sum_up_to_last_month.find("k")]
-        sum_up_to_last_month = float(sum_up_to_last_month.strip())
+        sum_up_to_last_month = sum_up_to_last_month[:sum_up_to_last_month.find("k")].strip()
+        sum_up_to_last_month = D(sum_up_to_last_month)
 
 this_month = count_kms(events)
 total = this_month + sum_up_to_last_month
