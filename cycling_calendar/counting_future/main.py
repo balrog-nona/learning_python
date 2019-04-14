@@ -11,7 +11,7 @@ import decimal
 This script counts how many kms I did on exercise bike during a particular month + using "rotoped soucet" event in my 
 calendar creates an event on the last day of every month to my calendar with the total sum of kms in my whole history.
 
-The program will run every last day of the following months.
+The program will run the first day of every month.
 
 Video about authorization:
 https://www.youtube.com/watch?v=h-gBeC9Y9cE
@@ -34,7 +34,7 @@ if not credz or credz.invalid:  # if the credentials are missing or invalid
 
 SERVICE = build("calendar", "v3", http=credz.authorize(Http()))  # creating an endpoint to that API; last par signes
 
-# 1. call to the Calendar API - gathering events from the current month to count
+# 1. call to the Calendar API - gathering events from the previous month to count
 calendar_ID = calendar_access.ID  # calendar Cviceni
 events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=making_date.time_max1,
                                       timeMin=making_date.time_min1, maxResults=60, singleEvents=True,
@@ -65,8 +65,8 @@ def count_kms(iterable):
 
 
 """"
-Accessing the last event called "rotoped soucet" from previous month
-This event has a start date last day of previous month and an end date first day of current month
+Accessing the last event called "rotoped soucet" from the penultimate month
+This event has a start date last day of penultimate month and an end date the first day of last month
 """
 # 2. call to the calendar API - accessing event "rotoped soucet" from previous month
 events_result2 = SERVICE.events().list(calendarId=calendar_ID, timeMax=making_date.time_max2,
