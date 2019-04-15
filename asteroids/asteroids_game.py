@@ -1,12 +1,13 @@
 import pyglet
 from pyglet.window import key
+from pyglet import gl
 from math import sin, cos, atan2, sqrt, degrees
 
 
 objects = list()  # for every object in the game
 
-ROTATION_SPEED = 150  # radians per second
-ACCELERATION = 1.5
+ROTATION_SPEED = 4  # radians per second
+ACCELERATION = 15
 WIDTH = 1200
 HEIGHT = 900
 
@@ -14,7 +15,6 @@ window = pyglet.window.Window(width=WIDTH, height=HEIGHT)
 
 
 batch = pyglet.graphics.Batch()  # collection for all sprites
-batch.draw()  # drawing all the sprites at once
 
 coordinates = set()
 
@@ -30,26 +30,35 @@ class Spaceship:
         image.anchor_x = image.width // 2
         image.anchor_y = image.height // 2
         self.sprite = pyglet.sprite.Sprite(image, x=self.x, y=self.y, batch=batch)
-        self.sprite.rotation = self.rotation
 
     def tick(self, dt):  # for moving, rotation, managing the ship
         # rotation
         if "right" in coordinates:
-            self.rotation = self.rotation + dt * ROTATION_SPEED
+            self.rotation = self.rotation + dt * ROTATION_SPEED  # in radians
         if "left" in coordinates:
             self.rotation = self.rotation - dt * ROTATION_SPEED
-        self.sprite.rotation = self.rotation
+        self.sprite.rotation = 90 - degrees(self.rotation)  # radians into degrees
+        # moving with acceleration
+        self.x_speed += dt * ACCELERATION  # v podkladech tam jsou cos a sin
+        self.y_speed += dt * ACCELERATION
+        # print(self.x_speed, self.y_speed)
         # basic movement
         if "forward" in coordinates:
-            self.x = self.x + dt * self.x_speed
-            self.y = self.y + dt * self.y_speed
-            # alfa = 90 - degrees(self.sprite.rotation)
-            self.sprite.x = self.x
-            self.sprite.y = self.y
+            self.x = self.x + dt * self.x_speed * cos(self.rotation)
+            self.y = self.y + dt * self.y_speed * sin(self.rotation)
+        # returning the ship into the field
+        if self.x == WIDTH:
+            self.x = 0
+        if self.x == 0:
+            self.x = WIDTH
+        if self.y == HEIGHT:
+            self.y = 0
+        if self.y == 0:
+            self.y = HEIGHT
+        print(self.x, self.y)
+        self.sprite.x = self.x
+        self.sprite.y = self.y
 
-        """# moving with acceleration
-        self.x_speed += dt * ACCELERATION * math.cos(self.rotation)
-        self.y_speed += dt * ACCELERATION * math.sin(self.rotation)"""
 
 
 def pressed_keys(symbol, modifiers):
@@ -76,8 +85,26 @@ ship1 = Spaceship(file="ship.png")
 objects.append(ship1)
 ship1.sprite.scale = 0.3
 
+
+def draw():
+    window.clear()
+
+    for x_offset in (-window.width, 0, window.width):
+        for y_offset in (-window.height, 0, window.height):
+            # remember the current state
+            gl.glPushMatrix()
+            # move everything drawn from now on by (x_offset, y_offset, 0)
+            gl.glTranslatef(x_offset, y_offset, 0)
+
+            # draw
+            batch.draw()
+
+            # restore remembered state (this cancels the glTranslatef)
+            gl.glPopMatrix()
+
+
 window.push_handlers(
-    on_draw=batch.draw,
+    on_draw=draw,
     on_key_press=pressed_keys,
     on_key_release=released_keys,
 )
