@@ -1,13 +1,20 @@
 import glob
 
+# relativni cesta k souborum
 songs = glob.glob("*/*/*/*.txt", recursive=True)  # pozor, cesta musi byt jako string!
 
 """
 takto by vypadala verze, kdyby ty pisnicky byly ulozene nekde cestou nahoru a pak jeste uplne jinam:
-songs = glob.glob("../../../../../Videa/Seriály/*/*/*/*.txt")
+songs = glob.glob("../../../../../Videa/Seriály/*/*/*/*.txt") - ve forme relativni cesty
+
+glob.glob se da pouzit jednak na relativni, tak na absolutni cesty + daji se pouzit wildcards
 """
 
-print(type(songs))  # glob.glob evidentne vytvori seznam
+#absolutni cesta k souborum
+#songs = glob.glob("/home/balrog/Dokumenty/Programování/doGIThubu/learning_python/uceni_soubory/pisne/pisnicky/"
+                  #"songs/*.txt")
+
+print(type(songs), len(songs))  # glob.glob evidentne vytvori seznam
 
 for song in songs:
     with open(song, encoding="utf-8") as text:
