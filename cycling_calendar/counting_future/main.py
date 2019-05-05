@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from __future__ import print_function
 from googleapiclient.discovery import build
 from httplib2 import Http  # HTTP object for signed requests
@@ -24,7 +26,8 @@ The substantial part of the code was taken from quickstart.py on the Google cale
 """
 
 SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
-CLIENT_SECRET = "client_secret.json"
+CLIENT_SECRET = "/home/balrog/Dokumenty/Programování/doGIThubu/learning_python/cycling_calendar/counting_future/" \
+                "client_secret.json"
 
 store = file.Storage("storage.json")  # storing access token
 credz = store.get()  # tries to get an access token with witch to make authorized API calls
