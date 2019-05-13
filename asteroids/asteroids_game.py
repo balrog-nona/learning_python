@@ -19,13 +19,17 @@ batch = pyglet.graphics.Batch()  # collection for all sprites
 coordinates = set()
 
 
-class Spaceship:
+class SpaceObject:
+    def __init__(self, x, y, x_speed, y_speed, rotation):
+        self.x = x
+        self.y = y
+        self.x_speed = x_speed
+        self.y_speed = y_speed
+        self.rotation = rotation
+
+
+class Spaceship(SpaceObject):
     def __init__(self, file):
-        self.x = WIDTH // 2
-        self.y = HEIGHT // 2
-        self.x_speed = 200
-        self.y_speed = 200
-        self.rotation = 0
         image = pyglet.image.load(file)
         image.anchor_x = image.width // 2
         image.anchor_y = image.height // 2
@@ -39,14 +43,14 @@ class Spaceship:
             self.rotation = self.rotation - dt * ROTATION_SPEED
         self.sprite.rotation = 90 - degrees(self.rotation)  # radians into degrees
         # moving with acceleration
-        self.x_speed += dt * ACCELERATION  # v podkladech tam jsou cos a sin
+        self.x_speed += dt * ACCELERATION
         self.y_speed += dt * ACCELERATION
         # print(self.x_speed, self.y_speed)
         # basic movement
         if "forward" in coordinates:
             self.x = self.x + dt * self.x_speed * cos(self.rotation)
             self.y = self.y + dt * self.y_speed * sin(self.rotation)
-        # returning the ship into the field
+        """returning the ship into the field
         if self.x == WIDTH:
             self.x = 0
         if self.x == 0:
@@ -54,8 +58,8 @@ class Spaceship:
         if self.y == HEIGHT:
             self.y = 0
         if self.y == 0:
-            self.y = HEIGHT
-        print(self.x, self.y)
+            self.y = HEIGHT"""
+        #print(self.x, self.y)
         self.sprite.x = self.x
         self.sprite.y = self.y
 
@@ -109,5 +113,5 @@ window.push_handlers(
     on_key_release=released_keys,
 )
 
-pyglet.clock.schedule(ship1.tick)
+pyglet.clock.schedule(SpaceObject.tick)
 pyglet.app.run()
