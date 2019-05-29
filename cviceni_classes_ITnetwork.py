@@ -1,6 +1,6 @@
 import math
 
-# jeden pes pro dva lidi
+# cv. lekce 4:jeden pes pro dva lidi
 class Pes:
 
     def __init__(self, jmeno, vek):
@@ -31,7 +31,7 @@ print('{} ({} let)'.format(karel.pes.jmeno, karel.pes.vek))
 print('{} ({} let)'.format(lenka.pes.jmeno, lenka.pes.vek))
 
 
-# rodokmen Simpsonu
+# cv. lekce 4: rodokmen Simpsonu
 class Rodina:
 
     def __init__(self, jmeno):
@@ -71,7 +71,7 @@ print(bart.vypis_rodinu())
 print(homer.vypis_rodinu())
 
 
-# cviceni s ptakem
+# cv. lekce 5 - 8: cviceni s ptakem
 class Ptak:
 
     def __init__(self):
@@ -115,7 +115,7 @@ ptacisko.provokuj(5)
 ptacisko.vypis()
 
 
-# Clovek a Pythonista
+# cv. lekce 5 - 8: Clovek a Pythonista
 class Clovek:  # tuto tridu jsem jen opsala ze zadani
     # ty kraviny 3 promenne by tu vubec nemusely byt
     jmeno = None  # obsolentni
@@ -173,7 +173,7 @@ programator.programuj(15)
 print(programator.unava)
 
 
-# geometricke tvary
+# cv. lekce 5 - 8: geometricke tvary
 class Tvar:
 
     def __init__(self, barva):
@@ -214,7 +214,7 @@ obsah_stromu = obdelnik.obsah + (4 * trojuhelnik.obsah)
 print("Obsah stromu je {} cm^2.".format(obsah_stromu))
 
 
-# lekce 9
+# LEKCE 9
 # prevod stupne a radiany mezi sebou - cviceni ke statice
 class Prevod:
 

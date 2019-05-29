@@ -52,9 +52,12 @@ V ramci generalizace byly metody zamnkoukej a zastekej prepsane na udelej zvuk, 
 
 # z IT NETWORK, kap. objektove orientovane programovani
 class Kostka:
+    """
+    Trida reprezentuje hraci kostku.
+    """
 
     def __init__(self, pocet_sten):  # metoda konstruktoru
-        self.__pocet_sten = pocet_sten  # neverejny/soukromy atribut pomoci __
+        self.__pocet_sten = pocet_sten  # neverejny/soukromy atribut pomoci __ nelze zvenci modifikovat
 
     def __str__(self):
         """
@@ -64,7 +67,7 @@ class Kostka:
         return str("Kostka s {} stenami.".format(self.__pocet_sten))
 
     def vrat_pocet_sten(self):
-        return self.__pocet_sten
+        return self.__pocet_sten  # atribut je v read-only rezimu; jeho hodnotu zjistime jen zavolanim metody!
 
     def hod(self):
         """
@@ -76,6 +79,7 @@ class Kostka:
 
 sestistenna = Kostka(pocet_sten=6)  # kostku bez parametru jiz nelze vytvorit
 desetistenna = Kostka(pocet_sten=10)
+# print(sestistenna.__pocet_sten) hodi AttributeError
 
 print(sestistenna)  # kostka ted automaticky vypisuje __str__ metodu, nikoli odkaz na objekt
 for i in range(10):
