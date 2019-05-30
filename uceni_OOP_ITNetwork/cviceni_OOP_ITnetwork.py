@@ -34,26 +34,66 @@ karel.beh(10)
 print(karel.unava)
 
 # stredne pokrocily priklad: generator nahodnych vet
-class Slovo:
+class Generator:
 
-    def __init__(self):
-        self.jaky = None
-        self.kdo = None
-        self.co = None
-        self.jak = None
-        self.kde = None
+    def tvorba_slova(self):
+        self.jaky = choice(["maly", "opily", "vzdelany", "umanuty", "drzy"])
+        self.kdo = choice(["workoholik", "sobec", "kontroverzni podnikatel", "ridic", "serif"])
+        self.co = choice(["nakupoval", "prednasel", "exhiboval", "tancil", "vyjednaval"])
+        self.jak = choice(["vytrvale", "s nadsenim", "znudene", "sarkasticky", "pitome"])
+        self.kde = choice(["u primatora", "v pivovaru", "u nehtarky", "u kartarky", "v zachode"])
 
-generator = Slovo()
-generator.jaky = ["maly", "opily", "vzdelany", "umanuty", "drzy"]
-generator.kdo = ["workoholik", "sobec", "blbec", "ridic", "serif"]
-generator.co = ["varil", "slapal", "mlatil", "tancil", "pral"]
-generator.jak = ["vytrvale", "s nadsenim", "znudene", "sarkasticky", "pitome"]
-generator.kde = ["u primatora", "v pivovaru", "u nehtarky", "u kartarky", "v zachode"]
+    def vypis_vetu(self):
+        return "{} {} {} {} {}".format(self.jaky, self.kdo, self.co, self.jak, self.kde)
 
+
+veta = Generator()
 for i in range(10):
-    print("{} {} {} {} {}".format(random.choice(generator.jaky)))
+    veta.tvorba_slova()
+    print(veta.vypis_vetu())
+
+# pokrocily priklad: auto a garaz
+class Auto:
+
+    def __init__(self, SPZ, barva):
+        self.spz = SPZ
+        self.barva = barva
+
+    def __str__(self):
+        return "{}".format(self.spz)
+
+    def zaparkuj(self):
+        return "V garazi je auto {}.".format(self)
+
+jaguar = Auto(SPZ="123ABC", barva="cerna")
+print(jaguar.zaparkuj())
+
+# reseni dle stahnuteho materialu
+class Auto:
+
+    def __init__(self, spz, barva):
+        self.spz = spz
+        self.barva = barva
+
+    def vrat_spz(self):
+        return self.spz
+
+    def zaparkuj(self, garaz):  # tady se navazal jiny objekt
+        garaz.vloz(self)
 
 
+class Garaz:
+
+    def vloz(self, auto):
+        self.auto = auto  # tady se navazal jiny objekt
+
+    def __str__(self):
+        return "V garazi je auto {}.".format(self.auto.vrat_spz())
+
+garaz = Garaz()
+corvetta = Auto(spz="567HJK", barva="cervena")
+corvetta.zaparkuj(garaz)
+print(garaz)
 
 # LEKCE 4 - CVICENI
 # jednoduchy priklad: pes a osoba

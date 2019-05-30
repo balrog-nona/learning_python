@@ -49,6 +49,26 @@ for zviratko in zviratka:
 V ramci generalizace byly metody zamnkoukej a zastekej prepsane na udelej zvuk, aby se to dalo pouzit v cyklu.
 """
 
+# lekce 4 - reference, garbage collector
+class Uzivatel:
+
+    def __init__(self, jmeno, vek):
+        self.jmeno = jmeno
+        self.vek = vek
+
+    def __str__(self):
+        return str(self.jmeno)
+
+
+u = Uzivatel(jmeno="Jan Novak", vek=28)
+v = Uzivatel(jmeno="Josef Novy", vek=32)
+print("u: {}\nv: {}\n".format(u, v))
+print("u: {}\nv: {}\n".format(id(u), id(v)))
+
+u = v  # zkopiruje se odkaz na objekt pod referenci v, ale objekt mame jen jeden; k objektu u ted nevede zadna reference
+print("u: {}\nv: {}\n".format(u, v))
+print("u: {}\nv: {}\n".format(id(u), id(v)))
+
 
 # z IT NETWORK, kap. objektove orientovane programovani
 class Kostka:
@@ -107,7 +127,7 @@ class Bojovnik:  # nesoukrome metody se automaticky dedi
     def __repr__(self):  # k dymanickemu provadeni kodu
         return str(self._jmeno)
 
-    def _nastav_zpravu(self, zprava):  # soukroma metoda s __ by nebzla k dispozici v dedeni; vnitrni metoda _ ano
+    def _nastav_zpravu(self, zprava):  # soukroma metoda s __ by nebyla k dispozici v dedeni; vnitrni metoda _ ano
         self.__zprava = zprava
 
     def vrat_posledni_zpravu(self):  # nastavovani zprav dle tutorialu - podle me zbytecne slozite
