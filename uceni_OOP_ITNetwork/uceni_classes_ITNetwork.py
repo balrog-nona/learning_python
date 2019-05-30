@@ -62,12 +62,23 @@ class Uzivatel:
 
 u = Uzivatel(jmeno="Jan Novak", vek=28)
 v = Uzivatel(jmeno="Josef Novy", vek=32)
-print("u: {}\nv: {}\n".format(u, v))
-print("u: {}\nv: {}\n".format(id(u), id(v)))
+print("u: {}\nv: {}".format(u, v))
+print("u: {}\nv: {}".format(id(u), id(v)))
 
 u = v  # zkopiruje se odkaz na objekt pod referenci v, ale objekt mame jen jeden; k objektu u ted nevede zadna reference
-print("u: {}\nv: {}\n".format(u, v))
-print("u: {}\nv: {}\n".format(id(u), id(v)))
+# mam ted 2 reference na stejny objekt (Josefa Noveho)
+print("u: {}\nv: {}".format(u, v))
+print("u: {}\nv: {}".format(id(u), id(v)))
+# objekt u (Jana Novaka) sezral garbage collector
+# vice k moznostem spravy pameti na webu ITNetwork
+
+v.jmeno = "John Doe"
+print("u: {}\nv: {}".format(u, v))
+print("u: {}\nv: {}".format(id(u), id(v)))
+v = None  # reference na objekt zrusena
+print("u: {}\nv: {}".format(u, v))
+print("u: {}\nv: {}".format(id(u), id(v)))
+# zrusila se reference v na Noveho, ale stale k nemu vede reference u
 
 
 # z IT NETWORK, kap. objektove orientovane programovani
@@ -267,6 +278,7 @@ kostka = Kostka(pocet_sten=10)
 zalgoren = Bojovnik(jmeno="Zalgoren", zivot=100, utok=20, obrana=10, hraci_kostka=kostka)
 gandalf = Mag(jmeno="Galdalf", zivot=60, utok=15, obrana=12, hraci_kostka=kostka, mana=30, magicky_utok=45)
 
+"""
 # funkce s dedenim - vraci True/False
 if isinstance(gandalf, Mag):
     print("{} je mag.".format(gandalf))
@@ -275,4 +287,5 @@ if issubclass(Mag, Bojovnik):
 
 arena = Arena(bojovnik1=zalgoren, bojovnik2=gandalf, kostka=kostka)
 arena.zapas()
+"""
 
