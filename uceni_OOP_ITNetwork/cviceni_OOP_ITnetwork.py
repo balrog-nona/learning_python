@@ -147,3 +147,4 @@ print("{}\n{}\n{}\n{}\n{}\n{}\n{}\n".format(Bart.jmeno, Bart.otec.jmeno, Bart.ot
 print("Rodokmen pro osobu Homer Simpson")
 print("{}\n{}\n{}".format(Homer.jmeno, Homer.otec.jmeno, Homer.matka.jmeno))
 
+# sice to funguje, ale je to podstatne krkolomnejsi nez napoprve

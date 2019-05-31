@@ -90,6 +90,12 @@ class Kostka:
     def __init__(self, pocet_sten):  # metoda konstruktoru
         self.__pocet_sten = pocet_sten  # neverejny/soukromy atribut pomoci __ nelze zvenci modifikovat
 
+    def __repr__(self):
+        """
+        return: v retezci kod konstruktoru pro fci eval()
+        """
+        return str("Kostka ({})".format(self.__pocet_sten))
+
     def __str__(self):
         """
         Vraci textovou reprezentaci kostky.
@@ -119,6 +125,12 @@ for i in range(10):
 print("\n", desetistenna, sep="")  # holy shit! dela se to separatorem
 for i in range(10):
     print(desetistenna.hod(), end=" ")
+
+# kopirovani dle teto lekce
+jina_sestistenna = eval(repr(sestistenna))
+print("\njina sestistenna: ", jina_sestistenna)
+print("sestistenna: {}; jina_sestistenna: {}".format(id(sestistenna), id(jina_sestistenna)))
+# jednoduse by se dalo pouzit i copy.deepcopy()
 
 
 class Bojovnik:  # nesoukrome metody se automaticky dedi
