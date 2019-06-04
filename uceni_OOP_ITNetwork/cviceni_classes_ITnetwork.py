@@ -1,5 +1,6 @@
 import math
 
+# pri prvnim prochazeni tutorialu
 # cv. lekce 4:jeden pes pro dva lidi
 class Pes:
 

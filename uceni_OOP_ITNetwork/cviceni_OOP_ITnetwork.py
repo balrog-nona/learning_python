@@ -1,7 +1,9 @@
 from random import choice
 
+# pri druhem prochazeni tutorialu
+
 # LEKCE 3 - CVICENI
-# jednoduchy priklad: covek a unava
+# jednoduchy priklad: clovek a unava
 class Clovek:
 
     def __init__(self, jmeno, unava=0):
@@ -148,3 +150,5 @@ print("Rodokmen pro osobu Homer Simpson")
 print("{}\n{}\n{}".format(Homer.jmeno, Homer.otec.jmeno, Homer.matka.jmeno))
 
 # sice to funguje, ale je to podstatne krkolomnejsi nez napoprve
+
+# LEKCE 5 - 8
