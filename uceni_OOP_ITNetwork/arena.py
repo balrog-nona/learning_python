@@ -1,3 +1,8 @@
+import sys
+import subprocess
+import time
+import random
+
 class Kostka:
     """
     Trida reprezentuje hraci kostku.
@@ -114,11 +119,64 @@ class Bojovnik:
         return self.__zprava
 
 
-Nona = Bojovnik(jmeno="Nona",zivot=100, utok=20, obrana=10, kostka=desetistenna)
-print("Zivot: {}".format(Nona.graficky_zivot()))
+nona = Bojovnik(jmeno="Nona",zivot=100, utok=20, obrana=10, kostka=desetistenna)
+print("Zivot: {}".format(nona.graficky_zivot()))
 # utok na bojovnika
-Saruman = Bojovnik(jmeno="Saruman", zivot=60, utok=18, obrana=15, kostka=desetistenna)
-Saruman.utoc(Nona)
-print(Saruman.vrat_posledni_zpravu())
-print(Nona.vrat_posledni_zpravu())
-print("Zivot: {}".format(Nona.graficky_zivot()))
+saruman = Bojovnik(jmeno="Saruman", zivot=60, utok=18, obrana=15, kostka=desetistenna)
+saruman.utoc(nona)
+print(saruman.vrat_posledni_zpravu())
+print(nona.vrat_posledni_zpravu())
+print("Zivot: {}".format(nona.graficky_zivot()))
+
+
+class Arena:
+
+    def __init__(self, bojovnik_1, bojovnik_2, kostka):
+        self.__bojovnik_1 = bojovnik_1
+        self.__bojovnik_2 = bojovnik_2
+        self.__kostka = kostka
+
+    def __vykresli(self):
+        self.__vycisti_obrazovku()
+        print("------------Arena-----------------\n")
+        print("Zdravi bojovniku: \n")
+        print("{} {}".format(self.__bojovnik_1, self.__bojovnik_1.graficky_zivot()))
+        print("{} {}".format(self.__bojovnik_2, self.__bojovnik_2.graficky_zivot()))
+
+    def __vycisti_obrazovku(self):
+        if sys.platform.startswith("win"):
+            subprocess.call(["cmd.exe", "/C", "cls"])
+        else:
+            subprocess.call(["clear"])
+
+    def __vypis_zpravu(self, zprava):
+        print(zprava)
+        time.sleep(1.5)  # uspi vlakno programu na tuto dobu v s
+
+    def zapas(self):
+        """
+        Je to neprehledne, protoze graficky zivot reaguje az na text, ktery se teprve vypise. Az pochopim,
+        proc se mi neprovadi prvni dva printy, prepsat si to do vlastni logicke verze, kde je nejdriv text a az
+        po nem grafika.
+        """
+        print("Vitejte v arene!\nDnes se utkaji {} s {}!".format(self.__bojovnik_1,self.__bojovnik_2))
+        print("Zapas muze zacit...")
+        # self.__vykresli() proc to neprovede predchozi prikazy?
+        if random.randint(0, 1):
+            (self.__bojovnik_1, self.__bojovnik_2) = (self.__bojovnik_2, self.__bojovnik_1)
+        while self.__bojovnik_1.nazivu and self.__bojovnik_2.nazivu:
+            self.__bojovnik_1.utoc(self.__bojovnik_2)
+            self.__vykresli() # tohle taky neprovede predchozi printy
+            self.__vypis_zpravu(self.__bojovnik_1.vrat_posledni_zpravu())  # nejdriv dostaneme info o utoku
+            self.__vypis_zpravu(self.__bojovnik_2.vrat_posledni_zpravu())
+            if self.__bojovnik_2.nazivu:
+                self.__bojovnik_2.utoc(self.__bojovnik_1)
+                self.__vykresli()
+                self.__vypis_zpravu(self.__bojovnik_2.vrat_posledni_zpravu())
+                self.__vypis_zpravu(self.__bojovnik_1.vrat_posledni_zpravu())
+
+
+# print(nona._Bojovnik__jmeno)
+
+arena = Arena(bojovnik_1=nona, bojovnik_2=saruman, kostka=desetistenna)
+arena.zapas()
