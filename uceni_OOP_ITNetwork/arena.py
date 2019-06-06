@@ -57,30 +57,31 @@ print("sestistenna: {}; jina_sestistenna: {}".format(id(sestistenna), id(jina_se
 class Bojovnik:
     """
     Trida reprezentujici bojovnika do areny.
+    Atributy a metody zacinaly na zacatku totirialu jako privatni, ale pak se kvuli dedeni zmenily na vnitrni.
     """
 
     def __init__(self, jmeno, zivot, utok, obrana, kostka):
-        self.__jmeno = jmeno
-        self.__zivot = zivot
-        self.__max_zivot = zivot
-        self.__utok = utok
-        self.__obrana = obrana
-        self.__kostka = kostka
+        self._jmeno = jmeno
+        self._zivot = zivot
+        self._max_zivot = zivot
+        self._utok = utok
+        self._obrana = obrana
+        self._kostka = kostka
         self.__zprava = ""
 
     def __str__(self):
-        return str(self.__jmeno)
+        return str(self._jmeno)
 
     def __repr__(self):
-        return str(self.__jmeno)
+        return str(self._jmeno)
 
     @property  # dekorator - zmenil metodu na vlastnost
     def nazivu(self):
-        return self.__zivot > 0  # toto vyhodnoti a vrati True nebo False
+        return self._zivot > 0  # toto vyhodnoti a vrati True nebo False
 
     def graficky_zivot(self):
         ukazatel_zivota = 20  # delka grafickeho ukazatele zivota
-        pocet_dilku = int(self.__zivot / self.__max_zivot * ukazatel_zivota)
+        pocet_dilku = int(self._zivot / self._max_zivot * ukazatel_zivota)
         # print(pocet_dilku)
         # na netu to maji nastavene, ze i vstupni zivot 60 se ukazuje jako 100%
         if pocet_dilku == 0 and self.nazivu:
@@ -88,37 +89,39 @@ class Bojovnik:
         return "[{}{}]".format("#" * pocet_dilku, " " * (ukazatel_zivota - pocet_dilku))
 
     def bran_se(self, uder):
-        zraneni = uder - (self.__obrana + self.__kostka.hod())  # objekt kostka ma k dispozici svoje metody
+        zraneni = uder - (self._obrana + self._kostka.hod())  # objekt kostka ma k dispozici svoje metody
         if zraneni > 0:
-            zprava = "{} utrpel poskozeni {} hp.".format(self.__jmeno, zraneni)
-            self.__zivot -= zraneni
-            if self.__zivot < 0:
-                self.__zivot = 0
+            zprava = "{} utrpel poskozeni {} hp.".format(self._jmeno, zraneni)
+            self._zivot -= zraneni
+            if self._zivot < 0:
+                self._zivot = 0
                 zprava = zprava[:-1] + " a zemrel."
         else:
-            zprava = "{} odrazil utok.".format(self.__jmeno)
-        self.__nastav_zpravu(zprava=zprava)
+            zprava = "{} odrazil utok.".format(self._jmeno)
+        self._nastav_zpravu(zprava=zprava)
 
     def utoc(self, souper):
         """
         Vyhoda referenci v Pythonu: instance soupere se sem jednoduse prida a vola se na ni metoda, aniz dojde k jejich
         zkopirovani.
         """
-        uder = self.__utok + self.__kostka.hod()
-        zprava = "{} utoci uderem za {} hp.".format(self.__jmeno, uder)
-        self.__nastav_zpravu(zprava=zprava)
-        souper.bran_se(uder)
+        uder = self._utok + self._kostka.hod()
+        zprava = "{} utoci uderem bojovnika za {} hp.".format(self._jmeno, uder)
+        self._nastav_zpravu(zprava=zprava)
+        souper.bran_se(uder=uder)
 
-    def __nastav_zpravu(self, zprava):  # soukroma/privatni metoda
+    def _nastav_zpravu(self, zprava):
         """
-        Pro vnitrni ucel tridy - nastavi zpravu do privatni promenne.
+        Pri zacatku psani to byla privatni metoda, ale pak se kvuli dedeni zmenila na vnitrni.
+        Celkove je treba pri psani tridy myslet na to, jestli se z ni bude dedit - pokud ano, atributy a metody
+        nemuzou byt privatni.
         """
         self.__zprava = zprava
 
     def vrat_posledni_zpravu(self):
         return self.__zprava
 
-
+"""
 nona = Bojovnik(jmeno="Nona",zivot=100, utok=20, obrana=10, kostka=desetistenna)
 print("Zivot: {}".format(nona.graficky_zivot()))
 # utok na bojovnika
@@ -127,6 +130,46 @@ saruman.utoc(nona)
 print(saruman.vrat_posledni_zpravu())
 print(nona.vrat_posledni_zpravu())
 print("Zivot: {}".format(nona.graficky_zivot()))
+"""
+
+
+class Mag(Bojovnik):
+    """
+    Mag pouziva manu k magickemu utoku - ten zpusobi vetsi damage a vycerpa manu na 0.
+    V kazdem kole se mana zveda o 10, Mag jinak utoci i beznym utokem.
+    """
+
+    def __init__(self, jmeno, zivot, utok, obrana, kostka, mana, magicky_utok):
+        """
+        Zde konstruktor musi mit vsechny parametry pro predka + nove co ma navic potomel.
+        Konstruktor predka se vola pred potomkovym konstruktorem.
+        Caste pouziti metody super()
+        """
+        super().__init__(jmeno, zivot, utok, obrana, kostka)
+        self.__mana = mana
+        self.__max_mana = mana
+        self.__magicky_utok = magicky_utok
+
+    def utok(self, souper):
+        """
+        Tato metoda prepise metodu v superclass.
+        """
+        # mana neni naplnena a nelze ji proto pouzit
+        if self.__mana < self.__max_mana:
+            self.__mana += 10
+            if self.__mana > self.__max_mana:
+                self.__mana = self.__max_mana
+            uder = self._utok + self._kostka.hod()
+            zprava = "{} utoci uderem maga bez many za {} hp.".format(self._jmeno, uder)
+            self._nastav_zpravu(zprava=zprava)
+        # magicky utok s manou
+        else:
+            uder = self.__magicky_utok + self._kostka.hod()
+            zprava = "{} pouzil magii za {} hp.".format(self._jmeno, uder)
+            self._nastav_zpravu(zprava=zprava)
+            self.__mana = 0
+            souper.bran_se(uder=uder)
+
 
 
 class Arena:
@@ -178,5 +221,10 @@ class Arena:
 
 # print(nona._Bojovnik__jmeno)
 
+nona = Bojovnik(jmeno="Nona", zivot=100, utok=20, obrana=10, kostka=desetistenna)
+saruman = Mag(jmeno="Saruman", zivot=60, utok=15, obrana=12, kostka=desetistenna, mana=30, magicky_utok=45)
+
 arena = Arena(bojovnik_1=nona, bojovnik_2=saruman, kostka=desetistenna)
-arena.zapas()
+# arena.zapas()
+
+print(isinstance(saruman, Mag))
