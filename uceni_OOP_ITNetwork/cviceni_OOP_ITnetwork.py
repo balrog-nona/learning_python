@@ -152,3 +152,54 @@ print("{}\n{}\n{}".format(Homer.jmeno, Homer.otec.jmeno, Homer.matka.jmeno))
 # sice to funguje, ale je to podstatne krkolomnejsi nez napoprve
 
 # LEKCE 5 - 8
+# jednoduche cviceni - ptak a angry ptak
+
+class Ptak:
+
+    def __init__(self):
+        self._hlad = 100
+        self._vaha = 50
+
+    def __str__(self):
+        return "Jsem ptak s vahou {} a hladem {}.".format(self._vaha, self._hlad)
+
+    def snez(self, potrava):
+        self._vaha += potrava
+        self._hlad -= potrava
+        if self._hlad < 0:
+            self._hlad = 0
+
+
+class Angry_ptak(Ptak):
+
+    def __init__(self):
+        super().__init__()
+        self._vztek = 50
+
+    def __str__(self):
+        return "Jsem angry-ptak s vahou {}, hladem {} a mira meho vzteku je {}.".format(self._vaha,
+                                                                                        self._hlad, self._vztek)
+
+    def provokuj(self, provokace):
+        if self._hlad > 60:
+            self._vztek += provokace * 2
+        else:
+            self._vztek += provokace
+
+
+ferdik = Ptak()
+kane = Angry_ptak()
+
+print(ferdik)
+ferdik.snez(potrava=20)
+print(ferdik)
+
+print(kane)
+kane.provokuj(provokace=5)
+print(kane)
+kane.snez(potrava=100)
+kane.provokuj(provokace=5)
+print(kane)
+
+
+# stredne pokrocily priklad - clovek a Pythonista

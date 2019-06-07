@@ -79,14 +79,20 @@ class Bojovnik:
     def nazivu(self):
         return self._zivot > 0  # toto vyhodnoti a vrati True nebo False
 
-    def graficky_zivot(self):
+    def graficky_ukazatel(self, aktualni, maximalni):
+        """
+        Metoda byla v prubehu prace prepsana tak,aby byla zobecnena a pouzila se jak na zivoty,tak na manu.
+        """
         ukazatel_zivota = 20  # delka grafickeho ukazatele zivota
-        pocet_dilku = int(self._zivot / self._max_zivot * ukazatel_zivota)
+        pocet_dilku = int(aktualni / maximalni * ukazatel_zivota)
         # print(pocet_dilku)
         # na netu to maji nastavene, ze i vstupni zivot 60 se ukazuje jako 100%
         if pocet_dilku == 0 and self.nazivu:
             pocet_dilku = 1
         return "[{}{}]".format("#" * pocet_dilku, " " * (ukazatel_zivota - pocet_dilku))
+
+    def graficky_zivot(self):
+        return self.graficky_ukazatel(aktualni=self._zivot, maximalni=self._max_zivot)
 
     def bran_se(self, uder):
         zraneni = uder - (self._obrana + self._kostka.hod())  # objekt kostka ma k dispozici svoje metody
@@ -106,7 +112,7 @@ class Bojovnik:
         zkopirovani.
         """
         uder = self._utok + self._kostka.hod()
-        zprava = "{} utoci uderem bojovnika za {} hp.".format(self._jmeno, uder)
+        zprava = "{} utoci uderem za {} hp.".format(self._jmeno, uder)
         self._nastav_zpravu(zprava=zprava)
         souper.bran_se(uder=uder)
 
@@ -149,8 +155,9 @@ class Mag(Bojovnik):
         self.__mana = mana
         self.__max_mana = mana
         self.__magicky_utok = magicky_utok
+        self.__zprava = ""
 
-    def utok(self, souper):
+    def utoc(self, souper):
         """
         Tato metoda prepise metodu v superclass.
         """
@@ -159,9 +166,7 @@ class Mag(Bojovnik):
             self.__mana += 10
             if self.__mana > self.__max_mana:
                 self.__mana = self.__max_mana
-            uder = self._utok + self._kostka.hod()
-            zprava = "{} utoci uderem maga bez many za {} hp.".format(self._jmeno, uder)
-            self._nastav_zpravu(zprava=zprava)
+            super().utoc(souper=souper)
         # magicky utok s manou
         else:
             uder = self.__magicky_utok + self._kostka.hod()
@@ -170,6 +175,8 @@ class Mag(Bojovnik):
             self.__mana = 0
             souper.bran_se(uder=uder)
 
+    def graficka_mana(self):
+        return self.graficky_ukazatel(aktualni=self.__mana, maximalni=self.__max_mana)
 
 
 class Arena:
@@ -182,9 +189,15 @@ class Arena:
     def __vykresli(self):
         self.__vycisti_obrazovku()
         print("------------Arena-----------------\n")
-        print("Zdravi bojovniku: \n")
-        print("{} {}".format(self.__bojovnik_1, self.__bojovnik_1.graficky_zivot()))
-        print("{} {}".format(self.__bojovnik_2, self.__bojovnik_2.graficky_zivot()))
+        print("Bojovnici: \n")
+        self.__vypis_bojovnika(bojovnik=self.__bojovnik_1)
+        self.__vypis_bojovnika(bojovnik=self.__bojovnik_2)
+
+    def __vypis_bojovnika(self, bojovnik):
+        print(bojovnik)
+        print("Zivot: {}".format(bojovnik.graficky_zivot()))
+        if isinstance(bojovnik, Mag):
+            print("Mana: {}".format(bojovnik.graficka_mana()))
 
     def __vycisti_obrazovku(self):
         if sys.platform.startswith("win"):
@@ -225,6 +238,5 @@ nona = Bojovnik(jmeno="Nona", zivot=100, utok=20, obrana=10, kostka=desetistenna
 saruman = Mag(jmeno="Saruman", zivot=60, utok=15, obrana=12, kostka=desetistenna, mana=30, magicky_utok=45)
 
 arena = Arena(bojovnik_1=nona, bojovnik_2=saruman, kostka=desetistenna)
-# arena.zapas()
+arena.zapas()
 
-print(isinstance(saruman, Mag))
