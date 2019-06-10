@@ -1,4 +1,5 @@
 from random import choice
+from math import sqrt
 
 # pri druhem prochazeni tutorialu
 
@@ -203,3 +204,92 @@ print(kane)
 
 
 # stredne pokrocily priklad - clovek a Pythonista
+class Osoba:
+
+    def __init__(self, jmeno, vek, unava=0):
+        """
+        Zadany parametr unava jiz nikam nepsat pro dedeni a tvorby objektu.
+        """
+        self.jmeno = jmeno
+        self.vek = vek
+        self.unava = unava
+
+    def __str__(self):
+        return "{} (vek {}), unaven {}".format(self.jmeno, self.vek, self.unava)
+
+    def beh(self, kms):
+        if self.unava + kms <= 20:
+            print("Bezim {} km.".format(kms))
+            self.unava += kms
+        else:
+            print("Jsem prilis vycerpany.")
+
+    def spani(self, hod):
+        self.unava -= hod * 10
+        if self.unava < 0:
+            self.unava = 0
+
+
+class Pythonista(Osoba):
+
+    def __init__(self, jmeno, vek, ide):
+        super().__init__(jmeno, vek)
+        self.__ide = ide
+
+    def programuj(self, pocet_radku):  # mam to trochu jinou logikou, ale zadani nebylo jednoznacne
+        if self.unava > 13:
+            print("Jsem prilis unaveny, abych programoval.")
+        else:
+            self.unava += pocet_radku // 10
+            if self.unava > 20:
+                self.unava = 20
+
+
+pythonista = Pythonista(jmeno="Karel Novy",vek=25, ide="pycharm")
+print(pythonista)
+pythonista.beh(5)
+print(pythonista)
+pythonista.programuj(25)
+print(pythonista)
+pythonista.spani(8)
+print(pythonista)
+
+
+# pokrocily priklad - trojuhelniky a obdelnik
+class Tvar:
+
+    def __init__(self, barva):
+        self.barva = barva
+
+
+class Obdelnik(Tvar):
+
+    def __init__(self, barva, sirka, delka):
+        super().__init__(barva)
+        self.sirka = sirka
+        self.delka = delka
+
+    def spocti_obsah(self):
+        return self.sirka * self.delka
+
+
+class Trojuhelnik(Tvar):
+
+    def __init__(self, barva, a, b, c):
+        super().__init__(barva)
+        self.a = a
+        self.b = b
+        self.c = c
+
+    def spocti_obsah(self):
+        """
+        Dle zadani pouzit Heronuv vzorec.
+        """
+        s = (self.a + self.b + self.c) / 2
+        return sqrt(s * (s - self.a) * (s - self.b) * (s - self.c))
+
+
+obdelnik = Obdelnik(barva="hneda", sirka=3, delka=26)
+trojuhelnik = Trojuhelnik(barva="zelena", a=25, b=15, c=15)
+
+print("Obsah stromu je {} cm^2".format(4 * trojuhelnik.spocti_obsah() + obdelnik.spocti_obsah()))
