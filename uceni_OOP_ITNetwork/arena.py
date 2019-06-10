@@ -217,7 +217,8 @@ class Arena:
         """
         print("Vitejte v arene!\nDnes se utkaji {} s {}!".format(self.__bojovnik_1,self.__bojovnik_2))
         print("Zapas muze zacit...")
-        # self.__vykresli() proc to neprovede predchozi prikazy?
+        input()  # tim inputem se zamezilo vymizeni vseho zatim vytisknuteho
+        # prohozeni bojovniku, aby pokazde zacal nekdo jiny
         if random.randint(0, 1):
             (self.__bojovnik_1, self.__bojovnik_2) = (self.__bojovnik_2, self.__bojovnik_1)
         while self.__bojovnik_1.nazivu and self.__bojovnik_2.nazivu:
