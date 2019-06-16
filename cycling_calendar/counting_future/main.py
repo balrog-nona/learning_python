@@ -21,6 +21,7 @@ https://www.youtube.com/watch?v=h-gBeC9Y9cE
 Google API documentation:
 https://developers.google.com/api-client-library/python/
 https://developers.google.com/calendar/v3/reference/events
+https://developers.google.com/calendar/overview
 
 The substantial part of the code was taken from quickstart.py on the Google calendar API website.
 """
@@ -93,4 +94,4 @@ EVENT = {
     "end": {"date": making_date.end_date}
 }
 
-e = SERVICE.events().insert(calendarId=calendar_ID, body=EVENT).execute()  # notification can be made as well
+e = SERVICE.events().insert(calendarId=calendar_ID, body=EVENT).execute()
