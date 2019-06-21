@@ -1,5 +1,6 @@
 from random import choice
 from math import sqrt
+from math import degrees, radians
 
 # pri druhem prochazeni tutorialu
 
@@ -293,3 +294,20 @@ obdelnik = Obdelnik(barva="hneda", sirka=3, delka=26)
 trojuhelnik = Trojuhelnik(barva="zelena", a=25, b=15, c=15)
 
 print("Obsah stromu je {} cm^2".format(4 * trojuhelnik.spocti_obsah() + obdelnik.spocti_obsah()))
+
+
+# lekce 9
+# jednoduchy priklad - prevod stupnu na radiany
+class Prevodnik():
+
+    @staticmethod
+    def na_radiany(stupen):
+        return "{} stupnu na radiany: {}".format(stupen, radians(stupen))
+
+    @staticmethod
+    def na_stupne(radian):
+        return "{} radianu na stupne: {}".format(radian, degrees(radian))
+
+
+print(Prevodnik.na_stupne(6.28))
+print(Prevodnik.na_radiany(90))
