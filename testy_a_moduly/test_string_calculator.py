@@ -14,4 +14,6 @@ def test_String_calculator():
     assert cal.add("1\n2, 3") == 6
     assert cal.add("1\n 2,3") == 6
     assert cal.add("1 \n 2 \n 3") == 6
-    
+    assert cal.add("//;\n1;2") == 3
+    assert cal.add("//:\n 1: 6") == 7
+    assert cal.add("//&\n4 &6") == 10

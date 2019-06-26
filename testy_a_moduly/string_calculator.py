@@ -6,13 +6,20 @@ class String_calculator:
         if bool(a) == False:
             return 0
         else:
+            if a[0] == "/":
+                delimiter = a[2]
+            else:
+                delimiter = ","
             if "\n" in a:
-                a = a.replace("\n", ",")
-            if "," in a:
-                a = a.split(",")
+                a = a.replace("\n", delimiter)
+            if delimiter in a:
+                a = a.split(delimiter)
                 summary = 0
                 for i in a:
-                    summary += int(i)
+                    try:
+                        summary += int(i)
+                    except ValueError:
+                        pass
                 return summary
             else:
                 return int(a)
