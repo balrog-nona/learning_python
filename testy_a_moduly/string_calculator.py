@@ -6,6 +6,8 @@ class String_calculator:
         if bool(a) == False:
             return 0
         else:
+            if "\n" in a:
+                a = a.replace("\n", ",")
             if "," in a:
                 a = a.split(",")
                 summary = 0
