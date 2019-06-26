@@ -17,7 +17,11 @@ class String_calculator:
                 summary = 0
                 for i in a:
                     try:
-                        summary += int(i)
+                        if int(i) > 0:
+                            summary += int(i)
+                        else:
+                            raise ValueError("negatives not allowed")
+                            continue
                     except ValueError:
                         pass
                 return summary
