@@ -1,9 +1,7 @@
-import pytest
-
-class String_calculator:
+class StringCalculator:
 
     def add(self, a):
-        if bool(a) == False:
+        if not a:
             return 0
         else:
             if a[0] == "/":
@@ -17,13 +15,14 @@ class String_calculator:
                 summary = 0
                 for i in a:
                     try:
-                        summary += int(i)
+                        if int(i) >= 0:
+                            summary += int(i)
+                        else:
+                            raise Exception("negatives not allowed: {}".format(int(i)))
                     except ValueError:
                         pass
                 return summary
             else:
                 return int(a)
-
-
 
 

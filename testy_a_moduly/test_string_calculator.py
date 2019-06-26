@@ -1,10 +1,9 @@
 import string_calculator
 import pytest
 
-cal = string_calculator.String_calculator()
-print(cal.add("1\n2,3"))
+cal = string_calculator.StringCalculator()
 
-def test_String_calculator():
+def test_StringCalculator():
     assert cal.add("") == 0
     assert cal.add("2") == 2
     assert cal.add("4,8") == 12
@@ -17,3 +16,5 @@ def test_String_calculator():
     assert cal.add("//;\n1;2") == 3
     assert cal.add("//:\n 1: 6") == 7
     assert cal.add("//&\n4 &6") == 10
+    with pytest.raises(Exception):
+        cal.add("//,\n2, 3, -2, 1")
