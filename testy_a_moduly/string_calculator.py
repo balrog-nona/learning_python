@@ -23,9 +23,9 @@ class StringCalculator:
                     except ValueError:
                         pass
                     if type(i) == int:
-                        if i > 0:
+                        if i > 0 and i <= 1000:
                             summary += i
-                        else:
+                        elif i < 0:
                             numbers += str(i) + " "
                 if numbers:
                     raise Exception("negatives not allowed: {}".format(numbers))
