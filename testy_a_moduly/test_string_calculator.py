@@ -3,7 +3,7 @@ import pytest
 
 cal = string_calculator.StringCalculator()
 #print(cal.add("//,5,6,-4,-2"))
-
+"""
 def test_StringCalculator():
     assert cal.add("") == 0
     assert cal.add("2") == 2
@@ -23,3 +23,8 @@ def test_StringCalculator():
     with pytest.raises(Exception) as error:
         cal.add("//:\n 1:4:-6:-7:3:-1")
         assert "-6 -7 -1" in str(error.value)
+"""
+def test_get_called_count():
+    cal.add("2, 6, 4")
+    cal.add("1, 2, 5")
+    assert cal.get_called_count() == 2

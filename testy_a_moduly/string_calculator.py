@@ -1,6 +1,9 @@
 class StringCalculator:
 
+    counting = 0
+
     def add(self, a):
+        self.counting += 1
         if not a:
             return 0
         else:
@@ -30,3 +33,6 @@ class StringCalculator:
                     return summary
             else:
                 return int(a)
+
+    def get_called_count(self):
+        return self.counting
