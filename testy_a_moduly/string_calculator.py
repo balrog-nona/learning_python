@@ -13,16 +13,20 @@ class StringCalculator:
             if delimiter in a:
                 a = a.split(delimiter)
                 summary = 0
+                numbers = ""
                 for i in a:
                     try:
-                        if int(i) >= 0:
-                            summary += int(i)
-                        else:
-                            raise Exception("negatives not allowed: {}".format(int(i)))
+                        i = int(i)
                     except ValueError:
                         pass
-                return summary
+                    if type(i) == int:
+                        if i > 0:
+                            summary += i
+                        else:
+                            numbers += str(i) + " "
+                if numbers:
+                    raise Exception("negatives not allowed: {}".format(numbers))
+                else:
+                    return summary
             else:
                 return int(a)
-
-
