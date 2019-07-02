@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ pohadka ]
+then
+	touch vynatek
+	head -1 pohadka > vynatek
+	cat vynatek >> pohadka
+	echo "hotovo"
+else
+	echo "pohadka neexistuje"
+fi

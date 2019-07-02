@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ pohadka ]
+then
+	sed 's/nany/noni/g' pohadka
+	touch vynatek
+	tail -4 pohadka > vynatek
+	echo "hotovo"
+else
+	echo "nepovedlo se"
+fi

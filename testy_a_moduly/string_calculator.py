@@ -8,7 +8,8 @@ class StringCalculator:
             return 0
         else:
             if a[0] == "/":
-                delimiter = a[3]
+                delimiter_1 = a[3]
+                delimiter_2 = a[6]
             else:
                 delimiter = ","
             if "\n" in a:
