@@ -8,9 +8,8 @@ class StringCalculator:
             return 0
         else:
             if a[0] == "/":
-                first_bracket = a.find("[")
-                second_bracket = a.find("]")
-                delimiter = a[first_bracket + 1:second_bracket]
+                delimiter_1 = a[3]
+                delimiter_2 = a[6]
             else:
                 delimiter = ","
             if "\n" in a:

@@ -23,10 +23,17 @@ def test_StringCalculator():
     with pytest.raises(Exception) as error:
         cal.add("//:\n 1:4:-6:-7:3:-1")
         assert "-6 -7 -1" in str(error.value)
+<<<<<<< HEAD
     assert cal.add("//:\n 2:6:10:1001") == 18
     assert cal.add("//;\n2; 7; 50; 1001") == 59
     assert cal.add("//[*****]\n10*****22 *****2000*****120") == 152
     #assert cal.add("//[*][.]\n 2.55*6 * 520.11* 3 . 1") == 598
+=======
+    assert cal.add("//[:]\n 2:6:10:1001") == 18
+    assert cal.add("//[;]\n2; 7; 50; 1001") == 59
+    assert cal.add("//[*****]\n1*****2 *****3") == 6
+    assert cal.add("//[*][.]\n 2.55.6 * 520*11* 3 . 1") == 598
+>>>>>>> parent of 86b3477... 10
 
 
 
