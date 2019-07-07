@@ -25,8 +25,8 @@ def test_StringCalculator():
         assert "-6 -7 -1" in str(error.value)
     assert cal.add("//[:]\n 2:6:10:1001") == 18
     assert cal.add("//[;]\n2; 7; 50; 1001") == 59
-    assert cal.add("//[*****]\n1*****2 *****3") == 6
-    assert cal.add("//[*][.]\n 2.55.6 * 520*11* 3 . 1") == 598
+    assert cal.add("//[*****]\n10*****22 *****2000*****120") == 152
+    #assert cal.add("//[*][.]\n 2.55*6 * 520.11* 3 . 1") == 598
 
 
 
