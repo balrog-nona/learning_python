@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if  grep "slovo" soubor 
+then
+	sed 's/slovo/prikazani/g' soubor > soubor_2
+	ls -l .. > soubor
+	echo "a to je konec" >> soubor_2
+else
+	ls -l > soubor
+	echo "uz to je prepsane"
+fi 
