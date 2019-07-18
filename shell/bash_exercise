@@ -1,0 +1,94 @@
+1. Run the program "test.sh" and discard any output (standard and error) of that script.
+
+bash ./test.sh >> /dev/null
+
+2. Copy a directory tree (with files) from /opt/test/ to your home directory using tar.
+
+tar -cvf test-08-07-19.tar ~/Downloads/opt/test
+
+3. Rename all .htm files in /tmp/test/ (but not subdirectories), so that they have .html extension instead of .htm. Ignore hidden files.
+
+rename .htm .html *.html
+
+4. Print contents of all files in /tmp/test/ (but not subdirectories), including hidden files. Ensure that the filesystem object is a regular file.
+
+for file in tmp/test/* tmp/test/.* ; do cat $file ; done
+
+5. List all files (their full paths) in /tmp/test/ and subdirectories, that contain the left bracket "["
+
+grep -r -l ‘\[‘ tmp/test/
+
+6. You have a file "/tmp/test/IMPORTANT" and a new version of it in your home directory named "IMPORTANT.new". Write a sequence of commands
+	that would replace the old version of the file with the new one, and keep the backup named "/tmp/test/IMPORTANT.backup". There must
+	be no race condition (time slice when the file is not there, or when there is just part of it).
+
+cat IMPORTANT > IMPORTANT.backup && cat ~/IMPORTANT.new > IMPORTANT
+
+7. Transfer directory "/tmp/test/" (and everything below) to a machine named "orion" to directory "/var/tmp/test". Use ssh.
+
+ssh orion mv /tmp/test/ /var/tmp/test
+
+8. Force apache to reload its configuration by sending a signal to it; "apache.pid" file is located in "/var/apache/".
+
+sudo /var/apache/ reload
+
+9. In "/tmp/test" and subdirs there are files with ".dat" extension (among others). The files contain numbers separated by 0x0A (LF).
+	Print the smallest number from each of the file.
+
+for file in tmp/test/.*dat tmp/test/*/*.dat ; do echo -e $(sed ‘s/0x/\\x/g’ $file) | sort -n | head -1 ; done
+
+10. There is a filesystem mounted on /usr containing new version of binaries. Create a hard link "/bin/perl" for file "/usr/bin/perl".
+
+ln /usr/bin/perl /bin/perl
+
+11. Set ownership to "root" group "sys" for directory "/tmp/test" and everything below.
+
+sudo chown :sys /tmp/test/
+
+12. Set rights for "/tmp/test/" tree (both files and directories), so that the owner can read and write files (but not execute), group can only
+	read, and others are denied access altogether. The directories must be accessible for owner and group only.
+
+chmod -R u=rwX,g=rX,o=- tmp/*
+
+13. Write a shell glob matching all files (and other objects) in the current directory, including hidden files, but not matching the "." or ".."
+
+
+
+14. Set permissions for binary "/usr/local/bin/my_program", so that only "root" and members of the "adm" group can execute it; and when
+	executed, the program runs under "daemon" UID.
+
+
+
+15. Set permissions for "/tmp/test/", so that root cannot delete files in this directory.
+
+setfacl -m u:root:r-x /tmp/test
+
+16. List lines in file "/tmp/test/pkgs" that start with SUNW then a hexadecimal number followed by a space, and end with an asterisk.
+
+egrep ‘^SUNW[‘[:xdigit:]’]{1,}[‘[:space:]’].*\*$’ /tmp/test/pkgs
+egrep ‘^SUNW[‘[:xdigit:]’]+[‘[:space:]’].*\*$’ /tmp/test/pkgs
+
+17. Copy file "/tmp/test/pkgs" to your home directory, so that the new name is pkgs-YYYYMMDD (where YYYYMMDD is the current date).
+
+cp /tmp/test/pkgs ~/pkgs-$(date +’%Y%m%d’)
+
+18. List user names from /etc/passwd that have UID > 500
+
+while IFS=: read login pwd uid gid full home shell; do if (( $iud > 500 )); then echo $login; fi; done < /etc/passwd
+awk -F: ‘$3 > 500’ < /etc/passwd | awk -F: '{print $1}’
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
