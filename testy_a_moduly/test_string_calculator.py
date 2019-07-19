@@ -54,3 +54,13 @@ def test_ex5():
     with pytest.raises(Exception) as error:
         cal.add('//&\n9& -1&68& 23')
         assert "-1" in str(error.value)
+
+
+def test_ex6():
+    with pytest.raises(Exception) as error:
+        cal.add('//.\n3. -77.-6. 2')
+        assert "-77, -6" in str(error.value)
+    with pytest.raises(Exception) as error:
+        cal.add('//!\n-9!1!6008! -235!-55')
+        assert "-9, -235, -55" in str(error.value)
+
