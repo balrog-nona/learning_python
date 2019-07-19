@@ -1,7 +1,7 @@
 import string_calculator
 import pytest
 
-cal = string_calculator.String_calculator()
+cal = string_calculator.StringCalculator()
 
 
 def test_ex1v1(): #v1 stands for version 1
@@ -45,3 +45,12 @@ list = [('//;\n1; 4; 50', 55), ('//~\n5~200', 205)]  #nevyhodou je, ze to je glo
 @pytest.mark.parametrize('test_input, expected', list)
 def test_ex4(test_input, expected):
     assert cal.add(test_input) == expected
+
+
+def test_ex5():
+    with pytest.raises(Exception) as error:
+        cal.add('//:\n3: 8:-6: 2')
+        assert "-6" in str(error.value)
+    with pytest.raises(Exception) as error:
+        cal.add('//&\n9& -1&68& 23')
+        assert "-1" in str(error.value)
