@@ -5,7 +5,10 @@ class StringCalculator:
     Calculator+Kata+v1.pdf
     """
 
+    counting_add = 0
+
     def add(self, a):
+        self.counting_add += 1
         if not a:
             return 0
         else:
@@ -37,4 +40,6 @@ class StringCalculator:
                 return int(a)
 
 
+    def get_called_count(self):
+        return self.counting_add
 

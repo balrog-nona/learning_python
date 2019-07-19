@@ -64,3 +64,7 @@ def test_ex6():
         cal.add('//!\n-9!1!6008! -235!-55')
         assert "-9, -235, -55" in str(error.value)
 
+
+def test_get_called_count():
+    assert cal.get_called_count() == 24
+
