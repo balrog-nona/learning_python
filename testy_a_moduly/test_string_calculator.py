@@ -41,7 +41,7 @@ def test_ex3(test_input, expected):
     assert cal.add(test_input) == expected
 
 
-list = [('//;\n1; 4; 50', 55), ('//~\n5~200', 205)]  #nevyhodou je, ze to je gloalni promenna
+list = [('//[;]\n1; 4; 50', 55), ('//[~]\n5~200', 205)]  #nevyhodou je, ze to je gloalni promenna
 @pytest.mark.parametrize('test_input, expected', list)
 def test_ex4(test_input, expected):
     assert cal.add(test_input) == expected
@@ -49,19 +49,19 @@ def test_ex4(test_input, expected):
 
 def test_ex5():
     with pytest.raises(Exception) as error:
-        cal.add('//:\n3: 8:-6: 2')
+        cal.add('//[:]\n3: 8:-6: 2')
         assert "-6" in str(error.value)
     with pytest.raises(Exception) as error:
-        cal.add('//&\n9& -1&68& 23')
+        cal.add('//[&]\n9& -1&68& 23')
         assert "-1" in str(error.value)
 
 
 def test_ex6():
     with pytest.raises(Exception) as error:
-        cal.add('//.\n3. -77.-6. 2')
+        cal.add('//[.]\n3. -77.-6. 2')
         assert "-77, -6" in str(error.value)
     with pytest.raises(Exception) as error:
-        cal.add('//!\n-9!1!6008! -235!-55')
+        cal.add('//[!]\n-9!1!6008! -235!-55')
         assert "-9, -235, -55" in str(error.value)
 
 
@@ -69,7 +69,12 @@ def test_get_called_count():
     assert cal.get_called_count() == 24
 
 
-@pytest.mark.parametrize('test_input, expected', [('//=\n6= 55= 1001', 61), ('4,4\n4, 9000', 12)])
+@pytest.mark.parametrize('test_input, expected', [('//[=]\n6= 55= 1001', 61), ('4,4\n4, 9000', 12)])
 def test_ex9(test_input, expected):
+    assert cal.add(test_input) == expected
+
+
+@pytest.mark.parametrize('test_input, expected', [('//[***]\n1***1000*** 45', 1046), ('//[^^]\n3^^ 9 ^^ 100', 112)])
+def test_ex10(test_input, expected):
     assert cal.add(test_input) == expected
 
