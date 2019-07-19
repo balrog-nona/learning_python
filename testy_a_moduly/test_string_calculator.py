@@ -41,7 +41,7 @@ def test_ex3(test_input, expected):
     assert cal.add(test_input) == expected
 
 
-list = [('//[;]\n1; 4; 50', 55), ('//[~]\n5~200', 205)]  #nevyhodou je, ze to je gloalni promenna
+list = [('//[;]\n1; 4\n 50', 55), ('//[~]\n5~200', 205)]  #nevyhodou je, ze to je gloalni promenna
 @pytest.mark.parametrize('test_input, expected', list)
 def test_ex4(test_input, expected):
     assert cal.add(test_input) == expected
@@ -82,4 +82,10 @@ def test_ex10(test_input, expected):
 @pytest.mark.parametrize('test_input, expected', [('//[*][%]\n11* 32%100 % 4 * 1001', 147), \
                                                   ('//[+][-]\n22\n5+ 50-4\n 110-0+1\n1', 193)])
 def test_ex11(test_input, expected):
+    assert cal.add(test_input) == expected
+
+
+@pytest.mark.parametrize('test_input, expected', [('//[***][.....]\n11*** 32.....100 ..... 4 *** 1001.....0', 147), \
+                                                  ('//[+][---]\n22\n5+ 50---4\n 110---0+1\n1+1 --- 1004', 194)])
+def test_ex12(test_input, expected):
     assert cal.add(test_input) == expected
