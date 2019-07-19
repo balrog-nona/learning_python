@@ -13,7 +13,11 @@ class StringCalculator:
             return 0
         else:
             if a[0] == '/':
-                delimiter = a[3]
+                if a[:8].count('[') >= 2 and a[:8].count(']') >= 2:
+                    delimiter = a[3]
+                    a = a.replace(a[6], delimiter) #second delimiter replaced by the first one
+                else:
+                    delimiter = a[3]
             else:
                 delimiter = ","
             if "\n" in a:
