@@ -78,7 +78,10 @@ while IFS=: read login pwd uid gid full home shell; do if (( $iud > 500 )); then
 awk -F: ‘$3 > 500’ < /etc/passwd | awk -F: '{print $1}’
 
 
-
+K subshellu:
+cat `echo textak` - prikaz mezi `` se provede jako prvni a jeho vysledek jde do cat, tato konstrukce muze mit jen 2 roviny
+cat $(echo textak) - prikaz v $() se provede jako prvni a jeho vysledek jde do cat, ale zde je mozna spousta rovin - dalsi $() muze
+byt v te prvni zavorce
 
 
 
