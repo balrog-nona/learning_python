@@ -69,7 +69,7 @@ def test_get_called_count():
     assert cal.get_called_count() == 24
 
 
-@pytest.mark.parametrize('test_input, expected', [('//[=]\n6= 55= 1001', 61), ('4,4\n4, 9000', 12)])
+@pytest.mark.parametrize('test_input, expected', [('//[=]\n6= 55= 1001\n4', 65), ('4,4\n4, 9000', 12)])
 def test_ex9(test_input, expected):
     assert cal.add(test_input) == expected
 
@@ -78,3 +78,8 @@ def test_ex9(test_input, expected):
 def test_ex10(test_input, expected):
     assert cal.add(test_input) == expected
 
+
+@pytest.mark.parametrize('test_input, expected', [('//[*][%]\n11* 32%100 % 4 * 1001', 147), \
+                                                  ('//[+][-]\n22\n5+ 50-4\n 110-0+1\n1', 193)])
+def test_ex11(test_input, expected):
+    assert cal.add(test_input) == expected
