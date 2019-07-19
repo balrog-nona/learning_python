@@ -1,5 +1,3 @@
-import pytest
-
 class String_calculator:
     """
     The class is created according to the test exercise here:
@@ -11,14 +9,23 @@ class String_calculator:
         if not a:
             return 0
         else:
+            if a[0] == '/':
+                delimiter = a[2]
+            else:
+                delimiter = ","
             if "\n" in a:
-                a = a.replace("\n", ",")
-            if ',' in a:
-                a = a.split(',')
-            sum = 0
-            for i in a:
-                sum += int(i)
-            return sum
+                a = a.replace("\n", delimiter)
+            if delimiter in a:
+                a = a.split(delimiter)
+                sum = 0
+                for i in a:
+                    try:
+                        sum += int(i)
+                    except ValueError:
+                        pass
+                return sum
+            else:
+                return int(a)
 
 
 
