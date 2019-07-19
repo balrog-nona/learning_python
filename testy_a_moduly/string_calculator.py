@@ -1,4 +1,4 @@
-class String_calculator:
+class StringCalculator:
     """
     The class is created according to the test exercise here:
     https://static1.squarespace.com/static/5c741968bfba3e13975e33a6/t/5ca6614d971a1877cadc4f8a/1554407757512/String+
@@ -20,7 +20,10 @@ class String_calculator:
                 sum = 0
                 for i in a:
                     try:
-                        sum += int(i)
+                        if int(i) >= 0:
+                            sum += int(i)
+                        else:
+                            raise Exception("negatives not allowed: {}".format(int(i)))
                     except ValueError:
                         pass
                 return sum
