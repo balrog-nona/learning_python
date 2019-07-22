@@ -11,3 +11,6 @@ class Matematika:
 
     def deleni(self, a, b):
         return a / b
+
+    def mocnina(self, a, b):
+        return a ** b
