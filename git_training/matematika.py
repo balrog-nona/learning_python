@@ -1,3 +1,5 @@
+import math
+
 class Matematika:
 
     def scitani(self, a, b):
@@ -14,3 +16,6 @@ class Matematika:
 
     def mocnina(self, a, b):
         return a ** b
+
+    def odmocnina(self, a):
+        return math.sqrt(a)
