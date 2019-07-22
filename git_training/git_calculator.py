@@ -6,11 +6,7 @@ Metoda: prevazne pokus-omyl
 class StringCalculator:
 
     def add(self, a):
-<<<<<<< HEAD
-        if bool(a) == False:
-=======
         if a:
->>>>>>> 368a269... Condition changed
             return 0
         else:
             if a[0] == "/":
