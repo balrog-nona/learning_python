@@ -8,3 +8,6 @@ class Matematika:
 
     def nasobeni(self, a, b):
         return a * b
+
+    def deleni(self, a, b):
+        return a / b
