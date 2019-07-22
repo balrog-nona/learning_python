@@ -22,3 +22,6 @@ class Matematika:
 
     def obvod_ctverce(self, a):
         return 4 * a
+
+    def obvod_obdelnika(self, a, b):
+        return 2 * (a + b)
