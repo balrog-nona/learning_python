@@ -19,3 +19,6 @@ class Matematika:
 
     def odmocnina(self, a):
         return math.sqrt(a)
+
+    def obvod_ctverce(self, a):
+        return 4 * a
