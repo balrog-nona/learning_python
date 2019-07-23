@@ -52,12 +52,12 @@ chmod -R u=rwX,g=rX,o=- tmp/*
 
 13. Write a shell glob matching all files (and other objects) in the current directory, including hidden files, but not matching the "." or ".."
 
-
+* | !(.|..)
 
 14. Set permissions for binary "/usr/local/bin/my_program", so that only "root" and members of the "adm" group can execute it; and when
 	executed, the program runs under "daemon" UID.
 
-
+sudo setfacl -m u:root:r-x,g:adm:r-x /usr/local/bin/my_program && setuid $daemon /usr/local/bin/my_program
 
 15. Set permissions for "/tmp/test/", so that root cannot delete files in this directory.
 
