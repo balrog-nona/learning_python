@@ -4,7 +4,7 @@ for i in seq `1 80`
 do
 	if [ "$(ping -c 1 google.com)" ]
 	then
-		/usr/bin/python3 /home/balrog/Dokumenty/Programování/doGIThubu/learning_python/cycling_future/main.py
+		/usr/bin/python3 /home/balrog/Dokumenty/Programování/doGIThubu/learning_python/cycling_calendar/counting_future/main.py
 	 	break
 	else
 		sleep 20

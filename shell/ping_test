@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ "$(ping -c 1 google.com)" ]
+then
+	echo "spojeni navazano"
+	/usr/bin/python3 /home/balrog/Documents/Programovani/doGIThubu/learning_python/cycling_calendar/counting_future/main.py
+	echo "provedeno"
+else
+	echo "spojeni nefungje"
+fi
