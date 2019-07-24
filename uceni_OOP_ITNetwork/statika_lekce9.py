@@ -21,7 +21,7 @@ class Uzivatel:
     zkontrolovat."""
 
     minimalni_delka_hesla = 6
-    dalsi_id = 1
+    dalsi_id = 1  # kdyby tu nebyla tridni promenna, musel by se pocet instanci hlidat zvenci
 
     def __init__(self, jmeno, heslo):
         self.jmeno = jmeno
@@ -29,7 +29,7 @@ class Uzivatel:
         self.prihlaseny = False
         # prakticke vyuziti tridnich promennych pro cislovani uzivatelu
         self.id = Uzivatel.dalsi_id
-        Uzivatel.dalsi_id += 1
+        Uzivatel.dalsi_id += 1  # trida si sama uklada, jake bude id dalsi instance
 
     def prihlas_se(self,zadane_heslo):
         if self.heslo == zadane_heslo:
@@ -51,15 +51,20 @@ class Uzivatel:
         else:
             return False
 
-    @classmethod
-    def zvaliduj_heslo_class(cls, heslo):
-        if len(heslo) >= cls.minimalni_delka_hesla:
+    @classmethod  # tridni metoda; hodi se, kdyz se bude trida dedit a v potomkovi ma byt jina hodnota tridni promenne
+    def zvaliduj_heslo_class(cls, heslo):  # prvni parametr - odkaz na tridu,dle konveci cls
+        if len(heslo) >= cls.minimalni_delka_hesla:  # pomoci cls. se volajitridni promenne
             return True
         else:
             return False
 
 
 print(Uzivatel.minimalni_delka_hesla)  # da se na to ptat primo pres tridu
+"""
+pristup k promenne primo pres tridu, nikoli instanci
+promenna nalezi tride a muzeme se na ni ptat, aniz bychom meli vytvoreneho uzivatele
+tato promenna bude ale i na instanci
+"""
 
 u = Uzivatel(jmeno="Tomas Marny", heslo="tik")
 print(u.minimalni_delka_hesla)  # tady je ta promenna taky
@@ -69,7 +74,7 @@ u.minimalni_delka_hesla = 90
 print(Uzivatel.minimalni_delka_hesla)
 print(u.minimalni_delka_hesla)
 
-print(Uzivatel.zvaliduj_heslo("hesloveslo"))
+print(Uzivatel.zvaliduj_heslo("hesloveslo"))  # metodu muzu zavolat na tride
 print(u.zvaliduj_heslo(u.heslo))
 
 v = Uzivatel(jmeno="Rosta", heslo="6666666")
@@ -92,6 +97,15 @@ class Trida:
     def odcitani(a):
         print("fce odcitani {}".format(a))
 
+    def nejaka_fce():
+        print("Tato fce je ve tride.")
+
+    def jina_fce(text):
+        print("Tahle fce je taky ve tride.")
+        print("Text je: ", text)
+
 
 Trida.scitani()
 Trida.odcitani(a=6)
+Trida.nejaka_fce()
+Trida.jina_fce(text="parametr")
