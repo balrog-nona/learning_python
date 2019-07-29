@@ -72,7 +72,7 @@ print(student)
 # trida s vlastnostma
 class StudentVlastnosti:
 
-    def __init(self, jmeno, pohlavi, vek):
+    def __init__(self, jmeno, pohlavi, vek):
         self.__jmeno = jmeno
         self.__muz = pohlavi
         self.__vek = vek
@@ -96,6 +96,66 @@ class StudentVlastnosti:
 Dekoratory jsou objekty podporujici volani (fce, metody nebo objektu s metodou __call__() ), ktere vraci upravenou
 (dekorovanou) verzi metody nebo fce.
 """
+studak = StudentVlastnosti(jmeno='Marek Novotny',pohlavi=True, vek=22)
+print(studak)
+studak.vek = 15
+print(studak)
+print(studak.vek)  # vlastnost se pouziva jako normalni atribut
+
+# vsechny atributy objektu se uchovavaji ve slovniku spojenem s objektem + da se tak i prirazovat
+print(studak.__dict__)
+
+
+# trida podle tutorialu Coreyho Schafera
+# https://www.youtube.com/watch?v=jCzT9XFZ5bw
+class Employee:
+
+    def __init__(self, first, last):
+        """
+        Pozdejsi zmeny jmena se nepromitnou do emailu, protoze __init__ se provede jen pri tvorbe instance.
+        Ale bylo by celkove fajn, kdyby se email updatoval automaticky, pokud se jmeno zmeni. Z teto pozice neni moc
+        vhodne udelat z email atributu emailovou metodu, protoze to by vsichni, kdo uz tento kod uzivaji museli
+        svuj kod zmenit, coz nechceme! Reseni: prevedeni email atributu na dekorator.
+        """
+        self.first = first
+        self.last = last
+        #self.email = first + '.' + last + '@email.com' vynato po tvorve dekoratoru
+
+    @property
+    def email(self):  # definovano jako metoda, ale pristup jako k atributu
+        return '{}.{}@email.com'.format(self.first, self.last)
+
+    @property
+    def fullname(self):
+        return '{} {}'.format(self.first, self.last)
+
+    @fullname.setter  # nazev vlastnosti.setter - nic nevraci, jen nastavuje
+    def fullname(self, name):
+        first, last = name.split(' ')
+        self.first = first
+        self.last = last
+
+    @fullname.deleter
+    def fullname(self):
+        print("Delete Name!")
+        self.first = None
+        self.last = None
+
+emp_1 = Employee(first='John', last='Smith')
+emp_1.first = 'Jim'
+emp_1.fullname = 'Corey Schafer' # k teto akci se vytvoril setter
+
+print(emp_1.first)
+print(emp_1.email)  # kdyby to nebyl dekorator, ale metoda, tak by se vsude pristup k nemu musel prepsat na email()
+print(emp_1.fullname)
+
+del emp_1.fullname
+print(emp_1.first)
+
+
+
+
+
 
 
 
