@@ -126,7 +126,7 @@ class Vector:
         elif issubclass(type(other), Sequence):  # konstrola, jestli je to podtrida Sequence z modulu collections.abc
             if len(other) == 2:
                 return Vector(self.x+other[0], self.y+other[1])  # tady taky
-        raise NotImplemented  # jak to, ze tu neni else? dole taky
+        raise NotImplemented
 
     def __mul__(self, other):
         if issubclass(type(other), Real):
@@ -185,6 +185,7 @@ class Typed:
 
     """
     Deskriptor Typed zajistuje, aby byl atribut urciteho typu.
+    Mela to byt evidentne obecna trida pouzitelna na jakykoli atribut.
     """
 
     dictionary = WeakKeyDictionary()
@@ -202,7 +203,7 @@ class Typed:
         print('Setting instance', instance, 'to', value)
         if not isinstance(value, self.ty):  # kontrola, jestli je hodnota spravneho typu
             raise TypeError('Value must be type {}'.format(self.ty))
-        self.dictionary[instance] = value
+        self.dictionary[instance] = value  # nemelo byt tu byt spis self.dictionary[atribute] = value??
 
 """
 WeakKeyDictionary funguje jako normalni slovnik, ale pokud pro dany objekt (klic) ve slovniku neexistuje vic referenci,
@@ -214,7 +215,7 @@ class Person:
 
     name = Typed(ty=str)  # jmeno musi byt string
     age = Typed()  # vek bude int
-    weight = Typed(ty=float)  # vek bude float
+    weight = Typed(ty=float)  # vaha bude float
 
     def __init__(self, name, age, weight):  # jak je toto navazane na ty promenne?
         self.name = name  # pri volani atributu Python pozna, ze jde o deskriptory a zavola __get__(), __set__()
@@ -245,12 +246,106 @@ class Ranged(Typed):
             raise TypeError('Value muset be greater than {}'.format(self.min))
         elif value > self.max:
             raise TypeError('Value must be lower than {}'.format(self.max))
-        super().__set__(instance, value)  # zase chybi else
+        super().__set__(instance, value)
 
 
-bob = CleverPerson(name='Bob', age=33, weight=88.7,iq=120)
-print(bob.weight)  # neco tu nefunguje
-del bob  # snizi se poct referenci na objekt
+bob = CleverPerson(name='Bob', age=33, weight=88.7,iq=120)  # toto nefunguje
+print(bob.name)  # pokazde se prepise zrejme cela instance, az zustane ta posledni hodnota...
+print(bob.__dict__)  # slovnik je prazdny - neobsahuje zadne atributy
+del bob  # snizi se pocet referenci na objekt
 # print(bob.age) vyvola NameError - bob uz neexistuje
 print(CleverPerson.name)
 
+
+# descriptory podle netu https://www.youtube.com/watch?v=HUtLnn5MBGk
+class MyDescriptor:
+
+    def __init__(self):
+        self.__age = 0
+
+    def __get__(self, instance, owner):  # instance je sam, owner je class, ktere ta instance nalezi, tj. zde Person
+        return self.__age
+
+    def __set__(self, instance, value):  # instance opet sam, value je ta pozadovana hodnota atributu
+        if not isinstance(value, int):
+            raise TypeError('Age must be integer value.')
+        if value < 0 or value > 120:
+            raise ValueError('Age must be between 0 and 120.')
+        self.__age = value
+
+    def __delete__(self, instance):
+        del self.__age
+
+
+class Person:
+
+    age = MyDescriptor()
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __str__(self):
+        return '{} is {} years old.'.format(self.name, self.age)
+
+sam = Person(name='Sam', age=44)
+print(sam)
+# sam.age = -88  vyhodi spravne ValueError
+# sam.age = 'twenty' tady taky
+"""
+Descriptory jsou navazane na tridu, ne na instanci - kdyz se zmeni hodnota descriptoru, tak se prepise na vsech
+instancich.
+Aby se tomu zamezilo, descriptor musi mit slovnik, ktery udrzuje hodnoty pro kazdou instanci.
+"""
+peter = Person(name='Peter', age=11)
+print(peter)
+print(sam)  # tady haze, ze Samovi je 11
+
+# verze se slovnikem
+class MyDescriptor2:
+
+    def __init__(self):
+        self.__age = WeakKeyDictionary()
+
+    def __get__(self, instance, owner):  # instance je sam, owner je class, ktere ta instance nalezi, tj. zde Person
+        return self.__age.get(instance)
+
+    def __set__(self, instance, value):  # instance opet sam, value je ta pozadovana hodnota atributu
+        if not isinstance(value, int):
+            raise TypeError('Age must be integer value.')
+        if value < 0 or value > 120:
+            raise ValueError('Age must be between 0 and 120.')
+        self.__age[instance] = value
+
+    def __delete__(self, instance):
+        del self.__age[instance]
+
+"""
+Tato trida ovsem umi osetrit jen 1 atribut, a to age - kdyby tam byly dalsi, jako vaha, vyska apod., nedalo by se to
+pouzit. Ta trida Typed() z ITNetwork mela predstavovat obecne osetreni pro vstupy.
+"""
+
+class Person:
+
+    age = MyDescriptor2()
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __str__(self):
+        return '{} is {} years old.'.format(self.name, self.age)
+
+
+john = Person(name='John', age=33)
+print(john)
+print(john.age)  # ale vypise se spravne
+print(type(john.age))
+print(john.__dict__)  # jak to,ze age neni v __dict__ jako atribut?
+eric = Person(name='Eric',age=77)
+print(eric)  # tady nedoslo k prepisu drivejsi instance
+print(eric.age)
+print(eric.__dict__)  # ani tady neni age
+"""
+Tohle teda funguje, ale osetruje to jen 1 konkretni atribut, neni to obecna kontrola typu.
+"""
