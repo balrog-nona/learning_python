@@ -434,3 +434,119 @@ a is Databaze znamena, ze se to rovna tomu objektu Tridy??
 jaka je tady za tim logika?
 """
 
+
+# lekce 10-13
+# jednoduchy priklad - MujList
+class MujList:
+
+    def __init__(self, seznam):
+        self.list = seznam
+
+    def __add__(self, other):  # metoda se vola pri pouziti operatoru +
+        if isinstance(other, MujList):
+            new_list = []
+            for cislo1, cislo2 in zip(self.list, other.list):
+                new_list.append(cislo1 + cislo2)
+            return new_list
+        raise NotImplemented
+
+    def __sub__(self, other):  # metoda se vola pri pouziti operatoru -
+        if isinstance(other, MujList):
+            new_list = []
+            for cislo1, cislo2 in zip(self.list, other.list):
+                new_list.append(cislo1 - cislo2)
+            return new_list
+        raise NotImplemented
+
+    def __mul__(self, other):  # metoda se vola pri pouziti operatoru *
+        if isinstance(other, MujList):
+            new_list = []
+            for cislo1, cislo2 in zip(self.list, other.list):
+                new_list.append(cislo1 * cislo2)
+            return new_list
+        raise NotImplemented
+
+    def __truediv__(self, other):  # metoda se vola pri pouziti operatoru /
+        if isinstance(other, MujList):
+            new_list = []
+            for cislo1, cislo2 in zip(self.list, other.list):
+                new_list.append(cislo1 / cislo2)
+            return new_list
+        raise NotImplemented
+
+    def __str__(self):
+        return '{}'.format(self.list)  # return str(self.list)
+
+
+a = MujList([1, 2, 3, 4, 5])
+b = MujList([5, 4, 3, 2, 1])
+print(str(a), ' + ', str(b), " = ", b + a)
+print(str(a), ' - ', str(b), " = ", a - b)
+print(str(a), ' * ', str(b), " = ", b * a)
+print(str(a), ' / ', str(b), " = ", a / b)
+# jiny zapis: print('{} + {} = {}'.format(a, b, a + b))
+c = [5, 4, 3, 2, 1]
+# print(a + c) vyjimka NotImplemeted funguje
+
+
+# stredni priklad - Dum s byty
+class Dum:
+
+    """
+    Stejneho vysledku by se dalo dosahnout i tim, ze by existovala metoda
+    def obyvatel(self, podlazi, majitel) - ktera by normalne nastavila majitele self.byty[0] = majitel
+    a pak dalsi metoda, ktera by majitele vracela.
+    """
+
+    def __init__(self, n):
+        self.byty = [None] * n
+
+    def __setitem__(self, podlazi, majitel):
+        print('setting...')
+        self.byty[podlazi] = majitel
+
+    def __getitem__(self, podlazi):
+        """
+        Is used to implement calls like self[key]
+        """
+        print('getting...')
+        return self.byty[podlazi]
+
+    def __str__(self):
+        for i in range(len(self.byty)):
+            if self.byty[i]:
+                print('V byte cislo {} je {}.'.format(i, self.byty[i]))
+            else:
+                print('Byt cislo {} je na prodej.'.format(i))
+        return ''
+
+
+dum = Dum(5)
+dum[0] = 'Tonda Novak'  # prirazeni jako do seznamu
+dum[4] = 'Jan Novy'
+print(dum[2])  # pristup jako k seznamu, zapoji se __getitem__
+print(dum.byty[4])  # __getitem__ se nezapoji
+print(dum)
+"""
+Pouziti techto metod je zavisle na tom, jak chce clovek tridu a jeji data pouzivat.
+"""
+
+# pokrocily priklad: Mag a Kouzlo
+class Kouzlo:
+
+    def __init__(self, nazev, typ):
+        self.nazev = nazev
+        self.typ = typ
+
+ohniva_koule = Kouzlo(nazev='Ohniva koule', typ='ohnive')
+kletba_smrti = Kouzlo(nazev='Kletba smrti', typ='temne')
+absolutni_nula = Kouzlo(nazev='Ansolutni nula', typ='vodni')
+manipulace_energie = Kouzlo(nazev='Manipulace energie', typ='cista')
+
+
+class Mag:
+
+    def __init__(self, jmeno, specializace):
+        self.jmeno = jmeno
+        self.specializace = specializace
+        self.typy_kouzel = list()

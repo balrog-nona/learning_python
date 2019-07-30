@@ -126,7 +126,7 @@ class Vector:
         elif issubclass(type(other), Sequence):  # konstrola, jestli je to podtrida Sequence z modulu collections.abc
             if len(other) == 2:
                 return Vector(self.x+other[0], self.y+other[1])  # tady taky
-        raise NotImplemented
+        raise NotImplemented  # vyvola TypeError
 
     def __mul__(self, other):
         if issubclass(type(other), Real):
@@ -143,6 +143,7 @@ vector = [3, 4] + vector
 vector *= 2.5
 print(vector)  # probehly obe ty operace vyse
 print(id(vector))
+# print(vector + 3) zde TypeError
 """
 Z toho kodu mi to pripada, jakoby se mel vracet novy objekt, ale vraci se ten puvodni, na kterem byly volane ty metody
 akorat ma ted zmenene atributy.
