@@ -513,6 +513,10 @@ class Dum:
         return self.byty[podlazi]
 
     def __str__(self):
+        """
+        Moje reseni zbytecne dela radek navic + __str__ by asi nemel sam nic tisknout... stacilo si vytvorit
+        promennou - string, kde by byly vsechny ty vety a metoda by pak vracela toto.
+        """
         for i in range(len(self.byty)):
             if self.byty[i]:
                 print('V byte cislo {} je {}.'.format(i, self.byty[i]))
@@ -538,6 +542,7 @@ class Kouzlo:
         self.nazev = nazev
         self.typ = typ
 
+
 ohniva_koule = Kouzlo(nazev='Ohniva koule', typ='ohnive')
 kletba_smrti = Kouzlo(nazev='Kletba smrti', typ='temne')
 absolutni_nula = Kouzlo(nazev='Ansolutni nula', typ='vodni')
@@ -546,7 +551,84 @@ manipulace_energie = Kouzlo(nazev='Manipulace energie', typ='cista')
 
 class Mag:
 
+    iterace = 0
+
     def __init__(self, jmeno, specializace):
+        self.__jmeno = jmeno
+        self.specializace = specializace  # vyvola setter
+
+    @property
+    def specializace(self):
+        return self.__specializace
+
+    @specializace.setter
+    def specializace(self, nova_specializace):
+        """
+        Nemusela jsem tu prirazovat primo jednotlive intance kouzel, ale priradit do setu typ jako ohnive, temne,
+        ciste, vodni a pak v pouzij_kouzlo pristoupit pomoci if kouzlo.typ self.__typy_kouzel
+        Takhle to funguje jen pro konkretni instance kouzel, ale ne na jine instance!!
+        """
+        self.__specializace = nova_specializace
+        self.__typy_kouzel = set()
+        if nova_specializace == 'voda':
+            self.__typy_kouzel.update({absolutni_nula, ohniva_koule})
+        elif nova_specializace == 'ohen':
+            self.__typy_kouzel.update({ohniva_koule, kletba_smrti})
+        elif nova_specializace == 'temna':
+            self.__typy_kouzel.add(kletba_smrti)
+        elif nova_specializace == 'cista':
+            self.__typy_kouzel.add(manipulace_energie)
+        if self.iterace > 0:
+            print('{} se nyni specializuje na {}.'.format(self.__jmeno, self.__specializace))
+        self.iterace += 1
+
+    def pouzij_kouzlo(self, kouzlo):
+        if kouzlo in self.__typy_kouzel:
+            print('{} pouzil kouzlo {}.'.format(self.__jmeno, kouzlo.nazev))
+        else:
+            print('{} nemuze pouzit {} s typem poskozeni {}.'.format(self.__jmeno, kouzlo.nazev, kouzlo.typ))
+
+    def __str__(self):
+        return '{} je mag se specializaci na {}.'.format(self.__jmeno, self.__specializace)
+
+
+gandalf = Mag(jmeno='Gandalf', specializace='voda')
+print(gandalf.specializace)  # opravdu se nastavi
+print(gandalf)
+gandalf.pouzij_kouzlo(absolutni_nula)
+gandalf.pouzij_kouzlo(kletba_smrti)
+gandalf.specializace = 'temna'
+gandalf.pouzij_kouzlo(kletba_smrti)
+gandalf.pouzij_kouzlo(manipulace_energie)
+gandalf.specializace = 'ohen'
+gandalf.pouzij_kouzlo(ohniva_koule)
+
+
+
+# jak funguji settery
+class Person:
+
+    def __init__(self, jmeno, prijmeni):
         self.jmeno = jmeno
-        self.specializace = specializace
-        self.typy_kouzel = list()
+        self.prijmeni = prijmeni
+        #self.fullname = jmeno + prijmeni vyvolava akci setteru
+
+    @property
+    def fullname(self):
+        print('jsem ve vlastnosti')
+        return '{} {}'.format(self.jmeno, self.prijmeni)
+
+    @fullname.setter
+    def fullname(self, name):
+        print('jdu do setteru...')
+        jmeno, prijmeni = name.split(' ')
+        self.jmeno = jmeno
+        self.prijmeni = prijmeni
+
+mirek = Person("Mirek", 'Dusin')
+mirek.fullname = 'Marek Holy'
+print(mirek.fullname)
+"""
+Nelze mit atribut, vlastnost a setter stejneho jmena! Prirazeni do atributu vyvola akci setteru a do vlastnosti taky.
+"""
+
