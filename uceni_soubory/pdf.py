@@ -1,5 +1,12 @@
 import PyPDF2
 
+"""
+Dle knizky: automate the boring stuff with python
+https://automatetheboringstuff.com/chapter13/
+vice v dokumentaci
+"""
+
+
 pdfFileObj = open('../../../automate_online-materials/meetingminutes.pdf', 'rb')  # rb read binary mode
 pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
 print(pdfReader.numPages)
@@ -63,4 +70,38 @@ pdfWriter.write(resultPdfFile)
 resultPdfFile.close()
 minutesFile.close()
 
-# 3. overlaying pages
+# 3. overlaying pages - useful for adding the logo, timestamp, watermark...
+minutes_file = open('../../../automate_online-materials/meetingminutes.pdf', 'rb')
+pdf_reader = PyPDF2.PdfFileReader(minutes_file)
+minutes_first_page = pdf_reader.getPage(0)
+watermark_reader = PyPDF2.PdfFileReader(open('../../../automate_online-materials/watermark.pdf', 'rb'))
+minutes_first_page.mergePage(watermark_reader.getPage(0))
+pdf_writer = PyPDF2.PdfFileWriter()
+pdf_writer.addPage(minutes_first_page)
+
+for pageNum in range(1, pdf_reader.numPages):
+    page_obj = pdf_reader.getPage(pageNum)
+    pdf_writer.addPage(page_obj)
+
+result_file = open('../../../automate_online-materials/watermarkedCover.pdf', 'wb')
+pdf_writer.write(result_file)
+minutes_file.close()
+result_file.close()
+
+# 4. encrypting files
+"""
+Vysledkem nebude existujici pdf zaheslovane, ale obsah pdf, ktere chci zaheslovat, zkopirovany do noveho pdf a toto
+pak zaheslovane.
+"""
+pdf_reader = PyPDF2.PdfFileReader(open('../../../automate_online-materials/meetingminutes.pdf', 'rb'))
+pdf_writer = PyPDF2.PdfFileWriter()
+
+for pageNum in range(pdf_reader.numPages):
+    pdf_writer.addPage(pdf_reader.getPage(pageNum))
+
+pdf_writer.encrypt('swordfish')
+new_pdf = open('../../../automate_online-materials/encryptedminutes.pdf', 'wb')
+pdf_writer.write(new_pdf)
+new_pdf.close()
+
+
