@@ -9,17 +9,19 @@ povoleni jsem pak vypla, cili kod nize bez opetovneho zapnuti nebude fungovat.
 smtpObj = smtplib.SMTP('smtp.gmail.com', 587)  # 587 - TLS encryption
 print(type(smtpObj))
 
-print(smtpObj.ehlo()) # establishing connection to the server, firste step after having SMTP object
+print(smtpObj.ehlo())  # establishing connection to the server, first step after having SMTP object
 # 250 is code of success in smtplib
 
 # next step: calling starttls() for ensuring the encryption
 print(smtpObj.starttls())  # 220 = encrypted connection is set up
 
 # login
-print(smtpObj.login(email_access.gmail_email, email_access.gmail_password))  # kod 235 - accepted
+print(smtpObj.login(email_access.gmail['email'], email_access.gmail['password']))  # kod 235 - accepted
 
-smtpObj.sendmail(email_access.gmail_email, email_access.gmail_email, 'Subject: So long\nDear Alice, so long and thank '
-                                                                     'you for all the fish. Sincerely, Bob')
+# nejdriv email odesilatele, pak email prijemce
+smtpObj.sendmail(email_access.gmail['email'], email_access.gmail['email'], 'Subject: So long\nDear Alice, '
+                                                                           'so long and thank you for all the fish. '
+                                                                           'Sincerely, Bob')
 
 # funguje! sendmail ma return value dictionary - prazdny slovnik znamena, ze vsichni adresati email obdrzeli
 
