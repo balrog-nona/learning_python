@@ -1,9 +1,10 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 import time
+import path_to_geckodriver
 
-driver = webdriver.Firefox(executable_path='/home/balrog/Dokumenty/Programování/doGIThubu/learning_python/web/'
-                                           'geckodriver')
+driver = webdriver.Firefox(executable_path=path_to_geckodriver.path)
+
 driver.get('https://www.bezfrazi.cz/')
 time.sleep(5)
 
