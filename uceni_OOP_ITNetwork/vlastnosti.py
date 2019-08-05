@@ -7,7 +7,7 @@ class Student:
         self.plnolety = (vek > 18)
 
     def __str__(self):
-        jsem_plnolety = "jsem" if self.plnolety else "nejsem"  # takto se da napsat normalne podminka?
+        jsem_plnolety = "jsem" if self.plnolety else "nejsem"  # takto se da napsat podminka, kdyz je kratka
         pohlavi = "muz" if self.muz else "zena"
         return "Jsem {}, {}. Je mi {} let a {} plnolety.".format(self.jmeno, pohlavi, self.vek, jsem_plnolety)
 

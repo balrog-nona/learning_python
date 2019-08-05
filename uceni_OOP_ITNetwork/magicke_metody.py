@@ -123,7 +123,7 @@ class Vector:
     def __add__(self, other):
         if isinstance(other, Vector):
             return Vector(self.x+other.x, self.y+other.y)  # toto vraci novy objekt? id tomu neodpovida...
-        elif issubclass(type(other), Sequence):  # konstrola, jestli je to podtrida Sequence z modulu collections.abc
+        elif issubclass(type(other), Sequence):  # kontrola, jestli je to podtrida Sequence z modulu collections.abc
             if len(other) == 2:
                 return Vector(self.x+other[0], self.y+other[1])  # tady taky
         raise NotImplemented  # vyvola TypeError
@@ -138,11 +138,11 @@ class Vector:
 
 
 vector = Vector(x=1, y=2)
-print(id(vector))
+print('id vector: ', id(vector))
 vector = [3, 4] + vector
 vector *= 2.5
 print(vector)  # probehly obe ty operace vyse
-print(id(vector))
+print('id vector: ', id(vector))
 # print(vector + 3) zde TypeError
 """
 Z toho kodu mi to pripada, jakoby se mel vracet novy objekt, ale vraci se ten puvodni, na kterem byly volane ty metody
@@ -187,11 +187,13 @@ class Typed:
     """
     Deskriptor Typed zajistuje, aby byl atribut urciteho typu.
     Mela to byt evidentne obecna trida pouzitelna na jakykoli atribut.
+    Petr mi potvrdil, ze to nefunguje kvuli tomu slovniku
     """
 
     dictionary = WeakKeyDictionary()
 
     def __init__(self, ty=int):
+        print('tvorba descriptoru')
         self.ty = ty
 
     def __get__(self, instance, owner=None):
@@ -210,19 +212,23 @@ class Typed:
 WeakKeyDictionary funguje jako normalni slovnik, ale pokud pro dany objekt (klic) ve slovniku neexistuje vic referenci,
 snaze objekt ze slovniku, coz by bezny slovnik neudelal, bo on sam by ho pouzival. Timto se zamezi memory leakum
 v pameti.
+neni resene jak zaridit, aby tam byly ulozene atributy a jejich hodnoty
 """
 
 class Person:
 
-    name = Typed(ty=str)  # jmeno musi byt string
+    # tridni promenne
+    name = Typed(ty=str)  # jmeno musi byt string. to se vytvari pri tvorbe teto tridy person.name je vlastne singleton
     age = Typed()  # vek bude int
     weight = Typed(ty=float)  # vaha bude float
 
-    def __init__(self, name, age, weight):  # jak je toto navazane na ty promenne?
+    def __init__(self, name, age, weight):
         self.name = name  # pri volani atributu Python pozna, ze jde o deskriptory a zavola __get__(), __set__()
         self.age = age
-        self.weight = weight
-
+        self.weight = weight  # navazane na weight a tim padem na typed
+"""
+kdyz neco nema instance ve slovniku tak se diva na to same do slovniku tridy
+"""
 
 # funguje i na podtridy
 class CleverPerson(Person):
@@ -251,11 +257,11 @@ class Ranged(Typed):
 
 
 bob = CleverPerson(name='Bob', age=33, weight=88.7,iq=120)  # toto nefunguje
-print(bob.name)  # pokazde se prepise zrejme cela instance, az zustane ta posledni hodnota...
+print('bob name: ', bob.name)  # pokazde se prepise zrejme cela instance, az zustane ta posledni hodnota...
 print(bob.__dict__)  # slovnik je prazdny - neobsahuje zadne atributy
 del bob  # snizi se pocet referenci na objekt
 # print(bob.age) vyvola NameError - bob uz neexistuje
-print(CleverPerson.name)
+print('clever person name:', CleverPerson.name)
 
 
 # descriptory podle netu https://www.youtube.com/watch?v=HUtLnn5MBGk
@@ -340,13 +346,18 @@ class Person:
 
 john = Person(name='John', age=33)
 print(john)
-print(john.age)  # ale vypise se spravne
+print('john age:', john.age)  # ale vypise se spravne
 print(type(john.age))
-print(john.__dict__)  # jak to,ze age neni v __dict__ jako atribut?
+print('john dict: ', john.__dict__)  # jak to,ze age neni v __dict__ jako atribut? on se eviduje v tride MyDescriptor2?
 eric = Person(name='Eric',age=77)
-print(eric)  # tady nedoslo k prepisu drivejsi instance
-print(eric.age)
-print(eric.__dict__)  # ani tady neni age
+print('eric ', eric)  # tady nedoslo k prepisu drivejsi instance
+print('eric age', eric.age)
+print('eric dict', eric.__dict__)  # ani tady neni age
 """
 Tohle teda funguje, ale osetruje to jen 1 konkretni atribut, neni to obecna kontrola typu.
+Totiz asi obecne descriptory by mely evidovat 3 veci - instanci, atribut, hodnotu, ne??
+"""
+
+"""
+poradne video k tomuto ve watch later! 
 """

@@ -8,15 +8,18 @@ tar -cvf test-08-07-19.tar ~/Downloads/opt/test
 
 3. Rename all .htm files in /tmp/test/ (but not subdirectories), so that they have .html extension instead of .htm. Ignore hidden files.
 
-rename .htm .html *.html
+rename .htm .html *.html - neumela jsem to zadat s mistem, kde se ma prikaz provest
+rename .hmt .html /tmp/test/* - rename co zaco kde
 
 4. Print contents of all files in /tmp/test/ (but not subdirectories), including hidden files. Ensure that the filesystem object is a regular file.
 
-for file in tmp/test/* tmp/test/.* ; do cat $file ; done
+for file in /tmp/test/* /tmp/test/.* ; do cat $file ; done
+find /tmp/test/ -maxdepth 1 -type f -exec cat {} \;
 
 5. List all files (their full paths) in /tmp/test/ and subdirectories, that contain the left bracket "["
 
-grep -r -l ‘\[‘ tmp/test/
+grep -r -l ‘\[‘ /tmp/test/  - toto dava jen relativni cestu! v zadani je full path
+grep -R \\[ /tmp/test/ | cut -d: -f1 | xargs -I{} realpath {}   
 
 6. You have a file "/tmp/test/IMPORTANT" and a new version of it in your home directory named "IMPORTANT.new". Write a sequence of commands
 	that would replace the old version of the file with the new one, and keep the backup named "/tmp/test/IMPORTANT.backup". There must

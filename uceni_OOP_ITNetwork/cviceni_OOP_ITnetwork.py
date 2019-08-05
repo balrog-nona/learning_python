@@ -406,33 +406,33 @@ class Databaze:
     """
 
     def __new__(self):
+        """
+        Tady se vlastne realne nevraci instance, ale tim Databaze.__instance = self je to postaveno na roven s tridou
+        proto jsou a, b, c stejne objekty a proto to haze False na isintance, ale True na a is Databaze
+        Stejneho vysledku jako ma zajistit Singleton se da dosahnout ruznymi pristupy
+        """
         if Databaze.__instance:
             print("Instance uz existuje")
         else:
             print("Tvorim instanci")
             self.jmeno = 'SQLite'
-            Databaze.__instance = self
-        return Databaze.__instance
-
+            Databaze.__instance = self  # tady to dal naroven te tridy, proto to dole haze hauznumera u isintance
+        return Databaze.__instance  # pokazde vraci tu stejnou uz vytvorenou jakoze instanci
 
 a = Databaze()
 b = Databaze()
 c = Databaze()
 
 print(id(a) == id(b) == id(c))  # je to jeden a tentyz objekt
+# je to kvuli return Databaze.__instance v __new__()
 
 print("Jméno databáze a {0} b {1} c {2}".format(a.jmeno, b.jmeno, c.jmeno))
-print("Je a instance Databaze?", a is Databaze)
+print("Je a instance Databaze?", a is Databaze)  # zde True pro vsechny 3
 print("Je b instance Databaze?", b is Databaze)
 print("Je c instance Databaze?", c is Databaze)
-print(isinstance(a, Databaze))  # what the hell
+print(isinstance(a, Databaze))  # zde False, viz vyse vysvetleni
 print(isinstance(b, Databaze))
 print(isinstance(c, Databaze))
-"""
-a, b, c jsou stejny objekt - jak to, ze nejsou stejna instance tridy? proc mi tu haze False
-a is Databaze znamena, ze se to rovna tomu objektu Tridy??
-jaka je tady za tim logika?
-"""
 
 
 # lekce 10-13
