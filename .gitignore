@@ -10,10 +10,10 @@ venv/
 uceni_soubory/pisne/
 cycling_calendar/*/*.json
 cycling_calendar/*/calendar_access.py
-uceni_OOP_ITNetwork/cviceni_oop_lekce4/
-uceni_OOP_ITNetwork/cviceni_oop_lekce5-8/
-uceni_OOP_ITNetwork/oop_cviceni_lekce9/
-uceni_OOP_ITNetwork/magic_metods_3.py
-uceni_OOP_ITNetwork/oop_cviceni_lekce10_13/
+uceni_OOP/cviceni_oop_lekce4/
+uceni_OOP/cviceni_oop_lekce5-8/
+uceni_OOP/oop_cviceni_lekce9/
+uceni_OOP/magic_metods_3.py
+uceni_OOP/oop_cviceni_lekce10_13/
 sending_emails/email_access.py
 web/geckodriver*
