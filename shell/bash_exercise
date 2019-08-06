@@ -15,6 +15,7 @@ rename .hmt .html /tmp/test/* - rename co zaco kde
 
 for file in /tmp/test/* /tmp/test/.* ; do cat $file ; done
 find /tmp/test/ -maxdepth 1 -type f -exec cat {} \;
+oboje udelalo to stejne, akorat v jinem poradi
 
 5. List all files (their full paths) in /tmp/test/ and subdirectories, that contain the left bracket "["
 
@@ -25,7 +26,11 @@ grep -R \\[ /tmp/test/ | cut -d: -f1 | xargs -I{} realpath {}
 	that would replace the old version of the file with the new one, and keep the backup named "/tmp/test/IMPORTANT.backup". There must
 	be no race condition (time slice when the file is not there, or when there is just part of it).
 
-cat IMPORTANT > IMPORTANT.backup && cat ~/IMPORTANT.new > IMPORTANT
+cat IMPORTANT > IMPORTANT.backup && cat ~/IMPORTANT.new > IMPORTANT  - tady mi uplne chybi cesta!
+cat /tmp/test/IMPORTANT > /tmp/test/IMPORTANT.backup && cat ~/IMPORTANT.new > /tmp/test/IMPORTANT
+Misovo:
+ln /tmp/test/IMPORTANT /tmp/test/IMPORTANT.backup
+ln -f ~/IMPORTANT.new /tmp/test/IMPORTANT
 
 7. Transfer directory "/tmp/test/" (and everything below) to a machine named "orion" to directory "/var/tmp/test". Use ssh.
 
@@ -38,7 +43,7 @@ sudo /var/apache/ reload
 9. In "/tmp/test" and subdirs there are files with ".dat" extension (among others). The files contain numbers separated by 0x0A (LF).
 	Print the smallest number from each of the file.
 
-for file in tmp/test/.*dat tmp/test/*/*.dat ; do echo -e $(sed ‘s/0x/\\x/g’ $file) | sort -n | head -1 ; done
+for file in /tmp/test/*.dat /tmp/test/*/*.dat ; do echo -e $(sed ‘s/0x/\\x/g’ $file) | sort -n | head -1 ; done
 
 10. There is a filesystem mounted on /usr containing new version of binaries. Create a hard link "/bin/perl" for file "/usr/bin/perl".
 
@@ -51,11 +56,13 @@ sudo chown :sys /tmp/test/
 12. Set rights for "/tmp/test/" tree (both files and directories), so that the owner can read and write files (but not execute), group can only
 	read, and others are denied access altogether. The directories must be accessible for owner and group only.
 
-chmod -R u=rwX,g=rX,o=- tmp/*
+chmod -R u=rwX,g=rX,o=- /tmp/*
+Misovo: chmod -R u=rwX,g=rX,o= /tmp/test/
 
 13. Write a shell glob matching all files (and other objects) in the current directory, including hidden files, but not matching the "." or ".."
 
-* | !(.|..)
+* | !(.|..) - tohle absolutne nefungovalo s zadnym prikazem
+.[^.]* *  - . ale ne dalsi . a cokoli + cokoli. funguje s kazdym prikazem, kde lze pouzit glob
 
 14. Set permissions for binary "/usr/local/bin/my_program", so that only "root" and members of the "adm" group can execute it; and when
 	executed, the program runs under "daemon" UID.
