@@ -77,14 +77,17 @@ setfacl -m u:root:r-x /tmp/test
 
 egrep ‘^SUNW[‘[:xdigit:]’]{1,}[‘[:space:]’].*\*$’ /tmp/test/pkgs
 egrep ‘^SUNW[‘[:xdigit:]’]+[‘[:space:]’].*\*$’ /tmp/test/pkgs
+option -c zmeni vystupn grepu - misto radku vrati pocet!
 
 17. Copy file "/tmp/test/pkgs" to your home directory, so that the new name is pkgs-YYYYMMDD (where YYYYMMDD is the current date).
 
 cp /tmp/test/pkgs ~/pkgs-$(date +’%Y%m%d’)
+cp -p /tmp/test/pkgs ~/pkgs-`date '+%Y%m%d'` - option -p zachova i vsechny dalsi atributy souboru 
 
 18. List user names from /etc/passwd that have UID > 500
 
 while IFS=: read login pwd uid gid full home shell; do if (( $iud > 500 )); then echo $login; fi; done < /etc/passwd
+while IFS=: read username x uid x; do if [ $uid -gt 500 ]; then echo $username; fi; done < /etc/passwd
 awk -F: ‘$3 > 500’ < /etc/passwd | awk -F: '{print $1}’
 
 

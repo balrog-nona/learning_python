@@ -19,7 +19,7 @@ print(smtpObj.starttls())  # 220 = encrypted connection is set up
 print(smtpObj.login(email_access.gmail['email'], email_access.gmail['password']))  # kod 235 - accepted
 
 # nejdriv email odesilatele, pak email prijemce
-smtpObj.sendmail(email_access.gmail['email'], email_access.gmail['email'], 'Subject: So long\nDear Alice, '
+smtpObj.sendmail(email_access.gmail['email'], email_access.seznam['email'], 'Subject: So long\nDear Alice, '
                                                                            'so long and thank you for all the fish. '
                                                                            'Sincerely, Bob')
 
