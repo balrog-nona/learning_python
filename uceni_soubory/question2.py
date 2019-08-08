@@ -2,12 +2,14 @@ with open('soubor', encoding='UTF-8') as text:
     content = text.read()
     lines = 0
     for line in content.split("\n"):
-        if line and type(line[0]) == str:
-            if line[0].islower():
-                lines += 1
+        lines += 1
+        if line and line[0].isupper():
+            lines -= 1
 
 
-print(lines)
+print(lines)  # vraci 20, protoze vyhodnoti oba prazdne radky
 
-# grep -c '^[[:lower:]]' soubor
-# grep -c '^[a-z]' soubor
+# kolik radku nezacina velkym pismenem v souboru:
+# grep -c -v '^[A-Z]' soubor   - vraci 19, ale nevyhodnoti prazdny radek na konci souboru
+# grep -c '^[^[:upper:]]' soubor   - vraci 18 - nevyhodnoti prazdny radek ani uprostred souboru
+# grep -c '^[^A-Z]' soubor  - vraci 18, dtto
