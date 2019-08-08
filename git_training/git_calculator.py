@@ -30,7 +30,7 @@ class StringCalculator:
             else:
                 return int(a)
 
-print('hotovo')
+print(add(7)
 
 
 
