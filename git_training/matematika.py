@@ -14,7 +14,7 @@ class Matematika:
     def nasobeni_deleni(self, a, b):  
         return (a * b, a / b)
 
-    def deleni(self, a, b):
+    def deleni(self, a, b):  # operace deleni vzdycky vraci float
         if b > 0:
             return a / b
         else:
@@ -23,7 +23,7 @@ class Matematika:
     def mocnina(self, a, b):  # komentar
         return a ** b
 
-    def odmocnina(self, a):
+    def odmocnina(self, a):  # jde odmocnovat nulou??
         return math.sqrt(a)
 
     def obvod_ctverce(self, a):
