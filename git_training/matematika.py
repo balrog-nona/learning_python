@@ -12,10 +12,11 @@ class Matematika:
     def odcitani(self, a, b):
         return a - b
 
-    def nasobeni(self, a, b):  # tady se vysvetli v komentari princip metody
+    def nasobeni(self, a, b): 
         return a * b
 
     def deleni(self, a, b):
+        # tu by to chtelo osetrit 0
         return a / b
 
     def mocnina(self, a, b):  # komentar
