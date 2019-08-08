@@ -12,12 +12,14 @@ class Matematika:
     def odcitani(self, a, b):
         return a - b
 
-    def nasobeni(self, a, b): 
-        return a * b
+    def nasobeni_deleni(self, a, b):  
+        return (a * b, a / b)
 
     def deleni(self, a, b):
-        # tu by to chtelo osetrit 0
-        return a / b
+        if b > 0:
+            return a / b
+        else:
+            return 'error'
 
     def mocnina(self, a, b):  # komentar
         return a ** b
