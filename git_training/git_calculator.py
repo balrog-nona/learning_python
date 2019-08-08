@@ -16,19 +16,21 @@ class StringCalculator:
                 a = a.replace("\n", delimiter)
             if delimiter in a:
                 a = a.split(delimiter)
-                summary = 0
+                soucet = 0  # komentar
                 for i in a:
                     try:
                         if int(i) > 0:
-                            summary += int(i)
+                            soucet += int(i)
                         else:
-                            raise ValueError("negatives not allowed")
+                            raise Exception("negatives not allowed")
                             continue
                     except ValueError:
                         pass
-                return summary
+                return soucet
             else:
                 return int(a)
+
+print('hotovo')
 
 
 
