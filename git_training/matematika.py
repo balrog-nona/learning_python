@@ -4,12 +4,15 @@ class Matematika:
 
     def scitani(self, a, b):
         # komentar
+        """
+        Komentar do commitu 1
+        """
         return a + b
 
     def odcitani(self, a, b):
         return a - b
 
-    def nasobeni(self, a, b):  # tady se vysvetli princip metody
+    def nasobeni(self, a, b):  # tady se vysvetli v komentari princip metody
         return a * b
 
     def deleni(self, a, b):
