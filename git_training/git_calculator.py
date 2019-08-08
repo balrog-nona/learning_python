@@ -11,7 +11,7 @@ class StringCalculator:
             if a[0] == "/":
                 delimiter = a[2]
             else:
-                delimiter = ","
+                delimiter = "^"
             if "\n" in a:
                 a = a.replace("\n", delimiter)
             if delimiter in a:
