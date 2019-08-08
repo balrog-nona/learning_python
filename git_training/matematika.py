@@ -4,7 +4,7 @@ class Matematika:
 
     def scitani(self, a, b):
         """
-        Komentar k fungovani metody
+        Nejlepsi komentar k fungovani metody dopise nekdo v budoucnu
         """
         return a + b
 
