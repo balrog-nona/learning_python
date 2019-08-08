@@ -1,5 +1,6 @@
 """
 Nacvik prace s Gitem - hlavne zmeny v souboru, ktery se v mezidobi vyvinul
+nacvik odstranovani konfliktu
 Metoda: prevazne pokus-omyl
 """
 
