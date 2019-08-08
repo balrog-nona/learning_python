@@ -3,9 +3,8 @@ import math
 class Matematika:
 
     def scitani(self, a, b):
-        # komentar
         """
-        Komentar do commitu 1
+        Komentar k fungovani metody
         """
         return a + b
 
