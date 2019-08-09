@@ -1,6 +1,6 @@
 import math
 
-class Matematika:
+class Matematika:  # koment k tride
 
     def scitani(self, a, b):
         """
