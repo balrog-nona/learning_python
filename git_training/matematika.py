@@ -26,10 +26,6 @@ class Matematika:
     def odmocnina(self, a):  # jde odmocnovat nulou??
         return math.sqrt(a)
 
-    def obvod_ctverce(self, a):
-        # komentar
-        return 4 * a
-
     def obvod_obdelnika(self, a, b):
         return 2 * (a + b)
 
