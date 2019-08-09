@@ -32,3 +32,6 @@ class Matematika:
 
     def obvod_obdelnika(self, a, b):
         return 2 * (a + b)
+
+# comment 1
+# comment 1
