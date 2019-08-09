@@ -32,3 +32,5 @@ class Matematika:
 
     def obvod_obdelnika(self, a, b):
         return 2 * (a + b)
+
+# coment do konfliktu
