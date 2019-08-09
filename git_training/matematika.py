@@ -8,9 +8,6 @@ class Matematika:  # koment k tride
         """
         return a + b
 
-    def odcitani(self, a, b):
-        return a - b
-
     def nasobeni_deleni(self, a, b):  
         return (a * b, a / b)
 
