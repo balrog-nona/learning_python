@@ -6,7 +6,7 @@ class Matematika:  # koment k tride
         """
         Nejlepsi komentar k fungovani metody dopise nekdo v budoucnu
         """
-        return a + b
+        return (a + b, b + a)
 
     def nasobeni_deleni(self, a, b):  
         return (a * b, a / b)
@@ -23,12 +23,8 @@ class Matematika:  # koment k tride
     def odmocnina(self, a):  # jde odmocnovat nulou??
         return math.sqrt(a)
 
-    def obvod_ctverce(self, a):
-        # komentar
-        return 4 * a
-
     def obvod_obdelnika(self, a, b):
         return 2 * (a + b)
 
 # comment 1
-# comment 1
+# coment do konfliktu
