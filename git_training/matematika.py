@@ -1,12 +1,12 @@
 import math
 
-class Matematika:
+class Matematika:  # coment u tuple
 
     def scitani(self, a, b):
         """
         Nejlepsi komentar k fungovani metody dopise nekdo v budoucnu
         """
-        return a + b
+        return (a + b, b + a)
 
     def odcitani(self, a, b):
         return a - b
