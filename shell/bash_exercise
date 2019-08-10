@@ -92,26 +92,22 @@ awk -F: ‘$3 > 500’ < /etc/passwd | awk -F: '{print $1}’
 
 19. Kolik radku v souboru nezacina velkym pismenem?
 
-grep -c -v '^[A-Z]' cesta/k/souboru  -c vrati pocet, -v najde radky, ktere vzorci neodpovidaji; vraci 19, ale nevyhodnoti prazdny radek na konci souboru
-grep -c '^[^[:upper:]]' cesta/k/souboru    - vraci 18, protoze nevyhodnoti prazdny radek ani uprostred souboru
-grep -c '^[^A-Z]' cesta/k/souboru   - vraci 18, dtto
-nejpresneji to spocital pythonni script
+grep -c -v '^[A-Z]' cesta/k/souboru  -c vrati pocet, -v najde radky, ktere vzorci neodpovidaji; vraci spravny pocet 
+
+grep -c '^[^[:upper:]]' cesta/k/souboru    - nevyhodnocuje prazdny radek
+grep -c '^[^A-Z]' cesta/k/souboru   - dtto
+
+grep -c -e '^[^[:upper:]]' -e '^$' cesta/k/souboru  - 2 regularni vyrazy po sobe, vyhodnoti i prazdne radky a vrati spravny pocet
+grep -c '^[^[:upper:]]\|^$' cesta/k/souboru  - varianta slozeneho regularniho vyrazu
+
+grep -c -e '^[^A-Z]' -e '^$' cesta/k/souboru  - dtto
+grep -c '^[^A-Z]\|^$' cesta/k/souboru 
 
 
 K subshellu:
 cat `echo textak` - prikaz mezi `` se provede jako prvni a jeho vysledek jde do cat, tato konstrukce muze mit jen 2 roviny
 cat $(echo textak) - prikaz v $() se provede jako prvni a jeho vysledek jde do cat, ale zde je mozna spousta rovin - dalsi $() muze
 byt v te prvni zavorce
-
-
-
-
-
-
-
-
-
-
 
 
 
