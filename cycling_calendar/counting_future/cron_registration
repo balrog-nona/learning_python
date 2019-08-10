@@ -5,7 +5,6 @@ do
 	if [ "$(ping -c 1 google.com)" ]
 	then
 		/usr/bin/python3 /home/balrog/Dokumenty/Programování/doGIThubu/learning_python/cycling_calendar/counting_future/main.py
-	 	echo 'hotovo'
 		break
 	else
 		sleep 20
