@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 import webbrowser
 import sys
@@ -23,3 +23,5 @@ else:
 
 
 webbrowser.open('https://www.google.com/maps/place/' + address)
+
+# osetrit chybu
