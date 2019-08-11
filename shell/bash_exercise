@@ -1,10 +1,15 @@
 1. Run the program "test.sh" and discard any output (standard and error) of that script.
 
-bash ./test.sh >> /dev/null
+bash ./test.sh > /dev/null 2> /dev/null     - 2> presmeruje chybovy vystup
+bash ./test.sh >/dev/null 2>&1   -presmeruje chybovy vystup do standardniho vystupu a toto pak dopryc
+2 je zastupny znak pro st chybovy vystup a 1 pro st normalni vystup
+( echo 'cau'; grep 'xxx' xxx ) 2>&1    - premena chyboveho vystupu na standardni, co pak muze jit treba do grepu
+| pracuje pouze se str vystup, nikdy ne s str chybovum vystupem
 
 2. Copy a directory tree (with files) from /opt/test/ to your home directory using tar.
 
-tar -cvf test-08-07-19.tar ~/Downloads/opt/test
+tar -cvf test-08-07-19.tar ~/Downloads/opt/test/   -zabaleni souboru do 1
+tar c /opt/test/ | tar x -C ~    - opravdu zkopiruje soubory
 
 3. Rename all .htm files in /tmp/test/ (but not subdirectories), so that they have .html extension instead of .htm. Ignore hidden files.
 
@@ -20,7 +25,7 @@ oboje udelalo to stejne, akorat v jinem poradi
 5. List all files (their full paths) in /tmp/test/ and subdirectories, that contain the left bracket "["
 
 grep -r -l ‘\[‘ /tmp/test/  - toto dava jen relativni cestu! v zadani je full path
-grep -R \\[ /tmp/test/ | cut -d: -f1 | xargs -I{} realpath {}   
+grep -R \\[ /tmp/test/ | cut -d: -f1 | xargs -I{} realpath {} | uniq   
 
 6. You have a file "/tmp/test/IMPORTANT" and a new version of it in your home directory named "IMPORTANT.new". Write a sequence of commands
 	that would replace the old version of the file with the new one, and keep the backup named "/tmp/test/IMPORTANT.backup". There must
@@ -28,35 +33,48 @@ grep -R \\[ /tmp/test/ | cut -d: -f1 | xargs -I{} realpath {}
 
 cat IMPORTANT > IMPORTANT.backup && cat ~/IMPORTANT.new > IMPORTANT  - tady mi uplne chybi cesta!
 cat /tmp/test/IMPORTANT > /tmp/test/IMPORTANT.backup && cat ~/IMPORTANT.new > /tmp/test/IMPORTANT
+nesplnuje podminku posledni vety - kopiruje se postupne, a kdyby si ho nekdo prohlidl pocas kopirovani, tak uvidi jen cast
 Misovo:
-ln /tmp/test/IMPORTANT /tmp/test/IMPORTANT.backup
+ln /tmp/test/IMPORTANT /tmp/test/IMPORTANT.backup   -ln vytvori hard link
 ln -f ~/IMPORTANT.new /tmp/test/IMPORTANT
+-1.radek je to jako kopirovani, ale ten soubor neni v pameti 2x. Pri editaci jednoho je editovany i ten druhy.
+-2.radek vytvori soubor IMPORTANT s obsahem IMPORTANT.new bude tam 1 soubor o dvou jmenech: IMPORTANT.new a IMPORTANT. IMPORTANT z 1. radku
+se premaze option -f (force)
 
 7. Transfer directory "/tmp/test/" (and everything below) to a machine named "orion" to directory "/var/tmp/test". Use ssh.
 
-ssh orion mv /tmp/test/ /var/tmp/test
+scp -r /tmp/test/ orion:/var/tmp/test   -scp je soucast baliku SSH
 
 8. Force apache to reload its configuration by sending a signal to it; "apache.pid" file is located in "/var/apache/".
 
-sudo /var/apache/ reload
+kill -HUP `cat /var/apache/apache.pid`  - kill posle signal HUP tomu process id od apache, pri zpracovani se apache znovu nacte
+- kill -HUP komunikuse s pid - process id 
 
 9. In "/tmp/test" and subdirs there are files with ".dat" extension (among others). The files contain numbers separated by 0x0A (LF).
 	Print the smallest number from each of the file.
 
 for file in /tmp/test/*.dat /tmp/test/*/*.dat ; do echo -e $(sed ‘s/0x/\\x/g’ $file) | sort -n | head -1 ; done
+- toto 'skvele' funguje u radku cisel rozdelenych primo 0x0A, ale takovy tadovy soubor by nikdy neexistoval + mi to nevleze do podslozky
+podlozky
+Zadani se melo vylozit tak, ze ty cisla maji byt oddelene radkem.
+Misovo:
+for file in `find /tmp/test -name "*.dat"`;do sort -g $file | head -n; done  -find projde vsechny vetve toho stromu
 
 10. There is a filesystem mounted on /usr containing new version of binaries. Create a hard link "/bin/perl" for file "/usr/bin/perl".
 
-ln /usr/bin/perl /bin/perl
+ln /usr/bin/perl /bin/perl  -toto funguje jen na papire a mohlo by to fungovat u me na PC, nicmene v Linuxu nejde udelat hard link
+to another file system
 
 11. Set ownership to "root" group "sys" for directory "/tmp/test" and everything below.
 
-sudo chown :sys /tmp/test/
+sudo chown :sys /tmp/test/   -tohle ponechalo uzivatele, ale zmenilo skupinu na sys. Zamyslela jsem nastavit vlastnictvi na skupinu rootu s nazvem sys, coz ale neecistuje... Root je jenom 1! 
+chtelo se: nastavit vlastnictvi na root a skupinu sys
+chown -R root:sys /tmp/test/  -R znamena recursive
 
 12. Set rights for "/tmp/test/" tree (both files and directories), so that the owner can read and write files (but not execute), group can only
 	read, and others are denied access altogether. The directories must be accessible for owner and group only.
 
-chmod -R u=rwX,g=rX,o=- /tmp/*
+chmod -R u=rwX,g=rX,o=- /tmp/test/
 Misovo: chmod -R u=rwX,g=rX,o= /tmp/test/
 
 13. Write a shell glob matching all files (and other objects) in the current directory, including hidden files, but not matching the "." or ".."
@@ -67,17 +85,28 @@ Misovo: chmod -R u=rwX,g=rX,o= /tmp/test/
 14. Set permissions for binary "/usr/local/bin/my_program", so that only "root" and members of the "adm" group can execute it; and when
 	executed, the program runs under "daemon" UID.
 
-sudo setfacl -m u:root:r-x,g:adm:r-x /usr/local/bin/my_program && setuid $daemon /usr/local/bin/my_program
+sudo setfacl -m u:root:r-x,g:adm:r-x /usr/local/bin/my_program && setuid $daemon /usr/local/bin/my_program  -setfacl ani nahodou, hledam suid
+set user id. setfacl nastavuje prava na urovni file systemu
+
+spravne:
+sudo chown daemon:adm /usr/local/bin/my_program    -nastaveno vlastnictvi na uzivatele daemon a skupinu adm
+sudo chmod u+s,g+x /usr/local/bin/my_program    -ten, kdo ho vlastni, bude mit nastavene suid(u+s), kdokoli ze skupiny adm muze program spustit(g+x)
+
+Kdyz je nastavene suid, tak proces bezi pod uzivatelem, ktery spusteny soubor vlastni. Kdyz neni nastavene suid, tak bezi pod uzivatelem, ktery ho spustil. Vyznam: kdyz program ma nastavene suid a tedy po spusteni bezi pod vlastnikem, tak muze mit vetsi prava, tzn. kdyz ho vlastni daemon, tak ma pristup vsude, kam daemon, ackoli uzivatel, ktery ho spustil, tyto prava nema. 
 
 15. Set permissions for "/tmp/test/", so that root cannot delete files in this directory.
 
-setfacl -m u:root:r-x /tmp/test
+chattr +i /tmp/test/    -nedovoli smazat, ale dovoli otevrit a psat; i je immutable flag
 
 16. List lines in file "/tmp/test/pkgs" that start with SUNW then a hexadecimal number followed by a space, and end with an asterisk.
 
 egrep ‘^SUNW[‘[:xdigit:]’]{1,}[‘[:space:]’].*\*$’ /tmp/test/pkgs
 egrep ‘^SUNW[‘[:xdigit:]’]+[‘[:space:]’].*\*$’ /tmp/test/pkgs
 option -c zmeni vystupn grepu - misto radku vrati pocet!
+Hexadecimalci cisla zacinaji na 0x, ja jsem to trenovala na souboru, kde nebyly...
+
+Misovo:
+grep '^SUNW0x[[:xdigit:]]\{1,\} .*\*$' /tmp/test/pkgs
 
 17. Copy file "/tmp/test/pkgs" to your home directory, so that the new name is pkgs-YYYYMMDD (where YYYYMMDD is the current date).
 
@@ -88,7 +117,12 @@ cp -p /tmp/test/pkgs ~/pkgs-`date '+%Y%m%d'` - option -p zachova i vsechny dalsi
 
 while IFS=: read login pwd uid gid full home shell; do if (( $iud > 500 )); then echo $login; fi; done < /etc/passwd
 while IFS=: read username x uid x; do if [ $uid -gt 500 ]; then echo $username; fi; done < /etc/passwd
-awk -F: ‘$3 > 500’ < /etc/passwd | awk -F: '{print $1}’
+awk -F: ‘$3 > 500’ < /etc/passwd | awk -F: '{print $1}'
+awk -F: '$3 > 500 { print $1 }' /etc/passwd
+
+Misovo:
+while IFS=: read username x uid x; do if [ $uid -gt 500 ]; then echo "$username"; fi; done < /etc/passwd
+x je promenna, kterou pak nebudu potrebovat. Do toho druheho vleze vsechno za uid.
 
 19. Kolik radku v souboru nezacina velkym pismenem?
 
@@ -99,7 +133,6 @@ grep -c '^[^A-Z]' cesta/k/souboru   - dtto
 
 grep -c -e '^[^[:upper:]]' -e '^$' cesta/k/souboru  - 2 regularni vyrazy po sobe, vyhodnoti i prazdne radky a vrati spravny pocet
 grep -c '^[^[:upper:]]\|^$' cesta/k/souboru  - varianta slozeneho regularniho vyrazu
-
 grep -c -e '^[^A-Z]' -e '^$' cesta/k/souboru  - dtto
 grep -c '^[^A-Z]\|^$' cesta/k/souboru 
 
