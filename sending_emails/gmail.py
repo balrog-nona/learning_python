@@ -6,27 +6,28 @@ Abych se dostala ke svemu mejlu, musela jsem si zapnout povoleni less secure app
 povoleni jsem pak vypla, cili kod nize bez opetovneho zapnuti nebude fungovat.
 """
 
-smtpObj = smtplib.SMTP('smtp.gmail.com', 587)  # 587 - TLS encryption
+smtpObj = smtplib.SMTP_SSL('smtp.gmail.com', 465)
 print(type(smtpObj))
 
-print(smtpObj.ehlo())  # establishing connection to the server, first step after having SMTP object
+smtpObj.set_debuglevel(True)
+
+
+smtpObj.ehlo()  # establishing connection to the server, first step after having SMTP object
 # 250 is code of success in smtplib
 
-# next step: calling starttls() for ensuring the encryption
-print(smtpObj.starttls())  # 220 = encrypted connection is set up
-
 # login
-print(smtpObj.login(email_access.gmail['email'], email_access.gmail['password']))  # kod 235 - accepted
+smtpObj.login(email_access.gmail['email'], email_access.gmail['password'])  # kod 235 - accepted
 
 # nejdriv email odesilatele, pak email prijemce
-smtpObj.sendmail(email_access.gmail['email'], email_access.seznam['email'], 'Subject: So long\nDear Alice, '
+smtpObj.sendmail(email_access.gmail['email'], email_access.gmail['email'], 'Subject: So long\nDear Alice, '
                                                                            'so long and thank you for all the fish. '
                                                                            'Sincerely, Bob')
 
-# funguje! sendmail ma return value dictionary - prazdny slovnik znamena, ze vsichni adresati email obdrzeli
+# sendmail ma return value dictionary - prazdny slovnik znamena, ze vsichni adresati email obdrzeli
 
-print(smtpObj.quit())  # 221 - session is ending
+smtpObj.quit()  # 221 - session is ending
 
 """
-neprochazela jsem cast lekce o IMAP, protoze v dohledne dobe nemam v planu si mejly stahovat
+Funguje perfektne posilani gmail to gmail a gmail to seznam. Email je identifikovany jako poslany mnou, ma predmet
+a telo emailu. Prijde v normalnim case.
 """
