@@ -23,5 +23,3 @@ else:
 
 
 webbrowser.open('https://www.google.com/maps/place/' + address)
-
-# osetrit chybu
