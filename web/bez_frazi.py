@@ -1,34 +1,28 @@
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-import time
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import path_to_geckodriver
 
 driver = webdriver.Firefox(executable_path=path_to_geckodriver.path)
 
 driver.get('https://www.bezfrazi.cz/')
-time.sleep(5)
+driver.implicitly_wait(4)
 
+cookies = driver.find_element_by_id('cookies-agree-button')
+cookies.click()
+driver.implicitly_wait(4)
+
+iterace = 0
 while True:
     try:
         driver.execute_script('window.scrollTo(0, document.body.scrollHeight)')
-        time.sleep(5)
-        element = driver.find_element_by_id('read-next-button')
+        driver.implicitly_wait(2)
+        element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'read-next-button')))
         element.click()
-        time.sleep(5)
-    except NoSuchElementException:
+        iterace += 1
+        driver.implicitly_wait(2)
+    except TimeoutException:
+        print('Pocet clicku: {}'.format(iterace))
         break
-
-"""
-funguje, ale neni to vubec efektivni. kvuli chybejicim importum mi nefungovaly fce:
-element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "myDynamicElement"))) 
-        - ze pry By. neni definovane
-element = wait.until(EC.element_to_be_clickable((By.ID, 'someid'))) - tady taky
-a ani toto driver.implicitly_wait(10) # seconds
-importy:
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-prepsat na efektivni verzi
-"""
