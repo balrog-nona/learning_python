@@ -8,10 +8,15 @@ import re
 import calendar_access
 import making_date
 import decimal
+from send_email import msg as msg
+from send_email import smtpObj as smtpObj
+from send_email import sender as sender
+from email.mime.text import MIMEText
 
 """
 This script counts how many kms I did on exercise bike during a particular month + using "rotoped soucet" event in my 
 calendar creates an event on the last day of every month to my calendar with the total sum of kms in my whole history.
+After that, the script sends me an email with the result.
 
 The program will run the first day of every month.
 
@@ -70,7 +75,7 @@ def count_kms(iterable):
 
 """"
 Accessing the last event called "rotoped soucet" from the penultimate month
-This event has a start date last day of penultimate month and an end date the first day of last month
+This event has a start date last day the penultimate month and an end date the first day of last month
 """
 # 2. call to the calendar API - accessing event "rotoped soucet" from previous month
 events_result2 = SERVICE.events().list(calendarId=calendar_ID, timeMax=making_date.time_max2,
@@ -95,3 +100,13 @@ EVENT = {
 }
 
 e = SERVICE.events().insert(calendarId=calendar_ID, body=EVENT).execute()
+
+
+# sending email with the result
+body = 'Statistics:\nLast month: {} km\nTotal: {} km'.format(this_month, total)
+msg.attach(MIMEText(body, 'plain'))
+text = msg.as_string()
+
+smtpObj.sendmail(sender, sender, text)  # from, to, message
+
+smtpObj.quit()
