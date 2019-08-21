@@ -120,3 +120,163 @@ class Point:
 p = Point(2, 3)
 print(p.x)  # vypise zpravu a pak hodnotu atributu
 print(p.y)
+
+
+# DEBUG ALL THE CLASSES - video 25:50
+# solution A - DEFINING A METACLASS
+class debugmeta(type):
+    def __new__(cls, clsname, bases, clsdict):
+        clsobj = super().__new__(cls, clsname, bases, clsdict)  # vytvori tridu
+        clsobj = debugmethods(clsobj)  # a pak na ni nabali class decorator - wraps it
+        return clsobj
+
+"""
+Every type in defined by class: the class is the type of instances created.
+The class is a callable that creates instances.
+Classes are instances of types: !!
+type(int)  - class type
+type(list)  - class type
+type(Point)  - class type
+isinstance(Point, type)  - True
+
+So type must be a class!
+type(type)  - class type
+Makes instances of types. Used when defining classes.
+"""
+
+class Spam(Base):
+
+    """
+    Name: Spam
+    Base classes: Base,
+    Functions: __init__, bar
+    """
+
+    def __init__(self, name):
+        self.name = name
+
+    def bar(self):
+        print('I am Spam.bar')
+
+# What happens during class definition
+# step 1: Body of class is isolated
+body = """
+    def __init__(self, name):
+        self.name = name
+    def bar(self):
+        print('I am Spam.bar')
+"""
+# step 2: the class dictionary is created
+clsdict = type.__prepare__('Spam', (Base,))  # this dictionary serves as local namespace for statements in the cls body
+# step 3: body is executed in returned dict
+exec(body, globals(), clsdict)
+# afterwards cls dict is populated
+# step 4: class is constructed from its name,base classes, and the dictionary
+Spam2 = type('Spam2', (Base,), clsdict)  # cili takhle to muzu naplnit i rucne mimo normalni definici?
+
+# Changing the METACLASS - video 30:55
+# by metaclass keyword argument; sets the class used for creating the type; bydefault it's set to type
+# class Spam(metaclass=type)
+"""
+normally while creating a class I inherit from type and redefine __new__ or __init__
+"""
+class mytype(type):
+    def __new__(cls, name, bases, clsdict):
+        """
+        tady si fakt muzu dat, co chci, napr. podminku o poctu bases, vyvolavat vyjimky apod.
+        """
+        clsobj = super().__new__(cls, name, bases, clsdict)
+        return clsobj
+
+# usage: class Spam(metaclass=mytype):
+
+"""
+Mataclasses get information about class definitions at the time of definition - I can inspect or modify this data.
+Essentially similar to a class decorator.
+
+Metaclasses propagate down hierarchies:
+class Base(metaclass=mytype):
+...
+class Spam(Base):   -metaclass Base
+...
+class Grok(Spam):   -metaclass Base!
+...
+It's like genetic mutation.
+"""
+class debugmeta(type):
+    def __new__(cls, clsname, bases, clsdict):
+        clsobj = super().__new__(cls, clsname, bases, clsdict)  # vytvori tridu
+        clsobj = debugmethods(clsobj)  # a pak na ni nabali class decorator - wraps it
+        return clsobj  # class gets created normally + immediately wrapped by class decorator
+
+# debug the universe:
+class Base(metaclass=debugmeta):
+    pass
+class Spam(Base):  # debugging gets applied across entire hierarchy - implicitly applied in subclasses
+    pass
+class Grok(Spam):
+    pass
+class Mondo(Grok):
+    pass
+
+"""
+Wrapping/rewriting:
+decorators: functions
+class decorators: classes
+metaclasses: class hierarchies
+
+With metaclass, there is a way how to make changes before the class creation X class decorators come in play
+after the class has already been created. 
+"""
+
+# STRUCTURE
+# ZABRANENI OPAKOVANI __INIT__ V KAZDE NOVE TRIDE - video 39:20
+class Stock:
+
+    def __init__(self, name, shares, price):
+        self.name = name
+        self.shares = shares
+        self.price = price
+
+class Point:
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+class Host:
+
+    def __init__(self, address, port):
+        self.address = address
+        self.port = port
+
+# too repetitive
+# varianta 1:
+class Structure:
+    _fields = []
+
+    def __init__(self, *args):  # generalizace initu
+        for name, val in zip(self._fields, args):
+            setattr(self, name, val)
+
+class Stock(Structure):
+    _fields = ['name', 'shares', 'price']
+
+class Point(Structure):
+    _fields = ['x', 'y']
+
+class Host(Structure):
+    _fields = ['address','port']
+
+s = Stock('GOOG', 100, 490.1)
+"""
+funguje - normalne vytvori potrebne atributy i s hodnotama
+
+Nevyhody:
+- ztrati se spousta dat uzitecnych pro debugging, napr. pri help(classname) tam skoro nic neni
+- kdyz se zada nespravny pocet argumentu, tak se instance vytvori, ale nebude mit ty spravne atributy
+- ztrata moznosti zadavat argumenty jako keywords
+- missing calling signature (z modulu inspect)
+"""
+
+# SIGNATURE - video 45:10
