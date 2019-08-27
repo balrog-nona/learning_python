@@ -17,7 +17,7 @@ Google API documentation:
 https://developers.google.com/api-client-library/python/
 https://developers.google.com/calendar/v3/reference/events
 
-The substantial part of the code was taken from quickstart.py on the Google calendar API website.
+The first 8 lines of the code was taken from quickstart.py on the Google calendar API website.
 """
 
 SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
