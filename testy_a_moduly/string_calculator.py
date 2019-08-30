@@ -8,7 +8,7 @@ class StringCalculator:
     counting_add = 0
 
     def add(self, a):
-        self.counting_add += 1
+        StringCalculator.counting_add += 1
         if not a:
             return 0
         else:

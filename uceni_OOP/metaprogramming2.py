@@ -150,7 +150,7 @@ print(help(Stock))
 # DESCRIPTORS - video 1:02:10
 """
 class Descriptor:   customized processing of attribute access
-    def __get__(self, instance, cls):
+    def __get__(self, instance, cls):   nepotrubuje se, pokud jen vraci normalne hodnotu z __dict__
         ...
     def __set__(self, instance, value):
         ...
@@ -159,13 +159,17 @@ class Descriptor:   customized processing of attribute access
 """
 class Descriptor:  # osetreni JEDNOHO atributu
     def __init__(self, name=None):
-        self.name = name
+        self.name = name  # jde se zvenci dostat k tomu, ze bych si overila, ze tento atribut se jmenuje name?
     def __get__(self, instance, cls):
+        # instance: is the instance being manipulated, e. g. Stock instance
         print('Get', self.name)
+        return instance.__dict__[self.name]
     def __set__(self, instance, value):
         print('Set', self.name, value)
+        instance.__dict__[self.name] = value
     def __delete__(self, instance):
         print('Delete', self.name)
+        del instance.__dict__[self.name]
 
 class StructMeta(type):
     def __new__(cls, name, bases, clsdict):
@@ -185,13 +189,69 @@ class Structure(metaclass=StructMeta):
 class Stock(Structure):
     _fields = ['name', 'shares', 'price']
 
+    name = Descriptor('name')
     shares = Descriptor('shares')
+    price = Descriptor('price')
 
 s = Stock('GOOG', 450, 200.6)
 print(s. shares)  # tady mi to tiskne i nejake None - odkud se bere??
 del s.shares
 s.shares = 1
-print(s.shares)  # tady taky po get je None
+print(s.shares)  # tady taky po get je None (jeste pred tim, nez metody v Descriptoru mely return)
+
+
+# struktura zakladniho descriptoru - video 1:07:09
+
+class Typed(Descriptor):
+    ty = object  # expected type
+    def __set__(self, instance, value):
+        if not isinstance(value, self.ty):
+            raise TypeError('Expected {}'.format(self.ty))
+        super().__set__(instance, value)
+
+class Integer(Typed):
+    ty = int
+
+class Float(Typed):
+    ty = float
+
+class String(Typed):
+    ty = str
+
+
+class Stock(Structure):
+    _fields = ['name', 'shares', 'price']
+    name = String('name')  # funguje, protoze String dedi od Typed a ten od Descriptor
+    shares = Integer('shares')
+    price = Float('price')
+
+s = Stock('banana', 450, 2.6)
+s.name = 'OTO'
+print(s.__dict__)
+# s.name = 8  type checking funguje
+
+class Positive(Descriptor):
+    def __set__(self, instance, value):
+        if value < 0:
+            raise ValueError('Must be > 0')
+        super().__set__(instance, value)
+
+
+class PositiveInteger(Integer, Positive):  # dedeni ze dvou trid!
+    pass
+
+class PositiveFloat(Float, Positive):  # kombinuje funkcionality obou trid, tj. type i value checking
+    pass
+
+class Stock(Structure):
+    _fields = ['name', 'shares', 'price']
+    name = String('name')  # funguje, protoze String dedi od Typed a ten od Descriptor
+    shares = PositiveInteger('shares')
+    price = PositiveFloat('price')
+
+s = Stock('koxo', 41, 7.6)
+# s.shares = 'a lot' funguje, vyvola TypeError
+# s.shares = -96  funguje, vyvola ValueError
 
 
 
