@@ -1,5 +1,7 @@
 import inspect
 from inspect import Parameter, Signature
+import re
+from collections import OrderedDict
 
 # podle prednasky https://www.youtube.com/watch?v=sPiWg5jSoZI&list=WL&index=7&t=0s
 
@@ -253,5 +255,60 @@ s = Stock('koxo', 41, 7.6)
 # s.shares = 'a lot' funguje, vyvola TypeError
 # s.shares = -96  funguje, vyvola ValueError
 
+"""
+Poradi dedeni tech dvou trid, ze kterych se dedi 
+class PositiveInteger(Integer, Positive)
+je dulezite - nejdriv potrebuju type check, aby se nestalo, ze se porovnava nenumericka hodnota, coz vyhodi zcela jiny
+error.
+Method resolution order:
+"""
+print(PositiveInteger.__mro__)  # order in which the value is checked by different __set__() methods
+# po Integer se zastavi na Typed a nejde dal na Descriptor kvuli fci super()
 
+# length checking - video 1:22:32
+class Sized(Descriptor):
+    def __init__(self, *args, maxlen, **kwargs):
+        self.maxlen = maxlen
+        super().__init__(*args, **kwargs)
 
+    def __set__(self, instance, value):
+        if len(value) > self.maxlen:
+            raise ValueError('Too big')
+        super().__set__(instance, value)
+
+class SizedString(String, Sized):
+    pass
+
+# pattern matching
+class Regex(Descriptor):
+    def __init__(self, *args, pat, **kwargs):
+        self.pat = re.compile(pat)
+        super().__init__(*args, **kwargs)  # to nevadi, ze trida Descriptor s argumenty nepocita?
+
+    def __set__(self, instance, value):
+        if not self.pat.match(value):
+            raise ValueError('Invalid string')
+        super().__set__(instance, value)
+
+class SizedRegexString(SizedString, Regex):
+    pass
+
+class Stock(Structure):
+    _fields = ['name', 'shares', 'price']
+    name = SizedRegexString('name', pat='[A-Z]+$', maxlen=8)
+    shares = PositiveInteger('shares')
+    price = PositiveFloat('price')
+
+s = Stock('KOLO', 250, 78.6)
+# s.name = 'aaaaaaaaaaaaaaa' funguje, vyhodi ValueError Too big
+# s.name = '1234'  funguje, vyhodi ValueError Invalid string
+# s.name = 66   funguje, vyhodi TypeError, protoze ocekava string
+"""
+Muze se dedit i ze 3 trid:
+class SizedRegexString(String, Sized, Regex):
+    pass
+    
+Cela ta manipulace s __init__ je umoznena tema kezword only argumenty, tj. name, maxlen, pat - video 1:27:00
+"""
+
+# novy level METACLASSES - video 1:29:11
