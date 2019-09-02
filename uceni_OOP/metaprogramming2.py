@@ -3,6 +3,7 @@ from inspect import Parameter, Signature
 import re
 from collections import OrderedDict
 
+
 # podle prednasky https://www.youtube.com/watch?v=sPiWg5jSoZI&list=WL&index=7&t=0s
 
 
@@ -308,7 +309,100 @@ Muze se dedit i ze 3 trid:
 class SizedRegexString(String, Sized, Regex):
     pass
     
-Cela ta manipulace s __init__ je umoznena tema kezword only argumenty, tj. name, maxlen, pat - video 1:27:00
+Cela ta manipulace s __init__ je umoznena tema keyword only argumenty, tj. name, maxlen, pat - video 1:27:00
 """
 
 # novy level METACLASSES - video 1:29:11
+class StructMeta(type):
+    @classmethod
+    def __prepare__(cls, name, bases):  # returns the dict which will be used during cls creation
+        return OrderedDict()  # dict that keeps things in order
+
+    def __new__(cls, name, bases, clsdict):
+        fields = [key for key, val in clsdict.items() if isinstance(val, Descriptor)]
+        for name in fields:
+            clsdict[name].name = name # tady mi to pripada nejasne
+
+        clsobj = super().__new__(cls, name, bases, dict(clsdict))
+        # for class content must be proper dict, not Ordered ot something
+
+        sig = make_signature(fields)
+        setattr(clsobj, '__signature__', sig)
+        return clsobj
+
+class Structure(metaclass=StructMeta):
+    _fields = []
+
+    def __init__(self, *args, **kwargs):
+        bound = self.__signature__.bind(*args, **kwargs)
+        for name, val in bound.arguments.items():
+            setattr(self, name, val)
+
+class Stock(Structure):
+    """
+    Vsechny tz tridy, ktere vznikly dedenim, jsou nejakym zpusobem navazane na Descriptor. Ted se pro kazdy atribut
+    vybere ta konkterni trida, do ktere ma spadat - jestli SizedString,PositiveInteger apod.
+    """
+    name = SizedRegexString(pat='[A-Z]+$', maxlen=8)
+    shares = PositiveInteger()
+    price = PositiveFloat()
+
+s = Stock('UHURU', 77, 22.6)
+print(s.name, s.price, s.shares)
+
+"""
+Velka nevyhoda celeho toho postupu se signature, metaclass hard core - video 1:37:42
+proti proste
+class Stock:
+    def__init__(self, name, shares, price):
+        self.name = name
+        self.shares = shares
+        self.price = price
+
+POMALOST
+"""
+# CODE GENERATION - video 1:39:49
+# fce, ktera vytvori __init__, aby to cele bylo zase rychle
+def _make_init(fields):
+    """
+    Give a list of field names, make an__init__ method
+    """
+    code = 'def __init__(self, {}):\n'.format(", ".join(fields))
+    for name in fields:
+        code += '   self.{} = {}\n'.format(name, name)
+    return code
+
+print(_make_init(['name','shares', 'price']))
+
+class StructMeta(type):
+    @classmethod
+    def __prepare__(cls, name, bases):  # returns the dict which will be used during cls creation
+        return OrderedDict()  # dict that keeps things in order
+
+    def __new__(cls, name, bases, clsdict):
+        fields = [key for key, val in clsdict.items() if isinstance(val, Descriptor)]
+        for name in fields:
+            clsdict[name].name = name
+
+        if fields:
+            init_code = _make_init(fields)
+            exec(init_code, globals(), clsdict)
+
+        clsobj = super().__new__(cls, name, bases, dict(clsdict))
+        # for class content must be proper dict, not Ordered ot something
+
+        return clsobj
+
+class Structure(metaclass=StructMeta):
+    _fields = []
+
+class Stock(Structure):
+    name = SizedRegexString(pat='[A-Z]+$', maxlen=8)
+    shares = PositiveInteger()
+    price = PositiveFloat()
+
+s = Stock('TUKAN', 55, 230.8)
+print(s.name, s.price, s.shares)
+# s.name = 33 checking stale funguje
+
+# je to podstatne rychlejsi nez ty srandy s metaclass, ale stale ne tak rychle jako prosta definice class
