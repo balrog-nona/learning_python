@@ -13,6 +13,14 @@ kwargs = {'x': 66, 'y': 100}
 func(*args, **kwargs) je to same jako func(4, 5, x=66, y=100)
 """
 
+"""
+Video zahrnuje:
+- descriptory
+- hiding of annoying details (signatures apod.)
+- dynamic code generation
+- customizing import
+"""
+
 # DEBUGGING USING DECORATORS
 """
 decorator is a function that creates a wrapper around another function. That wrapper functions exactly the same as

@@ -197,7 +197,7 @@ class Stock(Structure):
     price = Descriptor('price')
 
 s = Stock('GOOG', 450, 200.6)
-print(s. shares)  # tady mi to tiskne i nejake None - odkud se bere??
+print(s. shares)  # tady mi to tisklo i nejake None - odkud se bralo??
 del s.shares
 s.shares = 1
 print(s.shares)  # tady taky po get je None (jeste pred tim, nez metody v Descriptoru mely return)
@@ -318,7 +318,7 @@ class StructMeta(type):
     def __prepare__(cls, name, bases):  # returns the dict which will be used during cls creation
         return OrderedDict()  # dict that keeps things in order
 
-    def __new__(cls, name, bases, clsdict):
+    def __new__(cls, name, bases, clsdict):  # co bude driv? tento new nebo init z dedice?
         fields = [key for key, val in clsdict.items() if isinstance(val, Descriptor)]
         for name in fields:
             clsdict[name].name = name # tady mi to pripada nejasne
@@ -333,17 +333,17 @@ class StructMeta(type):
 class Structure(metaclass=StructMeta):
     _fields = []
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # co bude driv? tento init nebo new z parent cls?
         bound = self.__signature__.bind(*args, **kwargs)
         for name, val in bound.arguments.items():
             setattr(self, name, val)
 
 class Stock(Structure):
     """
-    Vsechny tz tridy, ktere vznikly dedenim, jsou nejakym zpusobem navazane na Descriptor. Ted se pro kazdy atribut
+    Vsechny ty tridy, ktere vznikly dedenim, jsou nejakym zpusobem navazane na Descriptor. Ted se pro kazdy atribut
     vybere ta konkterni trida, do ktere ma spadat - jestli SizedString,PositiveInteger apod.
     """
-    name = SizedRegexString(pat='[A-Z]+$', maxlen=8)
+    name = SizedRegexString(pat='[A-Z]+$', maxlen=8)  # tridni promenne
     shares = PositiveInteger()
     price = PositiveFloat()
 
