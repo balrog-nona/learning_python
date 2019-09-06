@@ -250,7 +250,7 @@ class Ranged(Typed):
 
     def __set__(self, instance, value):
         if value < self.min:
-            raise TypeError('Value muset be greater than {}'.format(self.min))
+            raise TypeError('Value must be greater than {}'.format(self.min))
         elif value > self.max:
             raise TypeError('Value must be lower than {}'.format(self.max))
         super().__set__(instance, value)
@@ -361,3 +361,179 @@ Totiz asi obecne descriptory by mely evidovat 3 veci - instanci, atribut, hodnot
 """
 poradne video k tomuto ve watch later! 
 """
+print('==================================================================================================')
+# muj vytvor
+class Descriptor:
+
+    def __init__(self, name=None):
+        self.name = name
+
+    def __set__(self, instance, value):
+        instance.__dict__[self.name] = value  # tento key se jmenuje self.name nebo name?
+
+    def __get__(self, instance, cls):
+        return instance.__dict__[self.name]
+
+    def __delete__(self, instance):
+        del instance.__dict__[self.name]
+
+class Typed(Descriptor):
+    ty = object
+    def __set__(self, instance, value):
+        if not isinstance(value, self.ty):
+            raise TypeError('Expected {}'.format(self.ty))
+        super().__set__(instance, value)
+
+class Integer(Typed):
+    ty = int
+
+class String(Typed):
+    ty = str
+
+class Float(Typed):
+    ty = float
+
+class Ranged(Descriptor):
+    def __set__(self, instance, value):
+        if value <= 0:
+            raise ValueError('Must be greater than 0')
+        super().__set__(instance, value)
+
+class RangedInteger(Integer, Ranged):
+    pass
+
+class RangedFloat(Float, Ranged):
+    pass
+
+class Person:  # jak to, ze to funguje?
+
+    name = String('name')
+    age = RangedInteger('age')
+    weight = RangedFloat('weight')
+
+    def __init__(self, name, age, weight):
+        self.name = name
+        self.age = age
+        self.weight = weight
+
+bobby = Person('bobby', 44, 55.8)
+print(bobby.name)
+print(id(bobby))
+print(bobby.age)
+# bobby.age = -5 funguje
+
+ron = Person('ron', 77, 96.4)
+print(ron.name, ron.weight, ron.age)
+ron.name = 'betty'
+print(ron.name)
+# ron.weight = -33.7 funguje
+print(id(ron))
+
+print(bobby.name)
+print(bobby.__dict__)
+print(ron.__dict__)
+
+class CleverPerson(Person):
+    iq = RangedInteger('iq')
+
+    def __init__(self, name, age, weight, iq):
+        super().__init__(name, age, weight)
+        self.iq = iq
+
+paula = CleverPerson('paula', 22, 55.7, 145)
+print(paula.iq, paula.age, paula.weight, paula.name)
+# paula.iq = -6 funguje
+paula.age = 18
+print(paula.age, bobby.age, ron.age)
+print(paula.__dict__)
+
+print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+# 2. verze s kontrolou vseho mozneho
+class Descriptor:
+
+    def __init__(self, name=None):
+        self.name = name
+
+    def __set__(self, instance, value):
+        instance.__dict__[self.name] = value
+
+    def __get__(self, instance, cls):
+        return instance.__dict__[self.name]
+
+    def __delete__(self, instance):
+        del instance.__dict__[self.name]
+
+class Typed(Descriptor):
+    ty = object
+    def __set__(self, instance, value):
+        if not isinstance(value, self.ty):
+            raise TypeError('Expected {}'.format(self.ty))
+        super().__set__(instance, value)
+
+class Integer(Typed):
+    ty = int
+
+class String(Typed):
+    ty = str
+
+class Float(Typed):
+    ty = float
+
+class NameString(String, Descriptor):
+    def __set__(self, instance, value):
+        if value[0].islower():
+            raise ValueError('Names start with capital letter.')
+        super().__set__(instance, value)
+
+class Ranged(Descriptor):
+    def __set__(self, instance, value):
+        if value <= 0:
+            raise ValueError('Must be greater than 0')
+        super().__set__(instance, value)
+
+class RangedInteger(Integer, Ranged):
+    def __set__(self, instance, value):
+        if value > 120:
+            raise ValueError('Max. 120')
+        super().__set__(instance, value)
+
+class RangedFloat(Float, Ranged):
+    pass
+
+class Person:  # jak to, ze to funguje?
+
+    name = NameString('name')
+    age = RangedInteger('age')
+    weight = RangedFloat('weight')
+
+    def __init__(self, name, age, weight):
+        self.name = name
+        self.age = age
+        self.weight = weight
+
+miguel = Person('Miguel', 50, 87.5)  # opravdu kontroluje velka pismena
+print(miguel.name, miguel.weight)
+# miguel.age = -66 funguje
+miguel.age = 12
+print(miguel.age)
+print(miguel.__dict__)
+
+class Max_iq(Integer, Ranged):
+    def __set__(self, instance, value):
+        if value > 190:
+            raise ValueError('Max. 190')
+        super().__set__(instance, value)
+
+class CleverPerson(Person):
+    iq = Max_iq('iq')
+
+    def __init__(self, name, age, weight, iq):
+        super().__init__(name, age, weight)
+        self.iq = iq
+
+joe = CleverPerson(name='Joe', age=24, weight=67.2, iq=165)  # podporuje keywords
+print(joe.name, joe.iq)
+# joe.iq = 210 funguje
+joe.name = 'Peter'
+print(joe.name, joe.weight)
+print(joe.__dict__)
