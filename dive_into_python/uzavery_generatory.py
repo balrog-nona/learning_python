@@ -126,7 +126,7 @@ rules3 vytvari posloupnost fci. bere vzorec z patterns a pouzitim fce build_matc
 pattern fci na match a fci na apply. Match fce zavola search a apply zavola sub.
 zde struktura rules3 na stejnou funkcni podobu jako u rules2 - seznam dvojic fci 
 """
-
+print('rules3:\n', rules3, sep="")  # je to seznam dvojic fci
 
 def plural3(noun):
     for matches_rule, apply_rule in rules3:
@@ -141,7 +141,7 @@ je to dynamicky vytvoreny seznam techto fci v rules3
 # a ted se samotne podminky pro tvorbu pluralu ulozi do vlastniho souboru a zde zustane jen kod
 rules4 = []  # bude to seznam z tuple - dvojic fci
 
-with open('../../diveintopython3/examples/plural4-rules.txt', encoding='utf-8') as pattern_file:
+with open('../../../diveintopython3/examples/plural4-rules.txt', encoding='utf-8') as pattern_file:
     for line in pattern_file:
         pattern, search, replace = line.split(None, 3)  # None - rozdel v miste bilych znaku, 3 - rozdel 3x
         rules4.append(build_match_and_apply_functions(pattern, search, replace))
@@ -171,7 +171,7 @@ print(inc10(4))
 """
 closure fce je obvykle ulozi to vlastni promenne, coz bude type fce, bo closure fce vraci fci
 VYHODA pouziti closure - 
-1 muze to byt citelnejsi
+1. muze to byt citelnejsi
 2. je to rychlejsi nez pouziti jinych struktur
 3. avoiding global variables since closure provides data hiding
 4. implementing a class with a public method
@@ -182,7 +182,7 @@ VYHODA pouziti closure -
 def outer_fce(name):
     print("Hello, sweet little", name)
 
-    def inner_fce():  # fce bude mit pristup k hodnote paranetru name
+    def inner_fce():  # fce bude mit pristup k hodnote parametru name
         print(name, "you are very small.")
 
     return inner_fce
@@ -252,8 +252,8 @@ def make_counter(x):
         print("incrementing x")
         x += 1
 
-
-counter = make_counter(2)  # pri zavolani vraci generator, nedojde k provedeni kodu fce
+print('MAKE COUNTER')
+counter = make_counter(2)  # pri zavolani vraci generator, nedojde k provedeni kodu fce, ani printu
 print(counter)
 print(next(counter))  # bez print tiskne jen to, co tiskne primo fce, tedy netiskne hodnotu x
 print(next(counter))
@@ -283,10 +283,13 @@ def fib(max):
 for n in fib(1000):  # for cyklus automaticky dostava dalsi hodnoty volanim fce next()!!
     print(n, end=" ")
 
+print()
 print(list(fib(1000)))  # fce list() iteruje pres hodnoty generatoru a vraci jejich seznam
 
 
 # opet k fci plural
+plural5_rules = '../../../diveintopython3/examples/plural5-rules.txt'
+
 def rules(rules_filename):
     with open(rules_filename, encoding='utf-8') as pattern_file:
         for line in pattern_file:
@@ -294,9 +297,7 @@ def rules(rules_filename):
             yield build_match_and_apply_functions(pattern, search, replace)
 
 
-directory, name = os.path.split('../../diveintopython3/examples/plural5-rules.txt')
-
-def plural5(noun, rules_filename=name):
+def plural5(noun, rules_filename=plural5_rules):
     for matches_rule, apply_rule in rules(rules_filename):
         """Pri druhe obratce se dostaneme tam, kde generator rules posledne skoncil, cili pri druhe obratce zde ve 
         for cyklu se dostaneme do rules do druheho radku for cyklu, coz vygeneruje dalsi dve fce a vrati se pres yield.
@@ -309,11 +310,11 @@ def plural5(noun, rules_filename=name):
 
 """
 Proti plural4() vyhody: ziskal se startovaci cas, bo v plural4() se musel importovat modul plural4 a vytvorit se seznam
-pravidel, nez se mohlo zacit neco delat. Pri pouziti generatoru se da vsechno delat na posledni chvili - naste se
+pravidel, nez se mohlo zacit neco delat. Pri pouziti generatoru se da vsechno delat na posledni chvili - nacte se
 pravidlo, vytvori se fce, vyzkousi se. Pokud to funguje, nemusi se nacitat zbytek ani tvorit dalsi fce.
 
 Nevyhody: ztrata vykonnosti - generator rules() startuje vzdycky od pokazde, kdyz se vola fce plural5(), tj. soubor se
 vzorky se musi znova otevrit a musi se cist jeden radek po druhem.
 """
 
-print(plural5("vacancy", rules_filename=name))  # tak toto mi nefunguje...
+print(plural5("vacancy", rules_filename=plural5_rules))

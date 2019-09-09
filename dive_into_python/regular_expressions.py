@@ -1,5 +1,7 @@
 import re
 
+# kap.5 Dive into Python3
+
 print("NAHRAZOVANI ADRESY")
 # priklady z ucebnice - nahrazovani slova ROAD zkratkou RD.
 s = "100 NORTH MAIN ROAD"
