@@ -174,6 +174,7 @@ print(guess)
 translation_table = dict(zip(characters, guess))  # klic je ord pismena, value je ord cisla
 print('translation table:', translation_table)
 print('SEND + MORE = MONEY'.translate(translation_table))  # obdoba zapisu puzzle.translate(dict(zip(characters,guess)))
+# transtale rovnou i prevede ord cisla zpet na cislo
 
 # 7. eval()
 print(eval('1 + 1 == 2'))
