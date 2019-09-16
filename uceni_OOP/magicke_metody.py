@@ -369,7 +369,7 @@ class Descriptor:
         self.name = name
 
     def __set__(self, instance, value):
-        instance.__dict__[self.name] = value  # tento key se jmenuje self.name nebo name?
+        instance.__dict__[self.name] = value
 
     def __get__(self, instance, cls):
         return instance.__dict__[self.name]
@@ -405,7 +405,7 @@ class RangedInteger(Integer, Ranged):
 class RangedFloat(Float, Ranged):
     pass
 
-class Person:  # jak to, ze to funguje?
+class Person:
 
     name = String('name')
     age = RangedInteger('age')
@@ -452,7 +452,8 @@ print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 class Descriptor:
 
     def __init__(self, name=None):
-        self.name = name
+        self.name = name  # jde nejak zvenci skrz tridu Person overit, ze ten atribut se jmenuje name? ANO, viz dole
+        # self.name je zde bezne nazvoslovi
 
     def __set__(self, instance, value):
         instance.__dict__[self.name] = value
@@ -500,7 +501,7 @@ class RangedInteger(Integer, Ranged):
 class RangedFloat(Float, Ranged):
     pass
 
-class Person:  # jak to, ze to funguje?
+class Person:
 
     name = NameString('name')
     age = RangedInteger('age')
@@ -510,6 +511,12 @@ class Person:  # jak to, ze to funguje?
         self.name = name
         self.age = age
         self.weight = weight
+
+"""
+Toto funguje proto, ze tridni promenne jsou Deescriptory a v takovem pripade Python pri tvorbe atributu self. name/age/
+weight nevytvori bezne instancni atributy, ale navaze to prave na tridni promenne, coz jsou descriptory.
+"""
+
 
 miguel = Person('Miguel', 50, 87.5)  # opravdu kontroluje velka pismena
 print(miguel.name, miguel.weight)
@@ -537,3 +544,47 @@ print(joe.name, joe.iq)
 joe.name = 'Peter'
 print(joe.name, joe.weight)
 print(joe.__dict__)
+
+print(Person.__dict__)
+print(Person.__dict__['age'].name)
+print(Person.__dict__['name'].name)
+print(Person.__dict__['weight'].name)
+print(Person.__dict__['__init__'])
+
+
+# dalsi varianty mozne upravy
+class DatabaseField:
+
+    def __init__(self, name):
+        self.name = name
+
+    def __set__(self, instance, value):
+        print('setting', instance, self.name, value)
+
+class Faktura:
+
+    cislo = DatabaseField('cislo')
+    castka = DatabaseField('castka')
+
+f = Faktura()
+f.cislo = 1234
+f.castka = 1000
+f.cislo = 225
+
+
+class DatabaseField:
+
+    def __set_name__(self, cls, fild_name):
+        self.name = fild_name
+
+    def __set__(self, instance, value):
+        print('setting', instance, self.name, value)
+
+class Faktura:
+
+    cislo = DatabaseField()
+    castka = DatabaseField()
+
+f = Faktura()
+f.cislo = 1234
+f.castka = 6666

@@ -215,8 +215,8 @@ funguje, protoze __import__() je taky zabudovana fce (import prebira jmeno impor
 Coz znamena, ze ani definice prazdnych slovniku {} a {} nezabrani tomuto:
 eval('__import__("subprocess").getoutput("rm /some/random/file")', {}, {})  - bude fungvat, importuje a smaze file
 """
-#print(eval("__import__('math').sqrt(5)", {"__builtins__":None}, {}))
-# haze mi to TypeError NoneType is not subscriptable misto NameError: __import__ is not defined
+# print(eval("__import__('math').sqrt(5)", {"__builtins__":None}, {}))
+# haze to TypeError NoneType is not subscriptable
 """
 zabudovane fce jsou vnitrne uzavreny do pseudomodulu __builtins__ Ten je vyhodnocovanym vyrazum normalne zpristupnen,
 ale da se to potlacit nastavenim slovniku __builtins__ na None.

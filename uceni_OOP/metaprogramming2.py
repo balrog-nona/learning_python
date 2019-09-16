@@ -162,7 +162,7 @@ class Descriptor:   customized processing of attribute access
 """
 class Descriptor:  # osetreni JEDNOHO atributu
     def __init__(self, name=None):
-        self.name = name  # jde se zvenci dostat k tomu, ze bych si overila, ze tento atribut se jmenuje name?
+        self.name = name
     def __get__(self, instance, cls):
         # instance: is the instance being manipulated, e. g. Stock instance
         print('Get', self.name)
@@ -173,6 +173,7 @@ class Descriptor:  # osetreni JEDNOHO atributu
     def __delete__(self, instance):
         print('Delete', self.name)
         del instance.__dict__[self.name]
+
 
 class StructMeta(type):
     def __new__(cls, name, bases, clsdict):
@@ -197,10 +198,10 @@ class Stock(Structure):
     price = Descriptor('price')
 
 s = Stock('GOOG', 450, 200.6)
-print(s. shares)  # tady mi to tisklo i nejake None - odkud se bralo??
+print(s. shares)
 del s.shares
 s.shares = 1
-print(s.shares)  # tady taky po get je None (jeste pred tim, nez metody v Descriptoru mely return)
+print(s.shares)
 
 
 # struktura zakladniho descriptoru - video 1:07:09
@@ -284,7 +285,12 @@ class SizedString(String, Sized):
 class Regex(Descriptor):
     def __init__(self, *args, pat, **kwargs):
         self.pat = re.compile(pat)
-        super().__init__(*args, **kwargs)  # to nevadi, ze trida Descriptor s argumenty nepocita?
+        super().__init__(*args, **kwargs)
+        """
+        trida Descriptor pocita pouze s arg name, jiny nevezme, ale *args, **kwargs je zkratka a funguje to a bude to
+        fungovat, i kdyby trida Descriptor byla v budoucnu doplnena o nejake dalsi argumenty - tady by se nemuselo
+        nic dopisovat
+        """
 
     def __set__(self, instance, value):
         if not self.pat.match(value):
@@ -318,7 +324,7 @@ class StructMeta(type):
     def __prepare__(cls, name, bases):  # returns the dict which will be used during cls creation
         return OrderedDict()  # dict that keeps things in order
 
-    def __new__(cls, name, bases, clsdict):  # co bude driv? tento new nebo init z dedice?
+    def __new__(cls, name, bases, clsdict):  # tento new by se mel provest driv nez init z dedice
         fields = [key for key, val in clsdict.items() if isinstance(val, Descriptor)]
         for name in fields:
             clsdict[name].name = name # tady mi to pripada nejasne
@@ -333,7 +339,7 @@ class StructMeta(type):
 class Structure(metaclass=StructMeta):
     _fields = []
 
-    def __init__(self, *args, **kwargs):  # co bude driv? tento init nebo new z parent cls?
+    def __init__(self, *args, **kwargs):  # tento init by se mel provest az po new z rodice
         bound = self.__signature__.bind(*args, **kwargs)
         for name, val in bound.arguments.items():
             setattr(self, name, val)
