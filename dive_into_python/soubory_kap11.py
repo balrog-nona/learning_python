@@ -147,9 +147,9 @@ for i in range(3):
     print('PapayaWhip')
 
 for i in range(3):
-    h = sys.stdout.write('is the')  # strout je obejkt typu stream a je definovat v modulu sys
+    h = sys.stdout.write('is the')  # strout je objekt typu stream a je definovan v modulu sys
 
-for i in range(3):  # toto nedela, co je v ucebnici
+for i in range(3):
     f = sys.stderr.write('new black')  # do strout a strerr se da pouze zapisovat, ne z nich cist
 
 # print(sys.stdout.read()) vyvola vyjimku not readable
