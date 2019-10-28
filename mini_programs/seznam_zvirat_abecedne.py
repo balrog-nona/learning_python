@@ -20,3 +20,6 @@ def test_podle_abecedy():
     
 
 print(podle_abecedy(zvirata))
+
+# anebo uplne jednoduse
+print(sorted(zvirata, key=lambda zvire: ord(zvire[1])))
