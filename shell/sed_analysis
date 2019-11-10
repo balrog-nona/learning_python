@@ -1,0 +1,109 @@
+1. zakladni substituce
+sed 's/unix/linux/' file  - provede zmenu prvniho slova unix za linux, tj. provede se na prvnim matchi
+sed 's/unix/linux/1' file  - dtto
+
+sed 's/unix/linux/2' file  - provede na kazdem radku zmenu na druhem matchi, prvni vynecha
+sed 's/unix/linux/3' file  - provede na kazdem radku zmenu na tretim matchi, prvni dva vynecha
+Kdyz na radku tolik matchu neni, tak jde jen dal.
+
+sed 's/unix/linux/g' file  - global; provede zmenu na vsech matchech
+sed 's/unix/linux/2g' file  - globalni zmena az od druheho matche
+
+Using escape character: 
+echo "http://unix.com" | sed 's/http:\/\//www./'  --> www.unix.com, matchovani http://
+
+Changing the / delimiter:
+echo "http://unix.com" | sed 's]http://]www.]'  --> www.unix.com
+echo "http://unix.com" | sed 's_http://_www._'
+echo "http://unix.com" | sed 's|http://|www.|'
+
+2. Repeated pattern & - using & as the matched string
+- search for the pattern and replace it by adding some characters
+
+sed 's/unix/{&}/' file  --> nahradi na kazdem radku prvni match unix za {unix}, tzn. & plni fci nahrady za ten hledany pattern
+sed 's/unix/{unix}/' file  - ekvivalent
+- toto se da zrejme skvele pouzit, kdyz chci vedet, kde se ten pattern matchnul
+
+sed 's/unix/{RedHat &}/2' file   - {} neplni zadnou syntaktickou fci, je to proste text nahrady
+sed 's/unix/&&/g' file  --> nahradi matche na kazdem radku za unixunix
+
+3. Zpetne reference - tagged regular expressions
+sed 's/\(unix\)/\1\1/g' file  - nahrada za slovo unixunix
+
+sed 's/\(unix\)\(linux\)/\2\1/g' file  - najde slovo unixlinux a zmeni ho na linuxunix. Pattern rozdelil 1 slovo do dvou zpetnych referenci!
+sed 's/\([a-z]*\)\(linux\)/\2\1/g' file - funguje stejne
+
+sed 's/\([a-z]*\) \([a-z]*\)/\2 \1/' file - zamena prvnich dvou slov na kazdem radku
+
+sed 's/^\(.\)\(.\)\(.\)/\3\2\1/' file - prohozeni prvnich tri pismen na kazdem radku
+
+4. Flag /p - desplaing the replaced line twice
+/p - tiskne radek, kde probehla nahrada
+
+sed 's/unix/linux/p' file  - radky, kde najde pattern unix a premeni ho na linux, vytiskne 2x. Da se kombinovat:
+sed 's/unix/linux/gp' file  - radky s patternem vytiskne 2x a provede substituci globalne
+sed 's/unix/linux/2gp' file  - to stejne akorat substituce od druheho matche
+
+Option -n
+sed -n 's/unix/linux/p' file - nevytiskne radek, kde neni match, + netiskne duplicitne radek, kde match byl
+Vsechny mozne kombinace fungujou predvidatelne:
+sed -n 's/unix/linux/2p' file
+sed -n 's/unix/linux/2gp' file
+
+5. Srovnani s grepem
+sed -n '/unix/p' file - vytiskne radky, kde je slovo unix, jako grep 'unix' file
+sed -n '/unix/!p' file - vytiskne radky, ktere pattern neobsahuji, jako grep -v 'unix' file
+POZOR: sed '/unix/!p' - sed ma pri hledani patternu automaticky dane, tiskne komplet vsechno. Tady vytiskne radky, kde unix je,
++ 2x radek, kde neni, protoze jednou se tiskne automaticky a jednou, protoze jsem to zadala v prikazu.
+
+6. Vice prikazu za sebou
+sed 's/unix/linux/' file | sed 's/operating/os/'
+sed -e 's/unix/linux/' -e 's/operating/os/' file - ekvivalenty 
+sed -n -e '/linux/p' -e '/operating system/p' file - tisknuti radku, kde je nektery z patternu, aniz by se tiskly 2x
+
+7. Replacing pattern on specific line number
+sed '3 s/unix/linux/' file
+sed '2 s/unix/linux/' file
+sed '3 s/unix/linux/2' file - zase lze kombinovat s g apod.
+
+8. Replacing string on a range of lines
+sed '1 s/unix/linux/' file - pracuje jen na prvnim radku
+sed '2,3 s/unix/linux/g' file - pracuje na radku 2-3
+sed '2,$ s/unix/linux/g' file - radek 2 az do konce souboru
+
+9. Replace on the line that contains the pattern
+sed '/unix/ s/linux/RedHatLinux/' file - hleda pattern unix. Tam, kde je, provede substitution. (Tento priklad je trochu nesmyslny.)
+
+10. Deleting lines
+sed '2d' file
+sed '2,$d' file
+sed 's/linux/d' file - vymazat radky obsahujici pattern
+
+11. Duplicating lines
+sed 'p' file - printing every line twice
+sed '1p' file - printing the first line twice
+
+12. Adding text
+sed '/unix/a NEW TEXT IN LINE AFTER THE PATTERN' file - po nalezeni matche vlozi novy radek s timto textem
+sed '/unix/a\ /' file - empty line after the match
+sed 'a\ ' file - emty line after every line
+
+sed '/unix/i NEW TEXT IN LINE BEFORE THE PATTERN' file - vklada radek nahoru pred radek s matchem
+sed '1i NEW FIRST LINE' file
+sed '1,2i NEW FIRST LINES' file - vlozi pred radek 1 a pred radek 2
+sed '$i NEW PENULTIMATE LINE' file
+
+13. Replacing the entire line
+sed '/unix/c REPLACING TEXT IN THIS LINE' file - radky, kde najde match, zameni za novy text
+
+14. Transforming like tr command
+sed 'y/ul/UL/' file - y k tomu pristupuje jako k jednotlivym characters, v souboru zameni pismeno u za U a l za L. 
+Naproti tomu:
+sed 's/ul/UL/' file - hleda retezec ul a nahradil by ho za UL
+
+15. Case insetive searching
+sed -n '/UNIx/Ip' file
+sed 's/UNIx/linux/Ig' file
+
+
+
