@@ -19,6 +19,11 @@ class Lhuta:
         else:
             raise Exception("Ukon ze dne {} zacal az po skonceni lhuty.".format(datum))
 
+    def odst4(self, ode_dne, do_dne):
+        zacatek_staveni = self.na_americke_datum(ode_dne)
+        konec_staveni = self.na_americke_datum(do_dne)
+        kolik_zbyvalo = (self.konec - zacatek_staveni) + datetime.timedelta(days=1)
+        self.konec = konec_staveni + kolik_zbyvalo
 
     def na_americke_datum(self, datum):
         den, mesic, rok = datum.split('.')
