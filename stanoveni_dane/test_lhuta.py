@@ -26,7 +26,11 @@ def test_odst3():
         lhuta.odst3("2.4.2023")
         assert "Ukon ze dne 2.4.2023 zacal az po skonceni lhuty." == str(error.value)
 
-
+def test_odst4():
+    lhuta.odst4(ode_dne='1.5.2021', do_dne='25.3.2022')
+    assert lhuta.konec == datetime.date(2024, 2, 24)
+    lhuta.odst4(ode_dne='2.1.2024', do_dne='1.7.2024')
+    assert lhuta.konec == datetime.date(2024, 8, 24)
 
 
 
