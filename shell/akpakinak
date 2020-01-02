@@ -1,0 +1,20 @@
+# moje reseni
+adresar="$1"  # nadbytecne
+if [ -d "$1" ]
+then
+	echo "Adresar uz existuje."
+elif ! [ -d "$1" ]  # negace, obraci navratovou hodnotu
+then
+	mkdir "$1" && echo "Operace se povedla."
+else
+	echo "operace selhala."
+fi
+
+# reseni z knizky
+if test -d "$1"; then
+	echo "Adresar '$1' jiz existuje." >&2  # vystup prikazu echo presmerovan do standardniho chyboveho vystupu 
+elif mkdir "$1" 2> /dev/null; then
+	echo "Adresar '$1' byl vytvoren."  >&2
+else
+	echo "Adresar '$1' nejde vytvorit." >&2
+fi
