@@ -1,0 +1,17 @@
+fakulty="KTF ... FF PrF MFF ... FHS"
+
+# varianta s podminkou
+if echo "$fakulty" | grep -wq "$1" ; then  # zadana zkratka se musi hledat jako jedno slovo!
+	echo "korektni"
+else
+	echo "nekorektni zkratka '$1'"
+fi
+
+# varianta s case
+case " $fakulty " in  # mezery se musely pridat i do promenne na zacetek a konec 
+  *" $1 "* )  # pridanim mezer se bude testovat zkratka jako cele slovo
+    echo "korektni case" ;;  # takto konci kazda vetev
+  * )
+    echo "nekorektni case zkratka '$1'"
+  exit ;;
+esac 
