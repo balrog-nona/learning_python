@@ -1,0 +1,29 @@
+# zjednodusene reseni
+case "$2" in
+ [[:digit:]] )  # pokud je cislo radku zadane jako cislo, vyhodnoti pouze jednociferna cisla!  
+    if [ -e "$1" -a -w "$1" -a `wc -l < "$1"` -ge "$radka" ]; then  # kontrola vsech parametru naraz
+    	sed -i "$2"d "$1" && cat "$1"
+    else
+	echo "Neco jsi zadal spatne."
+    fi 
+  exit 1;;
+esac
+
+# kompletni reseni
+case $2 in  # pouzita opacna logika - retezec je prazdny nebo obsahuje aspon 1 znak jiny nez cislo
+'' | *[!0-9]* ) echo "Parametr '$2' neni cislo."; exit 1;;
+esac
+
+[ ! -f "$1" ] && echo "Soubor '$1' neexistuje." && exit 2  # k prikazu exit i parametr - urceni naratove hodnoty 
+
+if [ ! -r "$1" -o ! -w "$1" ]; then
+	echo "K souboru '$1' nemame prava."
+	exit 3
+fi
+
+if [ `wc -l < "$1"` -lt $2 ]; then  # pozicni parametr opravdu obsahujue cislo, takze se muzou vynechat zavorky u $2
+	echo "Soubor '$1' je maly."
+	exit 4
+fi
+
+sed -i "$2"d "$1" && cat "$1"
