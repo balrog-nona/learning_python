@@ -1,0 +1,14 @@
+# moje reseni
+for f in *.c
+do
+	sed -i 's/\(Copyright [[:digit:]]\+\)-2008/\1-2009/' $f  # pozor, pred + se musi psat \
+done
+
+# knizka pouzila ed, ale ten nemam, nicmene jejich princip je tento:
+for f in *.c
+do
+	# grep nejdriv overi pritomnost retezce. Pokud tam neni, continue ukonci vykonavani tela cyklu a jde se na dalsi iteraci.
+	# diky tomu se soubor, co retezec neobsahuje, vubec neotevre a nezmeni se datum a cas jeho posledni modifikace!!
+	grep -q 'Copyright [0-9]*-2008' $f || continue
+	sed -i 's/\(Copyright [[:digit:]]*\)-2008/\1-2009/' $f  # kniha pouzila ed a here-document
+done	
