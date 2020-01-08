@@ -1,0 +1,31 @@
+# moje varianta 1
+for i in $(seq 1 "$1") 
+do
+	touch /tmp/soubor-x"$i"
+done
+
+# varianta 2
+for (( c=1; c<=$1; c++ )) 
+do
+	touch /tmp/soubor-x"$c"
+done
+
+# nefunkcni varianta 3
+for i in {1..$1}  # a toto nefunguje 
+do
+	touch /tmp/soubor-x"$i"  # vytvori soubor-x{1..5}
+done
+
+# varianty z knizky - pry se takove ulohy v shellu resi pomoci while
+n=$1; x=1
+while [ $x -le $n  ]; do
+	touch /tmp/soubor-$x
+	x=`expr $x + 1`  # jina varianta: x=$(($x + 1))
+done
+
+n=$1 
+x=@  
+while [ ${#x} -le "$n" ]; do
+	touch /tmp/soubor-${#x}
+	x=@$x
+done
