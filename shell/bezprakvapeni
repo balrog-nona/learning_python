@@ -1,0 +1,19 @@
+# moje reseni
+# prvni verze aritmeticke operace
+radek=$(grep -n 'Nona' /etc/passwd | cut -d: -f1) 
+radek=$(("$radek" - 1 ))
+echo  'radek' "$radek"
+
+# druha verze aritmeticke operace
+let "radka = $(grep -n 'Nona' /etc/passwd | cut -d: -f1) - 1"
+echo 'radka' "$radka"
+
+# vlastni zpracovani
+head -n$(echo "$radka") /etc/passwd | tail -n1 | cut -d: -f3,5
+head -n$(echo "$radek") /etc/passwd | tail -n1 | cut -d: -f3,5
+
+# reseni dle knizky
+while IFS=: read login pwd uid gid full home shell; do
+	[ "$login" = balrog ] && echo $lastuid $lastfull && break  # break cyklus ukonci
+	lastuid=$uid; lastfull=$full  # kdyz neukonci, takse ulozi hodnoty promennych z aktualniho radku, coz bude predposledni radek v pristi iteraci
+done < /etc/passwd
