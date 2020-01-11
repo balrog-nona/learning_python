@@ -1,10 +1,10 @@
 from datetime import date
-from calendar import prevmonth, nextmonth, monthrange
+from calendar import prevmonth, monthrange
 
 """
 Creating dates to use in the FIRST call to the calendar API
-timeMin must be the first day of last month because I will gather the events from the whole last month.
-timeMax must be the last day of last month.
+timeMin1 must be the first day of last month because I will gather the events from the whole last month.
+timeMax1 must be the last day of last month.
 """
 last_month_year, last_month_number = prevmonth(year=date.today().year, month=date.today().month)
 time_min1 = date.today().replace(day=1, month=last_month_number, year=last_month_year).isoformat() + "T01:00:00Z"
@@ -16,8 +16,8 @@ time_max1 += "T23:50:00Z"
 """
 Creating dates to use in the SECOND call to the calendar API
 I'm looking for the last event called "rotoped soucet" which was created last day penutimate month as a whole day event.
-timeMin must be the last day of penultimate month.
-timeMax must be the first day of the last month because that's how google calendar works - the whole day events end
+timeMin2 must be the last day of penultimate month.
+timeMax2 must be the first day of the last month because that's how google calendar works - the whole day events end
 the next day.
 """
 penultimate_month_year, penultimate_month_number = prevmonth(year=last_month_year, month=last_month_number)
