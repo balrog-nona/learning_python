@@ -3,8 +3,8 @@ from calendar import prevmonth, nextmonth, monthrange
 
 """
 Creating dates to use in the FIRST call to the calendar API
-timeMax must be the last day of last month.
 timeMin must be the first day of last month because I will gather the events from the whole last month.
+timeMax must be the last day of last month.
 """
 last_month_year, last_month_number = prevmonth(year=date.today().year, month=date.today().month)
 time_min1 = date.today().replace(day=1, month=last_month_number, year=last_month_year).isoformat() + "T01:00:00Z"
@@ -34,6 +34,5 @@ This event will be the whole day event which means:
 start - the last day of last month
 end - the first day of current month
 """
-
-start_date = datetime.date.today().replace(day=length_last_month, month=last_month_number).isoformat()
-end_date = datetime.date.today().replace(day=1).isoformat()
+start_date = date.today().replace(day=length_last_month, month=last_month_number, year=last_month_year).isoformat()
+end_date = date.today().replace(day=1).isoformat()
