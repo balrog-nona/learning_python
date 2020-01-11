@@ -1,17 +1,18 @@
-import datetime
-import calendar
+from datetime import date
+from calendar import prevmonth, nextmonth, monthrange
 
 """
 Creating dates to use in the FIRST call to the calendar API
 timeMax must be the last day of last month.
 timeMin must be the first day of last month because I will gather the events from the whole last month.
 """
-last_month_number = datetime.date.today().month - 1
-last_month = datetime.date.today().replace(month=last_month_number)
-time_min1 = datetime.date.today().replace(day=1, month=last_month_number).isoformat() + "T01:00:00Z"
+last_month_year, last_month_number = prevmonth(year=date.today().year, month=date.today().month)
+last_month = date.today().replace(year=last_month_year, month=last_month_number)  # object needed for monthrange
+time_min1 = date.today().replace(day=1, month=last_month_number, year=last_month_year).isoformat() + "T01:00:00Z"
 
-length_last_month = calendar.monthrange(last_month.year, last_month.month)[1]
-time_max1 = datetime.date.today().replace(day=length_last_month, month=last_month_number).isoformat() + "T23:50:00Z"
+length_last_month = monthrange(last_month.year, last_month.month)[1]
+time_max1 = date.today().replace(day=length_last_month, month=last_month_number, year=last_month_year).isoformat()
+time_max1 += "T23:50:00Z"
 
 """
 Creating dates to use in the SECOND call to the calendar API
