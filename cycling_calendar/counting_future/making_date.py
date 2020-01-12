@@ -21,13 +21,13 @@ timeMin2 must be the last day of penultimate month.
 timeMax2 must be the first day of the last month because that's how google calendar works - the whole day events end
 the next day.
 """
-penultimate_month_year, penultimate_month_number = prevmonth(year=last_month_year, month=last_month_number)
-length_penultimate_month = monthrange(penultimate_month_year, penultimate_month_number)[1]
-time_min2 = date.today().replace(day=length_penultimate_month, month=penultimate_month_number,
-                                 year=penultimate_month_year).isoformat()
+penultimate_month = date.today() - relativedelta(months=2)  # date object
+length_penultimate_month = monthrange(penultimate_month.year, penultimate_month.month)[1]
+time_min2 = date.today().replace(day=length_penultimate_month, month=penultimate_month.month,
+                                 year=penultimate_month.year).isoformat()
 time_min2 = time_min2 + "T01:00:00Z"
 
-time_max2 = date.today().replace(day=1, month=last_month_number, year=last_month_year).isoformat() + "T23:00:00Z"
+time_max2 = date.today().replace(day=1, month=last_month.month, year=last_month.year).isoformat() + "T23:00:00Z"
 
 """
 Creating dates for the new event
