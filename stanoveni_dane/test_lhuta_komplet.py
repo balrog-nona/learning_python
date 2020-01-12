@@ -1,6 +1,8 @@
-from lhuta_komplet import Lhuta148, Odst1, Odst2
+from lhuta_komplet import Lhuta148, Odst1, Odst2, Odst3
 import datetime
 import pytest
+
+# Nemam otestovane chybove hlasky!!
 
 def test_odst1():
     odst1 = Odst1(datum='1.4.2019')
@@ -30,4 +32,18 @@ def test_odst2():
     odst2 = Odst2(datum='2.4.2022')
     odst2._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
     assert odst2._vrat_konec(datum=odst2._konec) == '03.04.2023'
+
+def test_odst3():
+    odst3 = Odst3(datum='19.9.2022')
+    odst3._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
+    assert odst3._vrat_konec(datum=odst3._konec) == '22.09.2025'
+
+    extension = Odst3(datum='11.3.2025')
+    extension._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst3._konec, maximalni_delka=odst1._maximalni_delka)
+    assert extension._vrat_konec(datum=extension._konec) == '13.03.2028'
+
+    extension2 = Odst3(datum='13.03.2028')
+    extension2._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=extension._konec, maximalni_delka=odst1._maximalni_delka)
+    assert extension2._vrat_konec(datum=extension2._konec) == '01.04.2030'
+
 

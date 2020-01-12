@@ -75,3 +75,23 @@ class Odst2(Lhuta148):
                 self._konec = datum_konce
         if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
             self._konec = maximalni_delka
+
+
+class Odst3(Lhuta148):
+
+    def __init__(self, datum):
+        self._ukon = super()._na_americke_datum(datum)
+
+    def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):
+        if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
+                super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce):
+            # nasledujici den po ukonu + 3 roky
+            # nelze jen tak zvysit cislo dne o 1, kazdy mesic ma jiny pocet dnu, hrozilo by 31.4.
+            # vytvori nasledujici den prirozene podle kalendare
+            druhy_den = self._ukon + datetime.timedelta(days=1)  # vraci datetime object
+            druhy_den = super()._prevod_data(datum=druhy_den)  # prevod datetime na date object
+            self._konec = druhy_den.replace(year=druhy_den.year + 3)
+            self._konec = super()._kontrola_vikendu(self._konec)
+        if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
+            self._konec = maximalni_delka
+
