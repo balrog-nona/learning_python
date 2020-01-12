@@ -35,5 +35,5 @@ This event will be the whole day event which means:
 start - the last day of last month
 end - the first day of current month
 """
-start_date = date.today().replace(day=length_last_month, month=last_month_number, year=last_month_year).isoformat()
+start_date = date.today().replace(day=length_last_month, month=last_month.month, year=last_month.year).isoformat()
 end_date = date.today().replace(day=1).isoformat()
