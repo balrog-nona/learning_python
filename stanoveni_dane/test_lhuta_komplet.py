@@ -1,4 +1,4 @@
-from lhuta_komplet import Lhuta148, Odst1, Odst2, Odst3
+from lhuta_komplet import Lhuta148, Odst1, Odst2, Odst3, Odst4
 import datetime
 import pytest
 
@@ -46,4 +46,15 @@ def test_odst3():
     extension2._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=extension._konec, maximalni_delka=odst1._maximalni_delka)
     assert extension2._vrat_konec(datum=extension2._konec) == '01.04.2030'
 
+
+def test_odst4():
+    odst4 = Odst4(zacatek_staveni='1.5.2021', konec_lhuty=odst1._konec)
+    odst4.zadej_konec_staveni(konec_staveni='25.3.2022')
+    odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
+    assert odst4._vrat_konec(datum=odst4._konec) == '26.02.2024'
+
+    extension = Odst4(zacatek_staveni='2.1.2024', konec_lhuty=odst4._konec)
+    extension.zadej_konec_staveni(konec_staveni='1.7.2024')
+    extension._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst4._konec, maximalni_delka=odst1._maximalni_delka)
+    assert extension._vrat_konec(datum=extension._konec) == '26.08.2024'
 
