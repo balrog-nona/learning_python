@@ -3,6 +3,32 @@ import datetime
 import pytest
 
 
+def test_lhuta148():
+    lhuta = Lhuta148()
+    assert lhuta._na_americke_datum(datum='13.6.2021') == datetime.date(2021, 6, 13)
+    assert lhuta._na_ceske_datum(datum=datetime.date(2021, 11, 2)) == '02.11.2021'
+    assert lhuta._prevod_data(datum=datetime.datetime(2009, 10, 23)) == datetime.date(2009, 10, 23)
+    assert lhuta._kontrola_vikendu(datum=datetime.date(2020, 1, 18)) == datetime.date(2020, 1, 20)
+    assert lhuta._kontrola_vikendu(datum=datetime.date(2020, 1, 17)) == datetime.date(2020, 1, 17)
+    assert lhuta._kontrola_pred_zacatkem(datum_ukonu=datetime.date(2019, 7, 23),
+                                         datum_zacatku=datetime.date(2019, 7, 23)) == True
+    with pytest.raises(Exception) as error:
+        lhuta._kontrola_pred_zacatkem(datum_ukonu=datetime.date(2019, 7, 22), datum_zacatku=datetime.date(2019, 7, 23))
+        assert 'Ukon ze dne 22.07.2019 nemuze nastat pred zapocetim behu lhuty dne 23.7.2019.' == str(error.value)
+
+    assert lhuta._kontrola_po_konci(datum_ukonu=datetime.date(2020, 6, 13),
+                                    datum_konce=datetime.date(2020, 6, 13)) == True
+
+    with pytest.raises(Exception) as error:
+        lhuta._kontrola_po_konci(datum_ukonu=datetime.date(2020, 6, 14), datum_konce=datetime.date(2020, 6, 13))
+        assert 'Ukon ze dne 14.6.2020 nemuze nastat po konci behu lhuty dne 13.6.2020' == str(error.value)
+
+    assert lhuta._kontrola_odst5(konec=datetime.date(2019, 4, 1), maximalni_delka=datetime.date(2019, 4, 1)) == True
+    assert lhuta._kontrola_odst5(konec=datetime.date(2019, 3, 31), maximalni_delka=datetime.date(2019, 4, 1)) == True
+    assert lhuta._kontrola_odst5(konec=datetime.date(2019, 4, 2), maximalni_delka=datetime.date(2019, 4, 1)) == False
+    assert lhuta._vrat_konec(datum=datetime.date(2021, 8, 30)) == '30.08.2021'
+
+
 def test_odst1():
     odst1 = Odst1(datum='1.4.2019')
     odst1._konec_lhuty()
@@ -22,30 +48,6 @@ def test_odst1():
 odst1 = Odst1(datum='1.4.2020')
 odst1._konec_lhuty()
 odst1._maximalni_delka()
-
-
-def test_odst1():
-    lhuta = Lhuta148()
-    assert lhuta._na_americke_datum(datum='13.6.2021') == datetime.date(2021, 6, 13)
-    assert lhuta._na_ceske_datum(datum=datetime.date(2021, 11, 2)) == '02.11.2021'
-    assert lhuta._prevod_data(datum=datetime.datetime(2009, 10, 23)) == datetime.date(2009, 10, 23)
-    assert lhuta._kontrola_vikendu(datum=datetime.date(2020, 1, 18)) == datetime.date(2020, 1, 20)
-    assert lhuta._kontrola_vikendu(datum=datetime.date(2020, 1, 17)) == datetime.date(2020, 1, 17)
-    assert lhuta._kontrola_pred_zacatkem(datum_ukonu=datetime.date(2019, 7, 23),
-                                         datum_zacatku=datetime.date(2019, 7, 23)) == True
-    with pytest.raises(Exception):
-        lhuta._kontrola_pred_zacatkem(datum_ukonu=datetime.date(2019, 7, 22), datum_zacatku=datetime.date(2019, 7, 23))
-        assert 'Ukon ze dne 22.7.2019 nemuze nastat pred zapocetim behu lhuty dne 23.7.2019.' == str(error.value)
-
-    assert lhuta._kontrola_po_konci(datum_ukonu=datetime.date(2020, 6, 13),
-                                    datum_konce=datetime.date(2020, 6, 13)) == True
-
-    with pytest.raises(Exception):
-        lhuta._kontrola_po_konci(datum_ukonu=datetime.date(2020, 6, 14), datum_konce=datetime.date(2020, 6, 13))
-        assert 'Ukon ze dne 14.6.2020 nemuze nastat po konci behu lhuty dne 13.6.2020.' == str(error.value)
-
-    assert lhuta._kontrola_odst5(konec='1.4.2023',maximalni_delka='1.4.2023') == True
-    assert lhuta._kontrola_odst5(konec='31.3.2023', maximalni_delka='1.4.2023') == True
 
 
 def test_odst2():
@@ -81,7 +83,7 @@ def test_odst3():
     extension2._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=extension._konec, maximalni_delka=odst1._maximalni_delka)
     assert extension2._vrat_konec(datum=extension2._konec) == '01.04.2030'
 
-    with pytest.raises(Exception):
+    with pytest.raises(Exception) as error:
         odst3 = Odst3(datum='31.3.2020')
         odst3._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
         assert 'Ukon ze dne 31.3.2020 nemuze nastat pred zapocetim behu lhuty dne 1.4.2020.' == str(error.value)
