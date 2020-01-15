@@ -21,14 +21,11 @@ def test_odst2():
     assert lhuta.vrat_konec() == '03.04.2024'
     lhuta.odst2(datum='19.9.2023')
     assert lhuta.vrat_konec() == '03.04.2025'
-    with pytest.raises(Exception) as error:
-        lhuta.odst2(datum='2.4.2025')
-        assert 'Ukon ze dne 2.4.2025 nemuze nastat po konci behu lhuty dne {}.'.format\
-            (lhuta.na_ceske_datum(lhuta.konec)) == str(error.value)
-    with pytest.raises(Exception) as error:
+    with pytest.raises(Exception, match='Ukon ze dne 04.04.2025 nemuze nastat po konci behu lhuty dne 03.04.2025.'):
+        lhuta.odst2(datum='4.4.2025')
+
+    with pytest.raises(Exception, match='Ukon ze dne 31.03.2020 nemuze nastat pred zapocetim behu lhuty dne 01.04.2020.'):
         lhuta.odst2(datum='31.3.2020')
-        assert 'Ukon ze dne 31.3.2020 nemuze nastat pred zapocetim behu lhuty dne {}.'.format\
-                   (lhuta.na_ceske_datum(lhuta.zacatek)) == str(error.value)
 
 
 def test_odst3():
@@ -38,14 +35,13 @@ def test_odst3():
     assert lhuta.vrat_konec() == '24.09.2024'
     lhuta.odst3(datum='24.9.2024')
     assert lhuta.vrat_konec() == '27.09.2027'
-    with pytest.raises(Exception) as error:
-        lhuta.odst3(datum='26.9.2027')
-        assert 'Ukon ze dne 26.9.2027 nemuze nastat po konci behu lhuty dne {}.'.format\
-                   (lhuta.na_ceske_datum(lhuta.konec)) == str(error.value)
-    with pytest.raises(Exception) as error:
-        lhuta.odst2(datum='31.3.2020')
-        assert 'Ukon ze dne 31.3.2020 nemuze nastat pred zapocetim behu lhuty dne {}.'.format \
-                   (lhuta.na_ceske_datum(lhuta.zacatek)) == str(error.value)
+
+    with pytest.raises(Exception, match='Ukon ze dne 28.09.2027 nemuze nastat po konci behu lhuty dne 27.09.2027.'):
+        lhuta.odst3(datum='28.9.2027')
+
+    with pytest.raises(Exception, match='Ukon ze dne 31.03.2020 nemuze nastat pred zapocetim behu lhuty dne 01.04.2020.'):
+        lhuta.odst3(datum='31.3.2020')
+
     lhuta.odst3(datum='30.4.2023')
     assert lhuta.konec == datetime.date(2026, 5, 1)
 
@@ -56,18 +52,15 @@ def test_odst4():
     assert lhuta.konec == datetime.date(2024, 2, 26)
     lhuta.odst4(ode_dne='2.1.2024', do_dne='1.7.2024')
     assert lhuta.konec == datetime.date(2024, 8, 26)
-    with pytest.raises(Exception) as error:
+
+    with pytest.raises(Exception, match='Ukon ze dne 31.03.2020 nemuze nastat pred zapocetim behu lhuty dne 01.04.2020.'):
         lhuta.odst4(ode_dne='31.3.2020', do_dne=None)
-        assert 'Ukon ze dne 31.3.2020 nemuze nastat pred zapocetim behu lhuty dne {}.'.format \
-                   (lhuta.na_ceske_datum(lhuta.zacatek)) == str(error.value)
-    with pytest.raises(Exception) as error:
-        lhuta.odst4(ode_dne='25.8.2024', do_dne=None)
-        assert 'Ukon ze dne 25.8.2024 nemuze nastat po konci behu lhuty dne {}.'.format \
-                   (lhuta.na_ceske_datum(lhuta.konec)) == str(error.value)
-    with pytest.raises(Exception) as error:
-        lhuta.odst4(ode_dne=None, do_dne='31.3.2020')
-        assert 'Ukon ze dne 31.3.2020 nemuze nastat pred zapocetim behu lhuty dne {}.'.format \
-                   (lhuta.na_ceske_datum(lhuta.zacatek)) == str(error.value)
+
+    with pytest.raises(Exception, match='Ukon ze dne 27.08.2024 nemuze nastat po konci behu lhuty dne 26.08.2024.'):
+        lhuta.odst4(ode_dne='27.8.2024', do_dne=None)
+
+    with pytest.raises(Exception, match='Ukon ze dne 31.03.2020 nemuze nastat pred zapocetim behu lhuty dne 01.04.2020.'):
+        lhuta.odst4(ode_dne='2.6.2021', do_dne='31.3.2020')
 
 
 def test_odst5():
@@ -117,9 +110,9 @@ def test_komplexni2():
     assert lhuta.konec == datetime.date(2025, 11, 18)
     lhuta.odst2(datum='12.12.2024')
     assert lhuta.konec == datetime.date(2026, 11, 18)
-    with pytest.raises(Exception) as error:
+
+    with pytest.raises(Exception, match='Ukon ze dne 12.12.2026 nemuze nastat po konci behu lhuty dne 18.11.2026.'):
         lhuta.odst3(datum='12.12.2026')
-        assert 'Ukon ze dne 12.12.2026 nemuze nastat po konci behu lhuty dne {}.'.format \
-                   (lhuta.na_ceske_datum(lhuta.konec)) == str(error.value)
+
     lhuta.odst3(datum='1.11.2026')
     assert lhuta.konec == datetime.date(2029, 4, 2)

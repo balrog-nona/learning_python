@@ -3,8 +3,9 @@ import datetime
 class Lhuta148:
 
     def _na_americke_datum(self, datum):  # prevod stringu na date object
-        den, mesic, rok = datum.split('.')
-        return datetime.date(int(rok), int(mesic), int(den))
+        if datum:
+            den, mesic, rok = datum.split('.')
+            return datetime.date(int(rok), int(mesic), int(den))
 
     def _na_ceske_datum(self, datum):  # prevod date objectu na string v ceske forme
         datum = str(datum)

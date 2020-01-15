@@ -56,8 +56,9 @@ class Lhuta:
         return self.konec <= self.maximalni_delka  # vraci True/False
 
     def na_americke_datum(self, datum):  # prevod stringu na date object
-        den, mesic, rok = datum.split('.')
-        return datetime.date(int(rok), int(mesic), int(den))
+        if datum:
+            den, mesic, rok = datum.split('.')
+            return datetime.date(int(rok), int(mesic), int(den))
 
     def na_ceske_datum(self, datum):  # prevod date objectu na string v ceske forme
         datum = str(datum)
