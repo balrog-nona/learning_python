@@ -2,7 +2,6 @@ from lhuta_komplet import Lhuta148, Odst1, Odst2, Odst3, Odst4
 import datetime
 import pytest
 
-# Nemam otestovane chybove hlasky!!
 
 def test_odst1():
     odst1 = Odst1(datum='1.4.2019')
@@ -33,6 +32,17 @@ def test_odst2():
     odst2._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
     assert odst2._vrat_konec(datum=odst2._konec) == '03.04.2023'
 
+    with pytest.raises(Exception):
+        odst2 = Odst2(datum='31.3.2020')
+        odst2._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
+        assert 'Ukon ze dne 31.3.2020 nemuze nastat pred zapocetim behu lhuty dne 1.4.2020' == str(error.value)
+
+    with pytest.raises(Exception):
+        odst2 = Odst2(datum='4.4.2023')
+        odst2._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
+        assert 'Ukon ze dne 4.4.2023 nemuze nastat po konci behu lhuty dne 3.4.2023' == str(error.value)
+
+
 def test_odst3():
     odst3 = Odst3(datum='19.9.2022')
     odst3._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
@@ -46,6 +56,16 @@ def test_odst3():
     extension2._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=extension._konec, maximalni_delka=odst1._maximalni_delka)
     assert extension2._vrat_konec(datum=extension2._konec) == '01.04.2030'
 
+    with pytest.raises(Exception):
+        odst3 = Odst3(datum='31.3.2020')
+        odst3._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
+        assert 'Ukon ze dne 31.3.2020 nemuze nastat pred zapocetim behu lhuty dne 1.4.2020' == str(error.value)
+
+    with pytest.raises(Exception):
+        odst3 = Odst3(datum='4.4.2023')
+        odst3._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
+        assert 'Ukon ze dne 4.4.2023 nemuze nastat po konci behu lhuty dne 3.4.2023' == str(error.value)
+
 
 def test_odst4():
     odst4 = Odst4(zacatek_staveni='1.5.2021', konec_lhuty=odst1._konec)
@@ -57,4 +77,20 @@ def test_odst4():
     extension.zadej_konec_staveni(konec_staveni='1.7.2024')
     extension._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst4._konec, maximalni_delka=odst1._maximalni_delka)
     assert extension._vrat_konec(datum=extension._konec) == '26.08.2024'
+
+    with pytest.raises(Exception):
+        odst4 = Odst4(zacatek_staveni='31.3.2020', konec_lhuty=odst1._konec)
+        odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
+        assert 'Ukon ze dne 31.3.2020 nemuze nastat pred zapocetim behu lhuty dne 1.4.2020' == str(error.value)
+
+    with pytest.raises(Exception):
+        odst4 = Odst4(zacatek_staveni='4.4.2023', konec_lhuty=odst1._konec)
+        odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
+        assert 'Ukon ze dne 4.4.2023 nemuze nastat po konci behu lhuty dne 3.4.2023' == str(error.value)
+
+    with pytest.raises(Exception):
+        odst4 = Odst4(zacatek_staveni='14.9.2022', konec_lhuty=odst1._konec)
+        odst4._zacatek_staveni(konec_staveni='31.3.2020')
+        odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
+        assert 'Ukon ze dne 31.3.2020 nemuze nastat pred zapocetim behu lhuty dne 1.4.2020' == str(error.value)
 
