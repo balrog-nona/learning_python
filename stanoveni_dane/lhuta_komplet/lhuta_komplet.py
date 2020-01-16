@@ -1,5 +1,6 @@
 import datetime
 
+
 class Lhuta148:
 
     def _na_americke_datum(self, datum):  # prevod stringu na date object
@@ -25,47 +26,47 @@ class Lhuta148:
             datum = self._prevod_data(datum)
         return datum  # vraci date object
 
-    def _kontrola_pred_zacatkem(self, datum_ukonu, datum_zacatku):
+    def _kontrola_pred_zacatkem(self, datum_ukonu, datum_zacatku):  # oba parametry jsou date object
         if datum_ukonu < datum_zacatku:
             raise Exception('Ukon ze dne {} nemuze nastat pred zapocetim behu lhuty dne {}.'.format
                             (self._na_ceske_datum(datum_ukonu), self._na_ceske_datum(datum_zacatku)))
         else:
             return True
 
-    def _kontrola_po_konci(self, datum_ukonu, datum_konce):
+    def _kontrola_po_konci(self, datum_ukonu, datum_konce):  # oba parametry jsou date object
         if datum_ukonu > datum_konce:
             raise Exception('Ukon ze dne {} nemuze nastat po konci behu lhuty dne {}.'.format
                             (self._na_ceske_datum(datum_ukonu), self._na_ceske_datum(datum_konce)))
         else:
             return True
 
-    def _kontrola_odst5(self, konec, maximalni_delka):
+    def _kontrola_odst5(self, konec, maximalni_delka): # oba parametry jsou date object
         return konec <= maximalni_delka
 
-    def _vrat_konec(self, datum):
-        return self._na_ceske_datum(datum)
+    def _vrat_konec(self, datum):  # datum je date object
+        return self._na_ceske_datum(datum)  # vraci string
 
 
 class Odst1(Lhuta148):
 
-    def __init__(self, datum):
+    def __init__(self, datum):  # datum je string
         self._ukon = super()._na_americke_datum(datum)
 
-    def _konec_lhuty(self):
+    def _konec_lhuty(self):  # metoda pro vypocet subjektivni lhuty
         self._konec = self._ukon.replace(year=self._ukon.year + 3)  # normalne dle odst. 1; presne datum
         self._konec = super()._kontrola_vikendu(self._konec)
 
-    def _maximalni_delka(self):
+    def _maximalni_delka(self):  # metoda pro vypocet objektivni lhuty
         self._maximalni_delka = self._ukon.replace(year=self._ukon.year + 10)  # dle odst. 5; presne datum
         self._maximalni_delka = super()._kontrola_vikendu(self._maximalni_delka)  # konec lhuty po pravni strance
 
 
 class Odst2(Lhuta148):
 
-    def __init__(self, datum):
+    def __init__(self, datum):  # datum je string
         self._ukon = super()._na_americke_datum(datum)
 
-    def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):
+    def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
         if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
                 super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce):
             if datum_konce.replace(year=datum_konce.year - 1) <= self._ukon <= datum_konce:
@@ -80,10 +81,10 @@ class Odst2(Lhuta148):
 
 class Odst3(Lhuta148):
 
-    def __init__(self, datum):
+    def __init__(self, datum):  # datum je string
         self._ukon = super()._na_americke_datum(datum)
 
-    def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):
+    def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
         if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
                 super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce):
             # nasledujici den po ukonu + 3 roky
@@ -96,16 +97,18 @@ class Odst3(Lhuta148):
         if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
             self._konec = maximalni_delka
 
-class Odst4(Lhuta148):
 
-    def __init__(self, zacatek_staveni, konec_lhuty):
+class Odst4(Lhuta148):  # datum je string
+
+    def __init__(self, zacatek_staveni, konec_lhuty):  # zacatek_staveni je string, konec_lhuty je date object
+        # konec_lhuty je aktualni konec lhuty pred zacatkem staveni
         self._zacatek_staveni = super()._na_americke_datum(zacatek_staveni)
         self._predchozi_konec = konec_lhuty
 
-    def zadej_konec_staveni(self, konec_staveni):
+    def zadej_konec_staveni(self, konec_staveni):  # konec staveni je string
         self._konec_staveni = super()._na_americke_datum(konec_staveni)
 
-    def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):
+    def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
         if super()._kontrola_pred_zacatkem(datum_ukonu=self._zacatek_staveni, datum_zacatku=datum_zacatku) and \
                 super()._kontrola_po_konci(datum_ukonu=self._zacatek_staveni, datum_konce=datum_konce) and \
                 super()._kontrola_pred_zacatkem(datum_ukonu=self._konec_staveni, datum_zacatku=datum_zacatku):
