@@ -100,9 +100,9 @@ class Odst3(Lhuta148):
 
 class Odst4(Lhuta148):  # datum je string
 
-    def __init__(self, zacatek_staveni, konec_lhuty):  # zacatek_staveni je string, konec_lhuty je date object
+    def __init__(self, datum, konec_lhuty):  # zacatek_staveni je string, konec_lhuty je date object
         # konec_lhuty je aktualni konec lhuty pred zacatkem staveni
-        self._zacatek_staveni = super()._na_americke_datum(zacatek_staveni)
+        self._zacatek_staveni = super()._na_americke_datum(datum)
         self._predchozi_konec = konec_lhuty
 
     def zadej_konec_staveni(self, konec_staveni):  # konec staveni je string
