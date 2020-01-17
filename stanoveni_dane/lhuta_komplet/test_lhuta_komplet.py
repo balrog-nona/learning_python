@@ -89,26 +89,26 @@ def test_odst3():
 
 
 def test_odst4():
-    odst4 = Odst4(datum='1.5.2021', konec_lhuty=odst1._konec)
+    odst4 = Odst4(datum='1.5.2021')
     odst4.zadej_konec_staveni(konec_staveni='25.3.2022')
     odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
     assert odst4._vrat_konec(datum=odst4._konec) == '26.02.2024'
 
-    extension = Odst4(datum='2.1.2024', konec_lhuty=odst4._konec)
+    extension = Odst4(datum='2.1.2024')
     extension.zadej_konec_staveni(konec_staveni='1.7.2024')
     extension._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst4._konec, maximalni_delka=odst1._maximalni_delka)
     assert extension._vrat_konec(datum=extension._konec) == '26.08.2024'
 
     with pytest.raises(Exception, match='Ukon ze dne 31.03.2020 nemuze nastat pred zapocetim behu lhuty dne 01.04.2020.'):
-        odst4 = Odst4(datum='31.3.2020', konec_lhuty=odst1._konec)
+        odst4 = Odst4(datum='31.3.2020')
         odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
 
     with pytest.raises(Exception, match='Ukon ze dne 04.04.2023 nemuze nastat po konci behu lhuty dne 03.04.2023.'):
-        odst4 = Odst4(datum='4.4.2023', konec_lhuty=odst1._konec)
+        odst4 = Odst4(datum='4.4.2023')
         odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
 
     with pytest.raises(Exception, match='Ukon ze dne 31.03.2020 nemuze nastat pred zapocetim behu lhuty dne 01.04.2020.'):
-        odst4 = Odst4(datum='14.9.2022', konec_lhuty=odst1._konec)
+        odst4 = Odst4(datum='14.9.2022')
         odst4.zadej_konec_staveni(konec_staveni='31.3.2020')
         odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst1._konec, maximalni_delka=odst1._maximalni_delka)
 
@@ -148,9 +148,9 @@ def test_kompletni1():
     odst2._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst3._konec, maximalni_delka=odst1._maximalni_delka)
     assert odst2._konec == datetime.date(2025, 9, 8)  # 8.9.2025
 
-    odst4 = Odst4(datum='10.11.2023', konec_lhuty=odst2._konec)  # soud
+    odst4 = Odst4(datum='10.11.2023')  # soud
     odst4.zadej_konec_staveni(konec_staveni='19.11.2024')
-    odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst4._predchozi_konec, maximalni_delka=odst1._maximalni_delka)
+    odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst2._konec, maximalni_delka=odst1._maximalni_delka)
     assert odst4._konec == datetime.date(2026, 9, 21)
 
 
@@ -175,9 +175,9 @@ def test_kompetni2():
     assert odst2._konec == datetime.date(2025, 10, 9)
     assert odst2._konec == konec
 
-    odst4 = Odst4(datum='1.4.2024', konec_lhuty=konec)  # soud
+    odst4 = Odst4(datum='1.4.2024')  # soud
     odst4.zadej_konec_staveni(konec_staveni='19.1.2025')
-    odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst4._predchozi_konec, maximalni_delka=odst1._maximalni_delka)
+    odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=konec, maximalni_delka=odst1._maximalni_delka)
     assert odst4._konec == datetime.date(2026, 7, 30)
 
     odst2 = Odst2(datum='22.5.2025')  # R o odvolani
@@ -185,9 +185,9 @@ def test_kompetni2():
     assert odst2._konec == datetime.date(2026, 7, 30)
     konec = odst2._konec
 
-    odst4 = Odst4(datum='3.6.2025', konec_lhuty=konec)  # soud
+    odst4 = Odst4(datum='3.6.2025')  # soud
     odst4.zadej_konec_staveni(konec_staveni='18.2.2027')
-    odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=odst4._predchozi_konec, maximalni_delka=odst1._maximalni_delka)
+    odst4._konec_lhuty(datum_zacatku=odst1._ukon, datum_konce=konec, maximalni_delka=odst1._maximalni_delka)
     assert odst4._konec == datetime.date(2028, 4, 17)
 
     odst2 = Odst2(datum='17.4.2027')  # R o odvolani

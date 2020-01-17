@@ -100,21 +100,22 @@ class Odst3(Lhuta148):
 
 class Odst4(Lhuta148):  # datum je string
 
-    def __init__(self, datum, konec_lhuty):  # zacatek_staveni je string, konec_lhuty je date object
+    def __init__(self, datum):  # zacatek_staveni je string
+        # datum je zacatek staveni
         # konec_lhuty je aktualni konec lhuty pred zacatkem staveni
-        self._zacatek_staveni = super()._na_americke_datum(datum)
-        self._predchozi_konec = konec_lhuty
+        self._ukon = super()._na_americke_datum(datum)
+        self._konec_staveni = None
 
     def zadej_konec_staveni(self, konec_staveni):  # konec staveni je string
         self._konec_staveni = super()._na_americke_datum(konec_staveni)
 
     def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
-        if super()._kontrola_pred_zacatkem(datum_ukonu=self._zacatek_staveni, datum_zacatku=datum_zacatku) and \
-                super()._kontrola_po_konci(datum_ukonu=self._zacatek_staveni, datum_konce=datum_konce) and \
+        if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
+                super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce) and \
                 super()._kontrola_pred_zacatkem(datum_ukonu=self._konec_staveni, datum_zacatku=datum_zacatku):
             # odcitaci metoda - po konci staveni se pricte, co ze lhuty zbyvalo v dobe zacatku staveni
             # 1 den je treba pricist rucne, aby lhuta nebezela i po oba hranicni dny
-            kolik_zbyvalo = (self._predchozi_konec - self._zacatek_staveni) + datetime.timedelta(days=1)  # timedelta object
+            kolik_zbyvalo = (datum_konce - self._ukon) + datetime.timedelta(days=1)  # timedelta object
             self._konec = self._konec_staveni + kolik_zbyvalo  # date object
             self._konec = super()._kontrola_vikendu(self._konec)
         if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
