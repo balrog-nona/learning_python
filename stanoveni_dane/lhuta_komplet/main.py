@@ -6,10 +6,17 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
     if not isinstance(seznam_ukonu[0], Odst1):
         raise Exception('Prvnim ukonem musi byt zahajeni behu lhuty dle § 148 odst.1.')
     else:
+        print('ukon [0]', seznam_ukonu[0])
         seznam_ukonu[0]._konec_lhuty()
+        print('konec lhuty', seznam_ukonu[0]._konec)
+        print('ukon [0]', seznam_ukonu[0])
+        #print('ukon [1]', seznam_ukonu[1])
         seznam_ukonu[0]._maximalni_delka()
+        print('maximalni delka', seznam_ukonu[0]._maximalni_delka)
     subjektivni_lhuta = seznam_ukonu[0]._konec
+    print('subejktivni lhuta', subjektivni_lhuta)
     objektivni_lhuta = seznam_ukonu[0]._maximalni_delka
+    print('obejktivni lhuta', objektivni_lhuta)
 
     for i in seznam_ukonu[1:]:
         if isinstance(i, Odst4) and not i._konec_staveni:
