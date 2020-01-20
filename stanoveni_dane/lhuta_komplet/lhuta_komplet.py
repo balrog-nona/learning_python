@@ -27,6 +27,12 @@ class Lhuta148:
         return datum  # vraci date object
 
     def _kontrola_pred_zacatkem(self, datum_ukonu, datum_zacatku):  # oba parametry jsou date object
+        """
+        po vytvoreni konecne fce main se tato podminka testuje jeste i ve fci, cili nize uvedeny kod neprobehne
+        :param datum_ukonu: datum provedeni ukonu, self._ukon
+        :param datum_zacatku: datum zacatku behu lhuty
+        :return: bolean
+        """
         if datum_ukonu < datum_zacatku:
             raise Exception('Ukon ze dne {} nemuze nastat pred zapocetim behu lhuty dne {}.'.format
                             (self._na_ceske_datum(datum_ukonu), self._na_ceske_datum(datum_zacatku)))
@@ -67,6 +73,12 @@ class Odst2(Lhuta148):
         self._ukon = super()._na_americke_datum(datum)
 
     def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
+        """
+        :param datum_zacatku: 1. den zacatku behu lhuty
+        :param datum_konce: prozatimni den konce subjektivni lhuty
+        :param maximalni_delka: objektivni lhuta
+        :return: date object
+        """
         if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
                 super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce):
             if datum_konce.replace(year=datum_konce.year - 1) <= self._ukon <= datum_konce:
@@ -85,6 +97,12 @@ class Odst3(Lhuta148):
         self._ukon = super()._na_americke_datum(datum)
 
     def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
+        """
+        :param datum_zacatku: 1. den zacatku behu lhuty
+        :param datum_konce: prozatimni den konce subjektivni lhuty
+        :param maximalni_delka: objektivni lhuta
+        :return: date object
+        """
         if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
                 super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce):
             # nasledujici den po ukonu + 3 roky
@@ -110,6 +128,12 @@ class Odst4(Lhuta148):  # datum je string
         self._konec_staveni = super()._na_americke_datum(konec_staveni)
 
     def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
+        """
+        :param datum_zacatku: 1. den zacatku behu lhuty
+        :param datum_konce: prozatimni den konce subjektivni lhuty
+        :param maximalni_delka: objektivni lhuta
+        :return: date object
+        """
         if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
                 super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce) and \
                 super()._kontrola_pred_zacatkem(datum_ukonu=self._konec_staveni, datum_zacatku=datum_zacatku):
