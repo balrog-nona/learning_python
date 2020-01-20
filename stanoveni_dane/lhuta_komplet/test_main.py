@@ -220,7 +220,7 @@ def test14():  # soubeh s odst.4 i odst. 3
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2024, 10, 31)
 """
 
-def test_ukazat():
+def test_ukazat():  # normalni je mit ve fci 1x assert - 1 vec, kterou testuju ma vlastni fci
     ukony = []
     ukon1 = Odst1(datum='1.4.2020')
     ukony.append(ukon1)
@@ -231,9 +231,16 @@ def test_ukazat():
     ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
     assert datetime.date(2023, 4, 3) == spocitej_lhutu(ukony_sorted)
 
+    """
+    Nemuzu mit metodu a atribut stejneho jmena! Na objektu odst1 je v druhem assertu uz nastavany atribut maximalni_delka
+    a proto se nevola metoda, ale vyvola se ten atribut - proto mi pise, ze datetime.date is not callable
+    """
+
     ukon3 = Odst3(datum='3.7.2022')
     ukony.append(ukon3)
     ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
     assert datetime.date(2025, 7, 4) == spocitej_lhutu(ukony_sorted)
+
+
 
 
