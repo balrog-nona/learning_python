@@ -10,31 +10,41 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
     subjektivni_lhuta = seznam_ukonu[0]._konec
     objektivni_lhuta = seznam_ukonu[0]._maximalni
 
-    for i in seznam_ukonu[1:]:
-        if isinstance(i, Odst4) and not i._konec_staveni:
+    poradi_prvku = 1
+    for ukon in seznam_ukonu[1:]:
+        if isinstance(ukon, Odst4) and not ukon._konec_staveni:
             raise Exception('Lhutu nelze spocitat, dokud neskoncilo staveni.')
 
-        # sem prijde soubeh staveni + soubeh staveni s necim dalsim
+        if isinstance(ukon, Odst4):  # je treba prozkoumat nasledujici prvky seznamu
+            for item in seznam_ukonu[poradi_prvku:]:
+                odstavce2 = []
+                odstavce3 = []
+                odstavce4 = []
+                if isinstance(item, Odst4):  # nutno posbirat vsechny odst4 pro zkoumani soubehu
+                    odstavce4.append(item)
+                if ukon._ukon <= item._ukon <= ukon._konec_staveni:  # jiny ukon nastal v dobe staveni
+                    if isinstance(item, Odst2):
+                        odstavce2.append(item)
+                    elif isinstance(item, Odst3):
+                        odstavce3.append(item)
 
-        i._konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta, maximalni_delka=objektivni_lhuta)
-        subjektivni_lhuta = i._konec
+                if odstavce4:  # zjisteni teto lhuty ma prioritu - je vychozi pro vypocet dle dalsich odstavcu
+                    # prodlouzeni lhuty, jestli je tam soubeh, a to i vicekrat
+                if odstavce3 or (odstavce3 and odstavce2):
+                    # prodlouzeni lhuty
+                elif odstavce2:
+                    # prodlouzeni lhuty
+                else:  # zadny ukon nenastal v dobe staveni
+                    ukon._konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
+                                      maximalni_delka=objektivni_lhuta)
+                    subjektivni_lhuta = ukon._konec
+        else:  # pro objekty,co nejsou instance Odst4 neni treba kontrolovat dalsi prvky seznamu
+            ukon._konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
+                              maximalni_delka=objektivni_lhuta)
+            subjektivni_lhuta = ukon._konec
+
+        poradi_prvku += 1
 
     return subjektivni_lhuta
 
 
-# ukazat Petrovi, co to delalo, kdyz jsem mela 2x assert v jedne fci
-# zeptat se na soukrome a verejne metody/atributy
-"""
-def soubeh_staveni(i, seznam_ukonu):
-    if isinstance(i, Odst4):
-        for item in seznam_ukonu[iterace:]:
-            if i._ukon <= item._ukon =< i._konec_staveni:
-                if isinstance(item, Odst2):
-                    # co se stane
-                elif isinstance(item, Odst3):  # po konci staveni, ten druhy den + 3 roky
-                    item._konec_lhuty(datum_zacatku='')
-                elif isinstance(item, Odst4):
-                    # co se stane
-            else:
-                # co??
-"""
