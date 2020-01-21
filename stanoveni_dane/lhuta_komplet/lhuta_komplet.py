@@ -63,8 +63,8 @@ class Odst1(Lhuta148):
         self._konec = super()._kontrola_vikendu(self._konec)
 
     def _maximalni_delka(self):  # metoda pro vypocet objektivni lhuty
-        self._maximalni_delka = self._ukon.replace(year=self._ukon.year + 10)  # dle odst. 5; presne datum
-        self._maximalni_delka = super()._kontrola_vikendu(self._maximalni_delka)  # konec lhuty po pravni strance
+        self._maximalni = self._ukon.replace(year=self._ukon.year + 10)  # dle odst. 5; presne datum
+        self._maximalni = super()._kontrola_vikendu(self._maximalni)  # konec lhuty po pravni strance
 
 
 class Odst2(Lhuta148):

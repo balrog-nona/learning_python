@@ -8,7 +8,7 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
         seznam_ukonu[0]._konec_lhuty()
         seznam_ukonu[0]._maximalni_delka()
     subjektivni_lhuta = seznam_ukonu[0]._konec
-    objektivni_lhuta = seznam_ukonu[0]._maximalni_delka
+    objektivni_lhuta = seznam_ukonu[0]._maximalni
 
     for i in seznam_ukonu[1:]:
         if isinstance(i, Odst4) and not i._konec_staveni:
