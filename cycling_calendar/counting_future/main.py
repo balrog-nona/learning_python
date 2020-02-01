@@ -7,11 +7,14 @@ from oauth2client import file, client, tools  # for token storage
 import re
 import calendar_access
 import making_date
-import decimal
+from decimal import Decimal
 from send_email import msg as msg
 from send_email import smtpObj as smtpObj
 from send_email import sender as sender
 from email.mime.text import MIMEText
+import pandas as pd
+import altair as alt
+
 
 """
 This script counts how many kms I did on exercise bike during a particular month + using "rotoped soucet" event in my 
@@ -50,8 +53,6 @@ events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=making_dat
                                       orderBy='startTime').execute()
 events = events_result.get('items', [])  # type list
 
-D = decimal.Decimal
-
 
 def count_kms(iterable):
     """
@@ -60,7 +61,7 @@ def count_kms(iterable):
     :param iterable: events from calendar
     :return: total count of kms for the current month
     """
-    month_count = D("0.0")
+    month_count = Decimal("0.0")
     pattern = '\d+\.?\d+?\s?[kK]'
     if iterable:
         for item in iterable:
@@ -69,7 +70,7 @@ def count_kms(iterable):
                 if re.search(pattern, comment_string):
                     kms = re.search(pattern, comment_string).group().lower()
                     kms = kms[:kms.find("k")].strip()
-                    month_count += D(kms)
+                    month_count += Decimal(kms)
     return month_count
 
 
@@ -86,7 +87,7 @@ for event in events2:
     if "rotoped soucet" in event["summary"]:
         sum_up_to_last_month = event["description"]
         sum_up_to_last_month = sum_up_to_last_month[:sum_up_to_last_month.find("k")].strip()
-        sum_up_to_last_month = D(sum_up_to_last_month)
+        sum_up_to_last_month = Decimal(sum_up_to_last_month)
 
 this_month = count_kms(events)
 total = this_month + sum_up_to_last_month
@@ -110,3 +111,20 @@ text = msg.as_string()
 smtpObj.sendmail(sender, sender, text)  # from, to, message
 
 smtpObj.quit()
+
+
+# print the table
+with open('kms.csv', encoding='utf-8', mode='a') as file:
+    file.write('{},{},{}\n'.format(making_date.start_date, this_month, total))
+
+data_df = pd.read_csv('kms.csv')  # DataFrame object
+print(data_df)
+
+
+# data visualization
+base = alt.Chart(data_df).properties(width=500)  # creating Chart object
+line = base.mark_line(color='crimson').encode(x='date', y='kms')  # data visualization using Line Chart
+rule = base.mark_rule(color='coral').encode(y='average(kms)', size=alt.value(2))  # line for average kms
+
+my_chart = line + rule
+my_chart.save('chart.png')
