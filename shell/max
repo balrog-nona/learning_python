@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# lekce 4.25 moje reseni - funguje spravne s integery
+min=min
+max=max
+cislo=$1
+if [ `basename $0` = $min ]; then
+	for par in "$@"; do
+		if [ $par -lt $cislo ]; then
+			cislo=$par
+		fi
+	done
+elif [ `basename $0` = $max ]; then
+	for par in "$@"; do
+		if [ $par -gt $cislo ]; then
+			cislo=$par
+		fi
+	done
+fi
+
+echo $cislo
+
+
+# reseni z knizky - verze s while
+[ `basename $0` = min ] && operator=-lt || operator=-gt  # zavolano jako min, operator -lt, jinak operator -gt
+minimax=$1; shift  # ulozeni prvniho parametru + posun na druhy parametr
+while [ $# -gt 0 ]; do  # opakovani pro zbyvajici parametry; $# pocet aktualne nastavenych pozicnich parametru
+	[ $1 $operator $minimax ] && minimax=$1  # tvorba kodu pro test pomoci promennych
+	shift  # posun o jeden parametr dal
+done
+echo $minimax
+
+# verze s for
+[ `basename $0` = min ] && operator=-lt || operator=-gt
+#minimax=$1; shift  # tady hlasi chybu pocet shiftu mimo rozsah - pomohlo az odtraneni celeho radku
+for cislo; do  # jina moznost: for cislo in "$@"; do | bez klicoveho slova in projde vsechny pozicni parametry!
+	[ $cislo $operator $minimax ] && minimax=$cislo
+done
+echo $minimax
+
+

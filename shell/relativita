@@ -1,0 +1,32 @@
+#!/bin/sh
+# priklad 4.24; moje reseni - nebude fungovat, kdyz cil symlinku bude taky symlink, ani kdyz to spustim z jineho mista nez kde je ten konecny soubor
+cesta=`ls -l $1 | cut -d">" -f2 | xargs -I {} ls -l {} | cut -d" " -f-9`
+echo $cesta $1
+
+# reseni dle knizky
+adr=`pwd`
+puvodni=$1
+case $1:$adr in       # test parametru i aktualniho adresare; podminky pak pro oba testovane vyrazy
+/* ) cesta=$1;;       # pokud $1 zacina lomitkem, tj. parametrem je absolutni cesta
+*/ ) cesta=/$1;;      # cesta je relativni a nachazime se v koreni stromu adresaru
+*  ) cesta=$adr/$1;;  # relativni cesta a nekorenovy adresar; slouceni adresare a relativni cesty
+esac
+
+while [ -L "$cesta" ]; do
+	# zjisti se, kam symlink smeruje + pomoci sed se vymaze zacatek radku az po sipku
+	odkaz=`ls -ld $cesta | sed "s:.* $cesta -> ::"`
+	case odkaz in
+	/* ) cesta=$odkaz;;
+	*  ) cesta=`echo "$cesta" | sed 's:/[^/]*$::'`/$odkaz;;
+	esac
+done
+
+if [ -e "$cesta" ]; then
+	ls -ld "$cesta" | sed "s:$cesta\$:$puvodni:"
+else
+	ls -ld  "$puvodni"
+fi
+
+
+
+

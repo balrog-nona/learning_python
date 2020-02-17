@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# lekce 4.26, moje reseni - funguje pro syntax tail -n5 a ne pro tail -n 5
+: <<'END'
+prepinac=$1
+shift
+for operand; do
+	[ -e "$operand" ] && tail "$prepinac" "$operand" || echo 'soubor neexistuje'
+done
+END
+
+# reseni z knizky
+# 1. varianta while cyklu
+while [ $# -gt 0 ]; do
+	case $1 in
+	-[cn] ) opt="$1$2"
+	    shift 2 && continue   # continue znamena, ze se zade provede prikaz uvedeny ve while
+	    echo "Chybi hodnota pro $1" && exit;;  # exit konci cely script
+	-[cn]* ) opt="$1"; shift;;
+	-- ) shift; break;;
+	-* ) echo "Neznamy prepinac $1."; exit;;
+	* ) break;;
+	esac
+done
+
+
+for soubor; do
+	if [ -f "$soubor" ]; then
+		tail "$opt" "$soubor"
+	else
+		echo "Soubor '$soubor' neexistuje."
+	fi
+done
+

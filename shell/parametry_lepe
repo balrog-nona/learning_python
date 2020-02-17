@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# lekce 4.27, reseni dle knizky
+kontrola() {
+	[ -c "$optc" ] && echo "Uz byl zadan prepinac c." && exit
+	[ -n "$optn" ] && echo "Uz byl zadan prepinac n." && exit
+}
+
+while getopts :c:n: name; do
+	case $name in
+	c ) kontrola; optc="-c$OPTARG";;
+	n ) kontrola; optn="-n$OPTARG";;
+	\? ) echo "Neznamy prepinac $OPTARG"; exit;;
+	: ) echo "Chybi hodnota prepinace $OPTARG"; exit;;
+	esac
+done
+shift "$(expr "$OPTIND" - 1)" 
+
+for soubor; do
+	if [ -f "$soubor" ]; then
+		tail "$optc" "$optn" "$soubor"
+	else
+		echo "Soubor '$soubor' neexistuje."
+	fi
+done
+

@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# lekce 4.26, moje reseni - funguje pro syntax tail -n5 a ne pro tail -n 5
+: <<'END'
+prepinac=$1
+shift
+for operand; do
+	[ -e "$operand" ] && tail "$prepinac" "$operand" || echo 'soubor neexistuje'
+done
+END
+
+# reseni z knizky
+# 2. varianta while cyklu
+while getopts :c:n: name; do   # getopts zpracovava prepinace, par je retezec obsahujici pismena prepinacu + nazev promenne, kam je ma ukladat
+	case $name in
+	[cn] ) opt="-$name$OPTARG";;   # OPTARG je hodnota parametru n/c; : v prvnim radku znamena, ze ma parametr povinny argument 
+	\? ) echo "Neznamy prepinac $OPTARG"; exit;;
+	: ) echo "Chybi hodnota prepinace $OPTARG"; exit;;
+	esac
+done
+shift "$(expr "$OPTIND" - 1)"   # OPTIND obsahuje cislo parametru, ktery se ma dale zpracovavat
+
+for soubor; do
+	if [ -f "$soubor" ]; then
+		tail "$opt" "$soubor"
+	else
+		echo "Soubor '$soubor' neexistuje."
+	fi
+done
+
