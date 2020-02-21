@@ -6,13 +6,13 @@ echo $cesta $1
 # reseni dle knizky
 adr=`pwd`
 puvodni=$1
-case $1:$adr in       # test parametru i aktualniho adresare; podminky pak pro oba testovane vyrazy
-/* ) cesta=$1;;       # pokud $1 zacina lomitkem, tj. parametrem je absolutni cesta
-*/ ) cesta=/$1;;      # cesta je relativni a nachazime se v koreni stromu adresaru
-*  ) cesta=$adr/$1;;  # relativni cesta a nekorenovy adresar; slouceni adresare a relativni cesty
+case $1:$adr in       # vytvoreni stringu pro test parametru i aktualniho adresare; podminky pak pro oba testovane vyrazy
+/* ) cesta=$1;;       # pokud $1 zacina lomitkem, tj. parametrem je absolutni cesta, tj. /home/user/Downloads/nazev_linku
+*/ ) cesta=/$1;;      # cesta je relativni a nachazime se v koreni stromu adresaru ../../nazev_linku a $adr konci na /
+*  ) cesta=$adr/$1;;  # relativni cesta a nekorenovy adresar; slouceni adresare a nazvu souboru
 esac
 
-while [ -L "$cesta" ]; do
+while [ -L "$cesta" ]; do  # -L soubor existuje a je to symlink
 	# zjisti se, kam symlink smeruje + pomoci sed se vymaze zacatek radku az po sipku
 	odkaz=`ls -ld $cesta | sed "s:.* $cesta -> ::"`
 	case odkaz in
