@@ -1,0 +1,25 @@
+#!/bin/sh
+set -e  # exit whenever a command exits with a non 0 status
+set -u  # treat undefined variables as errors
+set -o pipefail  # pipe willbe considered successful if all the commands involved are executed without errors
+
+
+while getopts 'lha:' OPTION; do  # projima l,h, a - mozno i vice naraz; a musi mit argument - a: Kazda parsovana moznost se ulozi pro promenne OPTION
+	case "$OPTION" in
+	l )
+		echo "linuxconfig"
+		;;
+	h )
+		echo "h stands for h"
+		;;
+	a )
+		avalue="$OPTARG"  # OPTARG je hodnota prijimaneho prepinace u option a
+		echo "The value provided is $OPTARG"
+		;;
+	? )
+		echo "script usage: $(basename "$0") [-l] [-h] [-a somevalue]" >&2
+		exit 1
+		;;
+	esac
+done
+shift $(("$OPTIND" - 1))  # OPTIND je pri spusteni nastavene na 1 a pri kazdem zpracovani se zvedle o 1
