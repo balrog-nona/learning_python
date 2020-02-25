@@ -1,0 +1,13 @@
+#!/bin/bash
+
+znak=1
+opt=nona
+eval echo \"\$opt$znak\"  # tohle mi nefunguje
+echo eval \"\$opt$znak\"
+
+out='> /dev/null'
+echo Ladici vypis1 $out
+eval echo Ladici vypis2 $out
+
+out='> /dev/tty'  # pseudosoubor zastupujici terminal, na kterem shell bezi. s vystupem nejde dal pracovat.
+eval echo Ladici vypis3 $out

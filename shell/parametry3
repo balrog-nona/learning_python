@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# lekce 4.28, reseni dle knizky
+kontrola() {
+	znak=$1
+	eval [ -n \"\$opt$znak\" ] && echo "Opakovane zadani prepinace $znak." && exit
+	[ -n "$optc$optn" ] && echo "Prepinace c a n se navzajem vylucuji" && exit  # ekvivalent [ -n "$optc" -o -n "optn" ]
+	eval opt$znak=\"-$znak\$OPTARG\"  # toto ta fce vraci a stava se to globalni promennou?
+}
+
+while getopts :c:n: name; do
+	case $name in
+	[cn] ) kontrola; opt="-$name$OPTARG";;  # nefungovalo, kdyz to bylo napsane jako v knizce
+	\? ) echo "Neznamy prepinac $OPTARG"; exit;;
+	: ) echo "Chybi hodnota prepinace $OPTARG"; exit;;
+	esac
+done
+shift $(("$OPTIND" - 1)) 
+
+for soubor; do
+	if [ -f "$soubor" ]; then
+		tail "$opt" "$soubor"
+	else
+		echo "Soubor '$soubor' neexistuje."
+	fi
+done
+
+
+# PRIORITA ZPRACOVANI RADKU SHELLEM
+# 1. rozdeleni na slova - oddelovace mezery, tab, operatory shellu. Zleva doprava, respektuje quoting. PRIORITA OPERATORU SHELLU: pipe, podminene spusteni
+# (tj. && || ) a nakonec strednik.
+# 2. substituce promennych a prikazu - pokud nechci neci substituovat, musim pred $ dat \, tj. skryt ho shellu
+# 3. vysledky substituci se deli na pole podle hodnoty IFS
+# 4. expanze jmen souboru
+# 5. zruseni quotingu, tj. odkryti meta znaku 
+
+# Rada - eval je nebezpecne pouzivat, bezne se pouziva spis parametr fce

@@ -2,7 +2,7 @@
 
 # lekce 4.27, reseni dle knizky
 kontrola() {
-	[ -c "$optc" ] && echo "Uz byl zadan prepinac c." && exit
+	[ -n "$optc" ] && echo "Uz byl zadan prepinac c." && exit
 	[ -n "$optn" ] && echo "Uz byl zadan prepinac n." && exit
 }
 
