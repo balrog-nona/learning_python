@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# 4.30 - moje reseni
+# 1. varianta - funguje
+: <<'END'
+par=$(echo "$@" | tr "," " ")
+par_nahrazene=$(echo "$par" | sed 's/ / $/g')
+par_komplet=$(echo "$par_nahrazene" | sed 's/^/\$/' )
+
+{
+while read f s uid pid ppid c pri ni addr sz wchan tty time cmd; do
+	eval echo "$par_komplet"  
+done
+} <&0
+END
+
+# 2. varianta - funguje
+: <<'END'
+echo "2. varianta:"
+par=$(echo "$@" | tr "," " ")
+par_nahrazene=$(sed 's/ / $/g' <<< "$par")  # provadeni sedu na promenne
+par_komplet=$(sed 's/^/\$/' <<< "$par_nahrazene")
+{
+while read f s uid pid ppid c pri ni addr sz wchan tty time cmd; do
+	eval echo "$par_komplet"  
+done
+} <&0
+END
+
+# 3. varianta - funguje
+: <<'END'
+echo "3. varianta:"
+par=$(echo "$@" | tr "," " ")
+par_nahrazene=${par//" "/" $"}  # nahrazovani v promenne
+par_komplet=${par_nahrazene/"$par_nahrazene"/\$"$par_nahrazene"}
+{
+while read f s uid pid ppid c pri ni addr sz wchan tty time cmd; do
+	eval echo "$par_komplet"  
+done
+}  # funguje i bez presmerovani vstupu 
+END
+
+# reseni z knizky
+echo "KNIZKA:"
+# pro promennou seznam se dal pouzit i sed s/\([^,]*\),*/ $\1/g
+seznam=\$`echo "$1" | tr A-Z a-z | sed 's/,/ $/g'`  # zpracovani pozicnich parametru a jejich prevedeni na promenne
+read zahlavi  # nacteni seznamu sloupcu
+sloupce=$(echo "$zahlavi" | tr A-Z a-z)  # prevedeni nazvu sloupcu na mala pismena
+while read $sloupce; do  # nefunguje "$sloupce"
+	eval echo "$seznam"
+done
+
+
+
+
+
+
+
