@@ -3,11 +3,7 @@
 # 4.29 z knizky - moje reseni
 for par; do :;done
 
-if [ -d "$par" ]; then
-	mv "$@"
-else
-	echo "Cilovy adresar $par neexistuje."
-fi
+[ -d "$par" ] && mv "$@" || echo "Cilovy adresar $par neexistuje."
 
 
 
