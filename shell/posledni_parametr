@@ -1,13 +1,50 @@
 #!/bin/sh
 
 # 4.29 z knizky - moje reseni
-for par; do :;done
-
+# 1. varianta - plne prenositelna verze
+: <<'END'
+for par; do :;done  # for iteruje parametrama, pokud se mu neda nic k iteraci + pak ma hodnotu posledni promenne
+# nebo for i in "$@"; do:; done
 [ -d "$par" ] && mv "$@" || echo "Cilovy adresar $par neexistuje."
+END
 
+# 2. varianta 
+echo "${@: -1}"  # ne uplne prenositelne, jen pro bash a ksh
 
+# 3. varianta 
+echo "${BASH_ARGV[0]}"  # pouze pro bash v3.x+
 
+# 4. varianta - nefunguje mi
+echo "${!#}"  # pouze pro bash v3.x+
 
+# 5. varianta
+echo "$BASH_ARGV"  # pouze pro bash v3.x+
+
+# 6. varianta
+echo "${@:$#}"  # pouze pro bash v3.x+ a ksh
+
+# reseni z knizky - 1.varianta
+: <<'END'
+i=1
+while [ "$i" -le "$#" ]; do  # iterace parametry pomoci promenne
+	cil="$1"
+	shift
+	set -- "$@" "$cil"  # pridani parametru na konec seznamu - zadny se neztrati
+	i=$(("$i" + 1))
+done
+[ ! -d "$cil" ] && echo "Adresar $cil neexistuje." && exit
+mv "$@"
+END
+
+# 2. varianta z knizky
+kontroluj_posledni() {  # fce sice dostane parametry,ale pracuje s nima lokalne, tj. shift neznici pozicni parametry celeho scriptu
+	while [ "$#" -gt 1 ]; do  # dokud je pocet parametru vetsi nez 1, tak je zahod. U posledniho prestane.
+		shift
+	done
+	[ ! -d "$1" ] && echo "Adresar $1 neexistuje." && exit  # kontrola existence slozky, tj. posledniho parametru
+}
+kontroluj_posledni "$@"  # predani fci seznam parametru
+mv "$@"
 
 
 
