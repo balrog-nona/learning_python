@@ -6,8 +6,20 @@ eval echo \"\$opt$znak\"  # tohle mi nefunguje
 echo eval \"\$opt$znak\"
 
 out='> /dev/null'
-echo Ladici vypis1 $out
-eval echo Ladici vypis2 $out
+echo Ladici vypis1 "$out"  # out se nahradi, ale v tu chvili uz shell > nevyhodnoti jako operator, na to uz je pozde
+eval echo Ladici vypis2 "$out"  # provede se substituce out a slova Ladici vypis2 se vzhodi do /dev/null
 
 out='> /dev/tty'  # pseudosoubor zastupujici terminal, na kterem shell bezi. s vystupem nejde dal pracovat.
-eval echo Ladici vypis3 $out
+eval echo Ladici vypis3 "$out"
+
+out='/dev/null'
+echo Ladici vypis4 > "$out" # zde bez problemu 
+
+
+
+
+
+
+
+
+
