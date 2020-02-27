@@ -10,21 +10,18 @@ while [ "$i" -le 20 ]; do
 done
 END
 
-
-soubory=$(find . -wholename "$1")
+soubory=$(find "$@")
 iterace=1
-for i in "$soubory"; do
-	read -p "Chces soubor "$i" opravdu smazat?  " odpoved
+while read line; do
+	read -p "Chces soubor "$line" opravdu smazat?  " odpoved
 	case "$odpoved" in
-		ano ) rm "$i";;
+		ano ) rm "$line";;
 		ne ) continue;;
 		stop ) break; exit;;
 	esac
-
 	iterace=$((iterace + 1))
 	echo "$iterace"
-done
-
+done <<< "$soubory"
 
 
 
