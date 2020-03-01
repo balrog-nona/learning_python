@@ -2,8 +2,9 @@
 
 znak=1
 opt=nona
-eval echo \"\$opt$znak\"  # tohle mi nefunguje
-echo eval \"\$opt$znak\"
+opt1=xxx
+eval echo \"\$opt\$znak\"  # tohle mi nefunguje
+echo eval \"\$opt\$znak\"
 
 out='> /dev/null'
 echo Ladici vypis1 "$out"  # out se nahradi, ale v tu chvili uz shell > nevyhodnoti jako operator, na to uz je pozde

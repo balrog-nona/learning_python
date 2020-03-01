@@ -2,7 +2,7 @@
 
 
 # 4.31 - moje reseni
-: <<'END'  # tvorba cvicnych souboru
+: <<'END'  # tvorba cvicnych souboru nebo seq 1 20 | xargs -I {} touch /tmp/testy{}
 i=1
 while [ "$i" -le 20 ]; do
 	touch /tmp/testy$i

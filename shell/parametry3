@@ -10,7 +10,7 @@ kontrola() {
 
 while getopts :c:n: name; do
 	case $name in
-	[cn] ) kontrola $name;;  # toto je ta nefunkci verze z knizky, co to ma delat??
+	[cn] ) kontrola $name;;  # $name je parametr, ktery vstoupi do kontroly jako $1 - prvni arg te fce
 	#[cn] ) kontrola; opt="-$name$OPTARG";;  # nefungovalo, kdyz to bylo napsane jako v knizce
 	\? ) echo "Neznamy prepinac $OPTARG"; exit;;
 	: ) echo "Chybi hodnota prepinace $OPTARG"; exit;;
