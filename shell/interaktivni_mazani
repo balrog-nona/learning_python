@@ -10,10 +10,29 @@ while [ "$i" -le 20 ]; do
 done
 END
 
-soubory=$(find "$@")
-iterace=1
+touch hledani
+find "$@" > hledani
+filename='hledani'
+iterace=0
+
+: << 'END'
 while read line; do
-	read -p "Chces soubor "$line" opravdu smazat?  " odpoved
+	echo "$line"
+	read -p "Chces soubor $line opravdu smazat?  " odpoved
+	echo "$odpoved"
+	#case "$odpoved" in
+	#	ano ) rm "$line";;
+	#	ne ) continue;;
+	#	stop ) break; exit;;
+	#esac
+	iterace=$((iterace + 1))
+	echo "$iterace" "chachacha"
+done < $filename
+END
+
+while read line; do
+	echo "$line"
+	read -p "Chces soubor $line opravdu smazat?  " odpoved
 	case "$odpoved" in
 		ano ) rm "$line";;
 		ne ) continue;;
@@ -21,7 +40,7 @@ while read line; do
 	esac
 	iterace=$((iterace + 1))
 	echo "$iterace"
-done <<< "$soubory"
+done < $filename
 
 
 

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+read -p 'Username: ' name
+read -p 'Password: ' passwd
+echo "Thank you."
