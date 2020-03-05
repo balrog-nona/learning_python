@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # 4.31 - moje reseni
 : <<'END'  # tvorba cvicnych souboru nebo seq 1 20 | xargs -I {} touch /tmp/testy{}
 i=1
@@ -10,42 +9,73 @@ while [ "$i" -le 20 ]; do
 done
 END
 
-touch hledani
-find "$@" > hledani
-filename='hledani'
-iterace=0
+# 1. varianta - funguje
+smazano=0
+soubory=$(find "$@")
+while read line; do
+	read -p "Chces soubor $line opravdu smazat?  " odpoved < /dev/tty  # tohle nefungovalo bez /dev/tty, protoze tento read cetl taky ze vstupu $soubory
+	# /dev/tty je file system object, ktery reprezentuje konzoli
+	case "$odpoved" in
+		ano ) rm "$line"; smazano=$((smazano + 1));;
+		ne ) continue;;
+		stop ) exit;;
+	esac
+done <<< "$soubory"  # HERE string, pouhe presmerovani nestacilo
+echo "$smazano"
 
+# 2. varianta - funguje
 : << 'END'
-while read line; do
-	echo "$line"
-	read -p "Chces soubor $line opravdu smazat?  " odpoved
-	echo "$odpoved"
-	#case "$odpoved" in
-	#	ano ) rm "$line";;
-	#	ne ) continue;;
-	#	stop ) break; exit;;
-	#esac
-	iterace=$((iterace + 1))
-	echo "$iterace" "chachacha"
-done < $filename
-END
-
-while read line; do
-	echo "$line"
+smazano=0
+for line in $(find "$@"); do
 	read -p "Chces soubor $line opravdu smazat?  " odpoved
 	case "$odpoved" in
-		ano ) rm "$line";;
+		ano ) rm "$line"; smazano=$((smazano + 1));;
 		ne ) continue;;
-		stop ) break; exit;;
+		stop ) exit;;
 	esac
-	iterace=$((iterace + 1))
-	echo "$iterace"
-done < $filename
+done
+echo "$smazano"
+END
 
+# reseni z knizky - var. 1
+: << 'END'
+n=o
+find "$@" | (  # slozeni nekolika prikazu dostejneho subshellu
+	while read soubor; do
+		echo -n "Mazat $soubor? "
+		read odpoved < /dev/tty  # tady se readu presmeroval vstup, je to klavesnice
+		case $odpoved in
+		ano     ) n=$((n + 1)); rm "$soubor";;
+		"" | ne ) ;;  # tohle se myslelo implicitni hodnotou - pouze enter
+		stop    ) exit;;
+		esac
+	done
+	echo "Smazano $n souboru."
+)
+END
 
+# varianta 2
+: << 'END'
+n=o
+{
+	find "$@" | (  
+		while read soubor; do  # cteni z roury
+			echo -n "Mazat $soubor? "
+			read odpoved <&3  # cteni ze zkopirovaneho vstupniho proudu 
+			case $odpoved in
+			ano     ) n=$((n + 1)); rm "$soubor";;
+			"" | ne ) ;;  # tohle se myslelo implicitni hodnotou - pouze enter
+			stop    ) exit;;
+			esac
+		done
+		echo "Smazano $n souboru."
+	)
+} 3<&0  # presmerovani vstupniho proudu - duplikace deskriptoru 0, tj. standardni vstup, pod cislem 3
+END
 
-
-
-
+# jina varianta teze funkcnosti - pridani radku na zacatek a konec
+# exec 3<&0 - zkopiruj deskriptor 0 do 3
+# find "$@" | a vsechny navazujici prikazy
+# exec 3<-   - zavri deskriptor 3
 
 
