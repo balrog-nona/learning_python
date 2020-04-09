@@ -182,7 +182,7 @@ def test12():  # soubeh s odst. 3 i odst. 2
 
     ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2027, 8, 5)
-    
+"""
     
 def test13():  # soubeh s odst. 4
     ukony = []
@@ -196,11 +196,14 @@ def test13():  # soubeh s odst. 4
     ukon4a = Odst4(datum='12.10.2023')
     ukon4a.zadej_konec_staveni(konec_staveni='30.8.2024')
     ukony.append(ukon4a)
+    ukon4b = Odst4(datum='11.9.2024')
+    ukon4b.zadej_konec_staveni(konec_staveni='1.5.2025')
+    ukony.append(ukon4b)
 
     ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
-    assert spocitej_lhutu(ukony_sorted) == datetime.date(2024, 10, 31)
+    assert spocitej_lhutu(ukony_sorted) == datetime.date(2025, 6, 23)
     
-    
+"""    
 def test14():  # soubeh s odst.4 i odst. 3
     ukony = []
     ukon1 = Odst1(datum='1.4.2020')
