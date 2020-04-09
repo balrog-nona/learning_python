@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# cv. 4.32 
+# 1. varianta
+projdi() {
+	cd "$1" || return  # nema byt $1 soubor?? presunuti do pracovniho adresare
+	for x in *; do  # tady se vzdy provede jen jeden z radku podle toho, ktera podminka plati?
+		[ -d "$x" -a ! -L "$x" ] && projdi "$x" && return  # volani fce projdi zmeni hodnotu $x
+		[ "$x" = "$vzor" ] && echo `pwd`/"$x" && return
+	done
+	cd ..; return 1  # to je pro ukonceni fce kdyz nevyjde telo for cyklu?
+}
+vzor=$1 projdi "$2"  # podle zadani by mela byt $1 soubor a $2 adresar
+# vzor=$1 znamena dosazeni hodnoty promenne pro fci projdi; jde to takto i pri spousteni skriptu dosazovat hodnotu promenne pro skript  

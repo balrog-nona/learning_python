@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# cv. 4.32 
+# 4. varianta
+projdi() {
+	if [ -d "$1" -a ! -L "$1" ]; then
+		for soubor in "$1"/*; do
+			projdi "$soubor" && return 0  # proc je tady return?
+		done
+	fi
+	case "$1" in
+	*/$vzor ) echo "$1"; return 0;;
+	*       ) return 1;;  # co znamena *?
+	esac
+}
+vzor=$1 projdi "$2"
+
+# logika: fce projdi se vola na kadze jmeno souboru a ne jen na adresare + kontrola shody jmena souboru se odlozila az na konec fce
+# jmeno souboru zustane zachovano v lokalnim pozicnim parametru $1 + ztrati se informace o aktualni ceste
+
+

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# cv. 4.32 
+# 2. varianta
+projdi() {
+	for x in "$1"/*; do  # $1 teda ma byt adresar??
+		[ -d "$x" -a ! -L "$x" ] && projdi "$x" && return  # volani fce projdi zmeni hodnotu $x
+		[ "$x" = "$1/$vzor" ] && echo "$x" && return  # co tady retezili $1 i vzor...
+	done
+	return 1
+}
+vzor=$1 projdi "$2"
+
+
