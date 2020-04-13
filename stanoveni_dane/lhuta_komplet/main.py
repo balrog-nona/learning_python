@@ -11,23 +11,18 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
     objektivni_lhuta = seznam_ukonu[0]._maximalni
 
     ukony = soubeh_odst4(seznam_ukonu)  # sjednoceni ukonu soubehu i Odst4
-    zacatky_konce = odstavce4(ukony)  # posbirani zacatku a konce vsech staveni
-    ukony_soubehu = []
+    staveni_lhuty = odstavce4(ukony)  # posbirani zacatku a konce vsech staveni
+    ukony = soubeh_odst3(ukony, staveni_lhuty)
 
-    for ukon in seznam_ukonu[1:]:  # 1. krok - zpracovani seznamu ukonu
-        #print('velky for cyklus:', ukon)
+    for ukon in ukony[1:]:  # 1. krok - zpracovani seznamu ukonu
+        print('velky for cyklus:', ukon)
         if isinstance(ukon, Odst4) and not ukon._konec_staveni:
             raise Exception('Lhutu nelze spocitat, dokud neskoncilo staveni.')
-        """
-        for prvek in zacatky_konce:  # pokud jsou zacatky_konce prazdne, nic se nestane
-            if ukon._ukon <= prvek[1]:
-                ukony_soubehu.append(ukon)
-        """
 
         ukon._konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
                               maximalni_delka=objektivni_lhuta)
         subjektivni_lhuta = ukon._konec
-
+        print('subjektivni_lhuta:', subjektivni_lhuta)
 
     return subjektivni_lhuta
 
@@ -54,7 +49,7 @@ def soubeh_odst4(ukony):
                 if i._konec_staveni >= staveni_konec:  # druhe staveni je delsi nez prvni
                     staveni_konec = i._konec_staveni
                     print('staveni konec ', staveni_konec)
-                    ukony_kopie[index - 1]._konec_staveni = staveni_konec  # PROMITNOUT DO UKONY
+                    ukony_kopie[index - 1]._konec_staveni = staveni_konec
                     print('ukony_kopie[index]._koenc_staveni', staveni_konec)
                 else:  # druhe skoncilo v ramci prvniho
                     pass
@@ -73,10 +68,33 @@ def soubeh_odst4(ukony):
 
     return ukony_kopie
 
+
 def odstavce4(ukony):
-    zacatky_konce = []
+    ukony_staveni = []
     for ukon in ukony:
         if isinstance(ukon, Odst4):
-            zacatky_konce.append((ukon._ukon, ukon._konec_staveni))
-    return zacatky_konce
+            ukony_staveni.append(ukon)
+    return ukony_staveni
+
+
+def soubeh_odst3(ukony, ukony_odst4):
+    indexy = []
+    for ukon in ukony:
+        print('soubeh 3: ', ukon)
+        for i in ukony_odst4:
+            konec_staveni = i._konec_staveni
+            if i._ukon <= ukon._ukon <= konec_staveni:
+                if isinstance(ukon, Odst3):
+                    print('isinstance: ', ukon)
+                    ukon._ukon = konec_staveni  # pobezi 3 roky po skonceni staveni
+                    index = ukony.index(i)
+                    indexy.append(index)
+
+    for i in indexy:
+        print('i: ', i)
+        ukony[i].zadej_konec_staveni(konec_staveni='1.1.2100')
+        print(ukony[i]._konec_staveni)
+
+    return ukony
+
 
