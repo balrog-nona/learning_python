@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd "$1"  # zadani absolutni nebo relativni cesty k souborum, kterym chci odstranit posledni stranku
+for i in *
+do
+	nazev="$i"
+	mv "$i" input.pdf  # prejmenovani souboru, jak to vyzaduje pythonni program
+	python3 $(locate last_page_extractor.py)  # vyhledani umisteni programu + jeho spusteni
+	rm input.pdf  # smazani puvodni verze souboru
+	mv new.pdf "$nazev"  # prejmenovani noveho souboru za puvodni jmeno
+done 
+

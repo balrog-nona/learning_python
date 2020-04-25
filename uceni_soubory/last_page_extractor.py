@@ -1,5 +1,7 @@
 import PyPDF2
 
+# ke scriptu existuje i bash script linux_page_extractor pro hromadnou zmenu u vice souboru naraz
+
 input_file = open('input.pdf', 'rb')
 input_reader = PyPDF2.PdfFileReader(input_file)
 writer = PyPDF2.PdfFileWriter()
