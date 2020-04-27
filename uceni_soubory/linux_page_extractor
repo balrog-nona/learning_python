@@ -1,11 +1,14 @@
 #!/bin/bash
 
-cd "$1"  # zadani absolutni nebo relativni cesty k souborum, kterym chci odstranit posledni stranku
+# tento script pracuje s nejjednodussi verzi pythonniho scriptu 
+# upravi soubory ve slozce a puvodni verze vymaze
+
+cd "$1" || exit  # zadani absolutni nebo relativni cesty k souborum, kterym chci odstranit posledni stranku
 for i in *
 do
 	nazev="$i"
 	mv "$i" input.pdf  # prejmenovani souboru, jak to vyzaduje pythonni program
-	python3 $(locate last_page_extractor.py)  # vyhledani umisteni programu + jeho spusteni
+	python3 "$(find ~ -name last_page_extractor.py 2> /dev/null)"  # vyhledani umisteni programu + jeho spusteni
 	rm input.pdf  # smazani puvodni verze souboru
 	mv new.pdf "$nazev"  # prejmenovani noveho souboru za puvodni jmeno
 done 
