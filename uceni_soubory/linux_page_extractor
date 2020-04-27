@@ -1,6 +1,9 @@
 #!/bin/bash
 
-cd "$1"  # zadani absolutni nebo relativni cesty k souborum, kterym chci odstranit posledni stranku
+# tento script pracuje s nejjednodussi verzi pythonniho scriptu 
+# upravi soubory ve slozce a puvodni verze vymaze
+
+cd "$1" || exit  # zadani absolutni nebo relativni cesty k souborum, kterym chci odstranit posledni stranku
 for i in *
 do
 	nazev="$i"
