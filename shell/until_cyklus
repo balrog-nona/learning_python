@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# skript se spusti na pozadi pomoci &
+# soubor se vytvori manualne + skript bezi na pozadi tak dlouho, dokud soubor nezacne existovat
+
+# predcasne ukonceni skriptu, pokud neni zadan argument
+[ $# -eq 0 ] && echo "Chybi nazev souboru" && exit 1
+
+if [ -f $1 ]; then
+	echo "Soubor $1 uz existuje."
+else
+	echo "cekam na vytvoreni souboru $1"
+	until [ -f $1 ]; do  # dokud soubor neexistuje
+		true  # telo cyklu nic nedela
+	done
+	echo "Soubor $1 vytvoren."
+fi
