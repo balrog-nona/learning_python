@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# skript bere jakoargument cele cislo a vypise minimalni pocet minci, ze kterych lze sumu slozit
+# mince jsou v CZK: 50, 20, 10, 5, 2, 1
+# jediny mozny vstup ke kladne cele cislo
+
+VAL=$1
+
+while true
+do
+	if [[ "$VAL" =~ ^[0-9]+$ ]]; then
+		break
+	fi
+	echo "Vstupni hodnota neexistuje nebo neni kladne cele cislo."
+	read -p "Zadej hodnotu: " VAL
+done
+
+if [ $VAL -eq 0 ]; then
+	echo "Hodnota je 0."
+	exit
+fi
+
+for coin in 50 20 10 5 2 1
+do
+	HODNOTA=$(($VAL / $coin))
+	VAL=$(($VAL % $coin))
+	echo "Pocet minci hodnoty $coin: " $HODNOTA
+done
