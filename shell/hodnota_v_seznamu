@@ -1,0 +1,21 @@
+#!/bin/bash
+
+isInList() {
+	HLEDANE=$1
+	while shift; do
+		if [ "$HLEDANE" == "$1" ]; then
+			return 0
+		fi
+	done
+	return 1
+}
+
+
+if isInList r a b c e f t; then  # hledam r v seznamu a b c e f t
+	echo nalezeno
+else
+	echo nenalezeno
+fi
+
+
+
