@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# zadani z Engeto
+# script si mysli cislo a zadanem rozsahu, prip. do 10 a uzivatel ho hada
+
+if [ "$#" -eq 1 ]; then
+	cislo=$(( ( RANDOM % "$1" ) +1 ))
+else
+	cislo=$(( ( RANDOM % 10 ) +1 ))
+fi
+
+iterace=0
+while true; do
+	read -r -p "Zadej cislo: " VAL
+	if [[ "$VAL" =~ ^[0-9]+$ ]]; then
+		if [ "$VAL" -eq "$cislo" ]; then
+			echo "Ano, to je spravne cislo!"
+			break
+		else
+			echo "Nestrefil ses, hadej znovu"
+		fi
+	else
+		echo "Neni cislo, hadej znovu."
+	fi
+	iterace=$((iterace+1))
+done
+
+echo "Pocet platnych pokusu: $iterace"

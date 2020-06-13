@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# zadani z Engeto
+# sctipt spocita vyskyt jednotlivych znaku v zadanem souboru
+# pouziti: ./pocitani_znaku <filename> g h t 5 q
+
+soubor=$1
+shift
+if [ -r "$soubor" ]; then
+	for i in "$@"; do
+		pocet=$(grep -o "$i" "$soubor" | wc -l)  # neni schopen spocitat $
+		echo "$i: $pocet"
+	done
+fi

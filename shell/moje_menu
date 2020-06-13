@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# zadani z Engeto
+# uzivatel vybere nabidku z menu a script mu vrati pozadovanou akci
+
+menu="1 - Dnesni datum
+2 - Unixovy cas
+3 - Info o OS
+4 - Vypis pripojenych uzivatelu
+5 - Pocet procesoru
+6 - Konec"
+
+
+dnesni_datum() {
+	echo "Dnesni datum:" $(date '+%A %d.%m.%Y')
+}
+
+unixovy_cas() {
+	echo "Unixovy cas: " $(date +%s)
+}
+
+info_OS() {
+	echo $(hostnamectl)
+}
+
+vypis_uzivatelu() {
+	echo "Prihlaseni uzivatele: " $(users)
+}
+
+pocet_procesoru() {
+	echo "Pocet procesoru: " $(grep -c processor /proc/cpuinfo)
+}
+
+nacti_sluzbu() {
+	read -r -p "Vyber si moznost: " sluzba  # zeptat Misi
+	echo "$sluzba"
+}
+
+# primarni vstup pri zapnuti programu
+if [ "$#" -eq 1 ]; then
+	sluzba="$1"
+else
+	echo "$menu"
+	read -r -p "Vyber si moznost: " sluzba
+fi	
+
+
+while true; do
+	case "$sluzba" in
+		1 ) dnesni_datum ;;
+		2 ) unixovy_cas ;;
+		3 ) info_OS ;;
+		4 ) vypis_uzivatelu ;;
+		5 ) pocet_procesoru ;;
+		6 ) exit
+	esac
+	echo $(date '+%d/%m/%Y-%H:%M') $USER $sluzba >> /tmp/menuwork.log
+	read -r -p "Vyber si moznost: " sluzba
+done
+
+
+
+
+
+
+
+
+
