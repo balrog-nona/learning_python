@@ -8,7 +8,7 @@ soubor=$1
 shift
 if [ -r "$soubor" ]; then
 	for i in "$@"; do
-		pocet=$(grep -o "$i" "$soubor" | wc -l)  # neni schopen spocitat $
+		pocet=$(grep -o "$i" "$soubor" | wc -l)  
 		echo "$i: $pocet"
 	done
 fi

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# zadani z Engeto
+# vypis informaci o kazdem souboru z archivu tar nebo zip
+
+archiv=$1
+
+if [[ "$archiv" =~ ^.*\.tar$ ]]; then  
+	files=$(tar -tvf "$1" | tr -s ' ' ' ' | cut -d' ' -f6,7,8)
+elif [[ "$archiv" =~ ^.*\.zip$ ]]; then
+	files=$(unzip -l "$1" | tail -n +4 | head -n -2 | tr -s ' ' ' ' | cut -d' ' -f5)
+fi
+
+while IFS= read -r line; do
+	echo "filename: /$line"  # / pridan pro zachovani absolutni cesty
+	echo " type: " "$(file /"$line" | cut -d: -f2)"
+	echo " size: " "$(du -h /"$line" | cut -d/ -f1)"
+	echo " last modification: " "$(ls -l /"$line" | tr -s ' ' ' ' | cut -d' ' -f6,7)"
+done <<< "$files"
+
+
+
+

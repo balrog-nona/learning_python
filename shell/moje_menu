@@ -41,7 +41,7 @@ if [ "$#" -eq 1 ]; then
 	sluzba="$1"
 else
 	echo "$menu"
-	read -r -p "Vyber si moznost: " sluzba
+	sluzba=$(nacti_sluzbu)
 fi	
 
 
@@ -55,7 +55,7 @@ while true; do
 		6 ) exit
 	esac
 	echo $(date '+%d/%m/%Y-%H:%M') $USER $sluzba >> /tmp/menuwork.log
-	read -r -p "Vyber si moznost: " sluzba
+	sluzba=$(nacti_sluzbu)
 done
 
 
