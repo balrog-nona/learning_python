@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# zadani z Engeto
+# skript vypisuje ruzne informace o systemu
+
+echo "CPU information:"
+echo "$(grep -c "model name" /proc/cpuinfo) procesory"
+echo "modely:" 
+grep "model name" /proc/cpuinfo | cut -d':' -f2
+echo ---------------------------------------
+echo "Memory information:"
+free
+echo ---------------------------------------
+echo "Disk usage:"
+df
+echo ---------------------------------------
+echo "Kernel: $(uname -a | cut -d' ' -f3)"
+echo ---------------------------------------
+echo "Number of packages: $(sudo yum list installed | tail -n +2 | wc -l)"
+echo ---------------------------------------
+echo "Bash version: $(bash --version | head -n 1 | cut -d' ' -f4-)"
+echo ---------------------------------------
+echo "Python version: $(python --version | cut -d' ' -f2)"
+echo ---------------------------------------
+
+
+
+
+
