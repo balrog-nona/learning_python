@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# zadani z Engeto
+# script takes one argument - directory to compress and compares the efectivity of various compression methods
+
+BEST=$(du -bs "$1" | tr '\t' ' ' | cut -d' ' -f1)  # size of the original dir for comparison
+echo  "Original size: $(du -sh "$1" | tr '\t' ' ' | cut -d' ' -f1)"
+
+for i in ZIP BZIP2 GZIP XZ LZMA; do
+	case $i in
+		ZIP) zip -r OXOX "$1" 1>/dev/null ;;
+		BZIP2) tar cfj OXOX "$1" 1>/dev/null ;;
+		GZIP) tar cfz OXOX "$1" 1>/dev/null ;;
+		XZ) tar cfJ OXOX "$1" 1>/dev/null ;;
+		LZMA) tar cf OXOX "$1" 1>/dev/null && xz --format=lzma OXOX 1>/dev/null ;;
+	esac
+	SIZE=$(stat -c %s OXOX*)
+	echo SIZE $SIZE
+	echo "Compressed size using $i compression: $(du -h OXOX* | tr '\t' ' ' | cut -d' ' -f1)"
+	rm OXOX*
+	if [[ $SIZE -le $BEST ]]; then
+		BEST=$SIZE
+		BEST_COMPRESSION=$i
+	fi
+
+done
+
+echo "Best compression method: $BEST_COMPRESSION"
+

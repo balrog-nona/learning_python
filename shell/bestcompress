@@ -3,7 +3,7 @@
 # zadani z Engeto
 # script takes one argument - directory to compress and compares the efectivity of various compression methods
 
-echo  "Original size: $(du -h "$1" | tr '\t' ' ' | cut -d' ' -f1)"
+echo  "Original size: $(du -sh "$1" | tr '\t' ' ' | cut -d' ' -f1)"
 
 zip -r file.zip "$1" 1>/dev/null && SIZE_ZIP=$(stat -c %s file.zip) && echo "Compressed size using ZIP compression: $(du -h file.zip | tr '\t' ' ' | cut -d' ' -f1)"
 
