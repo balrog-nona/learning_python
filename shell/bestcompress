@@ -7,13 +7,13 @@ echo  "Original size: $(du -sh "$1" | tr '\t' ' ' | cut -d' ' -f1)"
 
 zip -r file.zip "$1" 1>/dev/null && SIZE_ZIP=$(stat -c %s file.zip) && echo "Compressed size using ZIP compression: $(du -h file.zip | tr '\t' ' ' | cut -d' ' -f1)"
 
-tar cfj file.tar.bz2 "$1" && SIZE_BZIP2=$(stat -c %s file.tar.bz2) && echo "Compressed size using BZIP2 compression: $(du -h file.tar.bz2 | tr '\t' ' ' | cut -d' ' -f1)"
+tar cfj file.tar.bz2 "$1" 2>/dev/null && SIZE_BZIP2=$(stat -c %s file.tar.bz2) && echo "Compressed size using BZIP2 compression: $(du -h file.tar.bz2 | tr '\t' ' ' | cut -d' ' -f1)"
 
-tar cfz file.tar.gz "$1" && SIZE_GZIP=$(stat -c %s file.tar.gz) && echo "Compressed size using GZIP compression: $(du -h file.tar.gz | tr '\t' ' ' | cut -d' ' -f1)"
+tar cfz file.tar.gz "$1" 2>/dev/null && SIZE_GZIP=$(stat -c %s file.tar.gz) && echo "Compressed size using GZIP compression: $(du -h file.tar.gz | tr '\t' ' ' | cut -d' ' -f1)"
 
-tar cfJ file.tar.xz "$1" && SIZE_XZ=$(stat -c %s file.tar.xz) && echo "Compressed size using XZ compression: $(du -h file.tar.xz | tr '\t' ' ' | cut -d' ' -f1)"
+tar cfJ file.tar.xz "$1" 2>/dev/null && SIZE_XZ=$(stat -c %s file.tar.xz) && echo "Compressed size using XZ compression: $(du -h file.tar.xz | tr '\t' ' ' | cut -d' ' -f1)"
 
-tar cf file.tar "$1" && xz --format=lzma file.tar && SIZE_LZMA=$(stat -c %s file.tar.lzma) && echo "Compressed size using LZMA compression: $(du -h file.tar.lzma | tr '\t' ' ' | cut -d' ' -f1)"
+tar cf file.tar "$1" 2>/dev/null && xz --format=lzma file.tar && SIZE_LZMA=$(stat -c %s file.tar.lzma) && echo "Compressed size using LZMA compression: $(du -h file.tar.lzma | tr '\t' ' ' | cut -d' ' -f1)"
 
 rm file.zip file.tar.bz2 file.tar.gz file.tar.xz file.tar.lzma
 
