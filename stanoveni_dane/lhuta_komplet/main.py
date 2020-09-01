@@ -1,6 +1,46 @@
 from lhuta_komplet import Lhuta148, Odst1, Odst2, Odst3, Odst4
 import datetime
 
+# 1. sesbiram intervaly staveni
+odstavce4 = list()
+for i in ukony:
+    if isinstance(i, Odst4):
+        odstavce4.append(i)
+
+# 2. roztridim ukony podle toho, jestli nastaly v intervalu soubehu nebo ne
+ukony_soubehu = list()
+new_list = list()
+for odstavec in odstavce4:
+    for i in ukony:
+        if odstavec._ukon <= i._ukon <= odstavec._konec_staveni:
+            ukony_soubehu.append(i)
+        else:
+            new_list.append(i)
+
+# 3. roztridim jednotlive soubehy k odstavcum 4 a upravim prislusne hodnoty na objektu
+for i in odstavce4:
+    odstavec3 = False
+    soubeh = list()
+    # 1. posbirat vsechny ukony soubehu k jednotlivym odstavcum 4
+    for ukon in ukony_soubehu:  # porovnani
+        if i._ukon <= ukon <= i._konec_staveni:
+            soubeh.append(ukon)
+    # 2. jednotlive akce pri soubehu s ruznymi ukony
+    for ukon in soubeh:
+        if isinstance(ukon, Odst4) and ukon._konec_staveni > i._konec_staveni:  # soubeh s odst. 4
+            i._konec_staveni = ukon._konec_staveni
+            new_list.append(i)
+        elif isinstance(ukon, Odst3):  # soubeh s odst. 3
+            odstavec3 = True
+            ukon._ukon.replace(year=i._konec_staveni.year + 3)
+            new_list.append(ukon)
+        elif isinstance(ukon, Odst2) and not odstavec3:  # soubeh s odst. 2, pokud neni pritomen odst. 3
+           # pokud staveni zacalo mene nez 12 mesicu pred koncem dosavadni lhuty a v te dobe byl i ukon podle odst. 2,
+            # tak se lhuta vypocete tak, ze po pricteni staveni se pricte jeste 12 mesicu
+
+
+
+
 def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data provedeni ukonu
     if not isinstance(seznam_ukonu[0], Odst1):
         raise Exception('Prvnim ukonem musi byt zahajeni behu lhuty dle § 148 odst.1.')
@@ -10,23 +50,13 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
     subjektivni_lhuta = seznam_ukonu[0]._konec
     objektivni_lhuta = seznam_ukonu[0]._maximalni
 
-    ukony = soubeh_odst4(seznam_ukonu)  # sjednoceni ukonu soubehu i Odst4
-    staveni_lhuty = odstavce4(ukony)  # posbirani zacatku a konce vsech staveni
-    ukony = soubeh_odst3(ukony, staveni_lhuty)
-
-    for ukon in ukony[1:]:  # 1. krok - zpracovani seznamu ukonu
-        print('velky for cyklus:', ukon)
-        if isinstance(ukon, Odst4) and not ukon._konec_staveni:
-            raise Exception('Lhutu nelze spocitat, dokud neskoncilo staveni.')
-
-        ukon._konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
-                              maximalni_delka=objektivni_lhuta)
-        subjektivni_lhuta = ukon._konec
-        print('subjektivni_lhuta:', subjektivni_lhuta)
+    for i in seznam_ukonu[1:]:
+        i._konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta, maximalni_delka=objektivni_lhuta)
+        subjektivni_lhuta = i._konec
 
     return subjektivni_lhuta
 
-
+"""
 def soubeh_odst4(ukony):
     ukony_kopie = ukony
     odstavce4 = []
@@ -96,5 +126,5 @@ def soubeh_odst3(ukony, ukony_odst4):
         print(ukony[i]._konec_staveni)
 
     return ukony
-
+"""
 
