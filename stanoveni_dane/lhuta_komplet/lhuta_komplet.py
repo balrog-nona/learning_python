@@ -58,7 +58,7 @@ class Odst1(Lhuta148):
     def __init__(self, datum):  # datum je string
         self._ukon = super()._na_americke_datum(datum)
 
-    def _konec_lhuty(self):  # metoda pro vypocet subjektivni lhuty
+    def konec_lhuty(self):  # metoda pro vypocet subjektivni lhuty
         self._konec = self._ukon.replace(year=self._ukon.year + 3)  # normalne dle odst. 1; presne datum
         self._konec = super()._kontrola_vikendu(self._konec)
 
@@ -72,7 +72,7 @@ class Odst2(Lhuta148):
     def __init__(self, datum):  # datum je string
         self._ukon = super()._na_americke_datum(datum)
 
-    def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
+    def konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
         """
         :param datum_zacatku: 1. den zacatku behu lhuty
         :param datum_konce: prozatimni den konce subjektivni lhuty
@@ -96,7 +96,7 @@ class Odst3(Lhuta148):
     def __init__(self, datum):  # datum je string
         self._ukon = super()._na_americke_datum(datum)
 
-    def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
+    def konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
         """
         :param datum_zacatku: 1. den zacatku behu lhuty
         :param datum_konce: prozatimni den konce subjektivni lhuty
@@ -127,7 +127,7 @@ class Odst4(Lhuta148):  # datum je string
     def zadej_konec_staveni(self, konec_staveni):  # konec staveni je string
         self._konec_staveni = super()._na_americke_datum(konec_staveni)
 
-    def _konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
+    def konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
         """
         :param datum_zacatku: 1. den zacatku behu lhuty
         :param datum_konce: prozatimni den konce subjektivni lhuty
