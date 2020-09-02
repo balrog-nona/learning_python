@@ -21,7 +21,7 @@ def uprava_ukonu_pri_soubehu(odstavce4, ukony_soubehu, new_list, seznam_ukonu, s
         soubeh = list()
         # 1. posbirat vsechny ukony soubehu k jednotlivym odstavcum 4
         for ukon in ukony_soubehu:  # porovnani
-            if i._ukon <= ukon <= i._konec_staveni:
+            if i._ukon <= ukon._ukon <= i._konec_staveni:
                 soubeh.append(ukon)
         # 2. jednotlive akce pri soubehu s ruznymi ukony
         for ukon in soubeh:
@@ -47,7 +47,7 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
     if not isinstance(seznam_ukonu[0], Odst1):
         raise Exception('Prvnim ukonem musi byt zahajeni behu lhuty dle § 148 odst.1.')
     else:
-        seznam_ukonu[0]._konec_lhuty()
+        seznam_ukonu[0].konec_lhuty()
         seznam_ukonu[0]._maximalni_delka()
     subjektivni_lhuta = seznam_ukonu[0]._konec
     objektivni_lhuta = seznam_ukonu[0]._maximalni
@@ -69,12 +69,21 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
             else:
                 new_list.append(ukon)
 
-    new_list = uprava_ukonu_pri_soubehu(odstavce4, ukony_soubehu, new_list, seznam_ukonu, subjektivni_lhuta,
+    if not ukony_soubehu:
+        [new_list.append(odstavec) for odstavec in odstavce4]
+    else:
+        new_list = uprava_ukonu_pri_soubehu(odstavce4, ukony_soubehu, new_list, seznam_ukonu, subjektivni_lhuta,
                                         objektivni_lhuta)
-
-    for i in new_list:
-        i.konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta, maximalni_delka=objektivni_lhuta)
-        subjektivni_lhuta = i._konec
+    if new_list:
+        for i in new_list:
+            i.konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
+                          maximalni_delka=objektivni_lhuta)
+            subjektivni_lhuta = i._konec
+    else:
+        for i in seznam_ukonu[1:]:
+            i.konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
+                          maximalni_delka=objektivni_lhuta)
+            subjektivni_lhuta = i._konec
 
     return subjektivni_lhuta
 
