@@ -97,14 +97,13 @@ def test8():
 def test9():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
-    ukon2 = Odst2(datum='14.8.2021')
     ukon4 = Odst4(datum='15.3.2022')
-    ukon2a = Odst2(datum='12.1.2023')
+    ukon2 = Odst2(datum='12.1.2023')
     ukon4.zadej_konec_staveni(konec_staveni='4.8.2023')
-    ukony.extend([ukon1, ukon2, ukon4, ukon2a])
-
+    ukony.extend([ukon1, ukon2, ukon4])
     ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2024, 8, 23)
+
     
 """    
 def test10():  # soubeh s odst. 2 s vlivem na delku lhuty

@@ -1,17 +1,18 @@
 from lhuta_komplet import Lhuta148, Odst1, Odst2, Odst3, Odst4
 import datetime
+import types
 
 def konec_lhuty_nove(self, datum_zacatku, datum_konce, maximalni_delka):
-    if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
-            super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce) and \
-            super()._kontrola_pred_zacatkem(datum_ukonu=self._konec_staveni, datum_zacatku=datum_zacatku):
+    if super(Odst4, self)._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
+            super(Odst4, self)._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce) and \
+            super(Odst4, self)._kontrola_pred_zacatkem(datum_ukonu=self._konec_staveni, datum_zacatku=datum_zacatku):
         # odcitaci metoda - po konci staveni se pricte, co ze lhuty zbyvalo v dobe zacatku staveni
         # 1 den je treba pricist rucne, aby lhuta nebezela i po oba hranicni dny
         kolik_zbyvalo = (datum_konce - self._ukon) + datetime.timedelta(days=1)  # timedelta object
         self._konec = self._konec_staveni + kolik_zbyvalo  # date object
         self._konec = self._konec.replace(year=self._konec.year + 1)  # pricteni toho 1 roku za odst. 2
-        self._konec = super()._kontrola_vikendu(self._konec)
-    if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
+        self._konec = super(Odst4, self)._kontrola_vikendu(self._konec)
+    if not super(Odst4, self)._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
         self._konec = maximalni_delka
 
 # 3. roztridim jednotlive soubehy k odstavcum 4 a upravim prislusne hodnoty na objektu
@@ -36,9 +37,14 @@ def uprava_ukonu_pri_soubehu(odstavce4, ukony_soubehu, new_list, seznam_ukonu, s
                 for u in new_list:
                     u.konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
                                   maximalni_delka=objektivni_lhuta)
-                    prozatimni_konec = u._konec
-                if i._ukon < prozatimni_konec.replace(year=prozatimni_konec.year - 1):
-                    i.konec_lhuty = konec_lhuty_nove
+                    subjektivni_lhuta = i._konec
+                prozatimni_konec = subjektivni_lhuta
+                print(prozatimni_konec)
+                print(prozatimni_konec.replace(year=prozatimni_konec.year - 1))
+                if i._ukon >= prozatimni_konec.replace(year=prozatimni_konec.year - 1):
+                    i.konec_lhuty = types.MethodType(konec_lhuty_nove, i)
+                    new_list.append(i)
+                else:
                     new_list.append(i)
     return new_list
 
