@@ -2,7 +2,7 @@ from lhuta_komplet import Lhuta148, Odst1, Odst2, Odst3, Odst4
 import datetime
 import types
 
-def konec_lhuty_nove(self, datum_zacatku, datum_konce, maximalni_delka):
+def konec_lhuty_nove_odst4(self, datum_zacatku, datum_konce, maximalni_delka):
     if super(Odst4, self)._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
             super(Odst4, self)._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce) and \
             super(Odst4, self)._kontrola_pred_zacatkem(datum_ukonu=self._konec_staveni, datum_zacatku=datum_zacatku):
@@ -14,6 +14,20 @@ def konec_lhuty_nove(self, datum_zacatku, datum_konce, maximalni_delka):
         self._konec = super(Odst4, self)._kontrola_vikendu(self._konec)
     if not super(Odst4, self)._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
         self._konec = maximalni_delka
+
+"""
+def konec_lhuty_nove_odst3(self, datum_zacatku, datum_konce=None, maximalni_delka):  # odstraneni kontroly po konci lhuty
+    if super(Odst3, self)._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku):
+        # nasledujici den po ukonu + 3 roky
+        # nelze jen tak zvysit cislo dne o 1, kazdy mesic ma jiny pocet dnu, hrozilo by 31.4.
+        # vytvori nasledujici den prirozene podle kalendare
+        druhy_den = self._ukon + datetime.timedelta(days=1)  # vraci datetime object
+        druhy_den = super(Odst3, self)._prevod_data(datum=druhy_den)  # prevod datetime na date object
+        self._konec = druhy_den.replace(year=druhy_den.year + 3)
+        self._konec = super(Odst3, self)._kontrola_vikendu(self._konec)
+    if not super(Odst3, self)._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
+        self._konec = maximalni_delka
+"""
 
 # 3. roztridim jednotlive soubehy k odstavcum 4 a upravim prislusne hodnoty na objektu
 def uprava_ukonu_pri_soubehu(odstavce4, ukony_soubehu, new_list, seznam_ukonu, subjektivni_lhuta, objektivni_lhuta):
@@ -31,18 +45,18 @@ def uprava_ukonu_pri_soubehu(odstavce4, ukony_soubehu, new_list, seznam_ukonu, s
                 new_list.append(i)
             elif isinstance(ukon, Odst3):  # soubeh s odst. 3
                 odstavec3 = True
-                ukon._ukon.replace(year=i._konec_staveni.year + 3)
+                ukon.soubeh = True
+                ukon._ukon = ukon._ukon.replace(year=i._konec_staveni.year, month=i._konec_staveni.month,
+                                                day=i._konec_staveni.day)
                 new_list.append(ukon)
             elif isinstance(ukon, Odst2) and not odstavec3:  # soubeh s odst. 2, pokud neni pritomen odst. 3
                 for u in new_list:
                     u.konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
                                   maximalni_delka=objektivni_lhuta)
-                    subjektivni_lhuta = i._konec
+                    subjektivni_lhuta = u._konec
                 prozatimni_konec = subjektivni_lhuta
-                print(prozatimni_konec)
-                print(prozatimni_konec.replace(year=prozatimni_konec.year - 1))
                 if i._ukon >= prozatimni_konec.replace(year=prozatimni_konec.year - 1):
-                    i.konec_lhuty = types.MethodType(konec_lhuty_nove, i)
+                    i.konec_lhuty = types.MethodType(konec_lhuty_nove_odst4, i)
                     new_list.append(i)
                 else:
                     new_list.append(i)
@@ -64,6 +78,23 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
         if isinstance(i, Odst4):
             odstavce4.append(i)
             seznam_ukonu.remove(i)  # odstraneni vsech objektu odst4
+    """
+    # kontrola soubehu odstavcu 4 mezi sebou jeste nez se porovna cokoli dalsiho
+    porovnavany_objekt = odstavce4[0]
+    for odstavec in odstavce4[1:]:
+        print('ano')
+        if porovnavany_objekt._ukon >= odstavec._ukon <= porovnavany_objekt._konec_staveni:
+            print('yes')
+            porovnavany_objekt._konec_staveni = porovnavany_objekt._konec_staveni.replace(year=odstavec._konec_staveni.year,
+                                                                                          month=odstavec._konec_staveni.month,
+                                                                                          day=odstavec._konec_staveni.day)
+            print(porovnavany_objekt._konec_staveni)
+            odstavce4.remove(odstavec)
+        else:
+            print('siii')
+            porovnavany_objekt = odstavec
+    #print(odstavce4)
+    """
 
     # 2. roztridim ukony podle toho, jestli nastaly v intervalu soubehu nebo ne
     ukony_soubehu = list()
@@ -85,11 +116,13 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
             i.konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
                           maximalni_delka=objektivni_lhuta)
             subjektivni_lhuta = i._konec
+            print(subjektivni_lhuta)
     else:
         for i in seznam_ukonu[1:]:
             i.konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
                           maximalni_delka=objektivni_lhuta)
             subjektivni_lhuta = i._konec
+            #print(subjektivni_lhuta)
 
     return subjektivni_lhuta
 

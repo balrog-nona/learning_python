@@ -95,6 +95,7 @@ class Odst3(Lhuta148):
 
     def __init__(self, datum):  # datum je string
         self._ukon = super()._na_americke_datum(datum)
+        self.soubeh = False
 
     def konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
         """
@@ -103,18 +104,29 @@ class Odst3(Lhuta148):
         :param maximalni_delka: objektivni lhuta
         :return: date object
         """
-        if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
-                super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce):
-            # nasledujici den po ukonu + 3 roky
-            # nelze jen tak zvysit cislo dne o 1, kazdy mesic ma jiny pocet dnu, hrozilo by 31.4.
-            # vytvori nasledujici den prirozene podle kalendare
-            druhy_den = self._ukon + datetime.timedelta(days=1)  # vraci datetime object
-            druhy_den = super()._prevod_data(datum=druhy_den)  # prevod datetime na date object
-            self._konec = druhy_den.replace(year=druhy_den.year + 3)
-            self._konec = super()._kontrola_vikendu(self._konec)
-        if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
-            self._konec = maximalni_delka
-
+        if not self.soubeh:
+            if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
+                    super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce):
+                # nasledujici den po ukonu + 3 roky
+                # nelze jen tak zvysit cislo dne o 1, kazdy mesic ma jiny pocet dnu, hrozilo by 31.4.
+                # vytvori nasledujici den prirozene podle kalendare
+                druhy_den = self._ukon + datetime.timedelta(days=1)  # vraci datetime object
+                druhy_den = super()._prevod_data(datum=druhy_den)  # prevod datetime na date object
+                self._konec = druhy_den.replace(year=druhy_den.year + 3)
+                self._konec = super()._kontrola_vikendu(self._konec)
+            if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
+                self._konec = maximalni_delka
+        else:
+            if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku):
+                # nasledujici den po ukonu + 3 roky
+                # nelze jen tak zvysit cislo dne o 1, kazdy mesic ma jiny pocet dnu, hrozilo by 31.4.
+                # vytvori nasledujici den prirozene podle kalendare
+                druhy_den = self._ukon + datetime.timedelta(days=1)  # vraci datetime object
+                druhy_den = super()._prevod_data(datum=druhy_den)  # prevod datetime na date object
+                self._konec = druhy_den.replace(year=druhy_den.year + 3)
+                self._konec = super()._kontrola_vikendu(self._konec)
+            if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
+                self._konec = maximalni_delka
 
 class Odst4(Lhuta148):  # datum je string
 
