@@ -47,7 +47,6 @@ def test4():
     ukon4 = Odst4(datum='15.9.2026')
     ukon4.zadej_konec_staveni(konec_staveni='4.8.2027')
     ukony.extend([ukon1, ukon2, ukon2a, ukon3, ukon4])
-
     ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2027, 12, 23)
 

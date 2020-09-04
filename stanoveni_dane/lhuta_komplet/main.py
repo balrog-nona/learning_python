@@ -40,10 +40,10 @@ def uprava_ukonu_pri_soubehu(odstavce4, ukony_soubehu, new_list, seznam_ukonu, s
                 soubeh.append(ukon)
         # 2. jednotlive akce pri soubehu s ruznymi ukony
         for ukon in soubeh:
-            if isinstance(ukon, Odst4) and ukon._konec_staveni > i._konec_staveni:  # soubeh s odst. 4
+            """if isinstance(ukon, Odst4) and ukon._konec_staveni > i._konec_staveni:  # soubeh s odst. 4
                 i._konec_staveni = ukon._konec_staveni
-                new_list.append(i)
-            elif isinstance(ukon, Odst3):  # soubeh s odst. 3
+                new_list.append(i)"""
+            if isinstance(ukon, Odst3):  # soubeh s odst. 3
                 odstavec3 = True
                 ukon.soubeh = True
                 ukon._ukon = ukon._ukon.replace(year=i._konec_staveni.year, month=i._konec_staveni.month,
@@ -63,6 +63,39 @@ def uprava_ukonu_pri_soubehu(odstavce4, ukony_soubehu, new_list, seznam_ukonu, s
     return new_list
 
 
+def uprava_odstavcu4(seznam_odstavcu):
+    nove_odstavce = list()
+    for odstavec in seznam_odstavcu:
+        print(odstavec, odstavec._ukon, odstavec._konec_staveni)
+    porovnavany_objekt = seznam_odstavcu[0]
+    delka = len(seznam_odstavcu[1:])
+    iterace = 0
+    for odstavec in seznam_odstavcu[1:]:
+        iterace += 1
+        print('for', odstavec)
+        if odstavec._ukon >= porovnavany_objekt._ukon and odstavec._ukon <= porovnavany_objekt._konec_staveni \
+                and odstavec._konec_staveni > porovnavany_objekt._konec_staveni:
+            print('v ifu')
+            porovnavany_objekt._konec_staveni = porovnavany_objekt._konec_staveni.replace(
+                year=odstavec._konec_staveni.year,
+                month=odstavec._konec_staveni.month,
+                day=odstavec._konec_staveni.day)
+            print(porovnavany_objekt, porovnavany_objekt._ukon, porovnavany_objekt._konec_staveni)
+            print('porovnavany objekt v ifu', porovnavany_objekt)
+        else:
+            print('v elsu')
+            print(porovnavany_objekt, odstavec)
+            if iterace == delka:
+                nove_odstavce.extend([porovnavany_objekt, odstavec])
+            else:
+                nove_odstavce.append(porovnavany_objekt)
+            porovnavany_objekt = odstavec
+            print(porovnavany_objekt)
+    print("-" * 20)
+    for odstavec in nove_odstavce:
+        print(odstavec)
+    return nove_odstavce
+
 def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data provedeni ukonu
     if not isinstance(seznam_ukonu[0], Odst1):
         raise Exception('Prvnim ukonem musi byt zahajeni behu lhuty dle § 148 odst.1.')
@@ -78,23 +111,9 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
         if isinstance(i, Odst4):
             odstavce4.append(i)
             seznam_ukonu.remove(i)  # odstraneni vsech objektu odst4
-    """
-    # kontrola soubehu odstavcu 4 mezi sebou jeste nez se porovna cokoli dalsiho
-    porovnavany_objekt = odstavce4[0]
-    for odstavec in odstavce4[1:]:
-        print('ano')
-        if porovnavany_objekt._ukon >= odstavec._ukon <= porovnavany_objekt._konec_staveni:
-            print('yes')
-            porovnavany_objekt._konec_staveni = porovnavany_objekt._konec_staveni.replace(year=odstavec._konec_staveni.year,
-                                                                                          month=odstavec._konec_staveni.month,
-                                                                                          day=odstavec._konec_staveni.day)
-            print(porovnavany_objekt._konec_staveni)
-            odstavce4.remove(odstavec)
-        else:
-            print('siii')
-            porovnavany_objekt = odstavec
-    #print(odstavce4)
-    """
+
+    if odstavce4 and len(odstavce4) > 1:
+        odstavce4 = uprava_odstavcu4(odstavce4)
 
     # 2. roztridim ukony podle toho, jestli nastaly v intervalu soubehu nebo ne
     ukony_soubehu = list()
