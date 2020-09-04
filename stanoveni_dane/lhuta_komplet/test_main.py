@@ -156,22 +156,45 @@ def test13():
     ukony.extend([ukon1, ukon4, ukon4a, ukon4b])
     ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2025, 6, 23)
-    
-"""
-def test14():  # soubeh s odst.4 i odst. 3
+
+
+# soubeh s odst.4 i odst. 3
+def test14():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
-    ukon2 = Odst2(datum='14.8.2021')
     ukon4 = Odst4(datum='1.2.2023')
     ukon4.zadej_konec_staveni(konec_staveni='4.8.2024')
     ukon4a = Odst4(datum='12.10.2023')
     ukon4a.zadej_konec_staveni(konec_staveni='30.8.2024')
     odst3 = Odst3(datum='15.8.2024')
-    ukony.extend([ukon1, ukon2, ukon4, ukon4a, odst3])
-
+    ukony.extend([ukon1, ukon4, ukon4a, odst3])
     ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2027, 8, 31)
-"""
 
+
+# test na soubeh vice odst.4 a odst.3
+def test15():
+    ukony = list()
+    ukon1 = Odst1(datum='1.4.2020')
+    ukon3 = Odst3(datum='9.8.2020')
+    ukon4 = Odst4(datum='1.9.2020')
+    ukon4.zadej_konec_staveni(konec_staveni='1.12.2020')
+    ukon4a = Odst4(datum='1.2.2021')
+    ukon4a.zadej_konec_staveni(konec_staveni='1.4.2021')
+    ukon4b = Odst4(datum='8.3.2021')
+    ukon4b.zadej_konec_staveni(konec_staveni='6.5.2021')
+    ukon4c = Odst4(datum='1.7.2021')
+    ukon4c.zadej_konec_staveni(konec_staveni='1.9.2021')
+    ukon3a = Odst3(datum='21.7.2021')
+    ukon4d = Odst4(datum='1.1.2022')
+    ukon4d.zadej_konec_staveni(konec_staveni='1.5.2022')
+    ukon4e = Odst4(datum='1.4.2022')
+    ukon4e.zadej_konec_staveni(konec_staveni='19.8.2022')
+    ukon4f = Odst4(datum='21.5.2022')
+    ukon4f.zadej_konec_staveni(konec_staveni='11.9.2022')
+    #odst2 = Odst2(datum='16.4.2022')
+    ukony.extend([ukon1, ukon3, ukon4, ukon4a, ukon4b, ukon4c, ukon3a, ukon4d, ukon4e, ukon4f])
+    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    assert spocitej_lhutu(ukony_sorted) == datetime.date(2025, 5, 14)
 
 

@@ -82,6 +82,8 @@ def uprava_odstavcu4(seznam_odstavcu):
                 day=odstavec._konec_staveni.day)
             print(porovnavany_objekt, porovnavany_objekt._ukon, porovnavany_objekt._konec_staveni)
             print('porovnavany objekt v ifu', porovnavany_objekt)
+            if iterace == delka:
+                nove_odstavce.append(porovnavany_objekt)
         else:
             print('v elsu')
             print(porovnavany_objekt, odstavec)
@@ -92,8 +94,9 @@ def uprava_odstavcu4(seznam_odstavcu):
             porovnavany_objekt = odstavec
             print(porovnavany_objekt)
     print("-" * 20)
+    print('delka nove odstavce', len(nove_odstavce))
     for odstavec in nove_odstavce:
-        print(odstavec)
+        print('objekt', odstavec, odstavec._ukon, odstavec._konec_staveni)
     return nove_odstavce
 
 def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data provedeni ukonu
@@ -114,16 +117,21 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
 
     if odstavce4 and len(odstavce4) > 1:
         odstavce4 = uprava_odstavcu4(odstavce4)
+    print(odstavce4)
 
     # 2. roztridim ukony podle toho, jestli nastaly v intervalu soubehu nebo ne
     ukony_soubehu = list()
     new_list = list()
     for odstavec in odstavce4:
+        print('ve foru')
         for ukon in seznam_ukonu[1:]:  # iterace ukonama uz bez objektu odst4
+            print('pred ifem', ukon)
             if odstavec._ukon <= ukon._ukon <= odstavec._konec_staveni:
+                print(ukon)
                 ukony_soubehu.append(ukon)
             else:
                 new_list.append(ukon)
+    print('ukony soubehu', ukony_soubehu)
 
     if not ukony_soubehu:
         [new_list.append(odstavec) for odstavec in odstavce4]
@@ -135,7 +143,7 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
             i.konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
                           maximalni_delka=objektivni_lhuta)
             subjektivni_lhuta = i._konec
-            print(subjektivni_lhuta)
+            print('subjektivni lhuta', subjektivni_lhuta)
     else:
         for i in seznam_ukonu[1:]:
             i.konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
