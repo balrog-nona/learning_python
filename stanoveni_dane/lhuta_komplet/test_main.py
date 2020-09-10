@@ -52,7 +52,7 @@ def test4():
 
 
 # test maximalni delky lhuty
-def test6():
+def test5():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
     ukon3 = Odst3(datum='1.3.2023')
@@ -64,7 +64,7 @@ def test6():
 
 
 # test ukonu pred zacatkem behu lhuty
-def test7():
+def test6():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
     ukon3 = Odst3(datum='1.3.2023')
@@ -78,7 +78,7 @@ def test7():
 
 
 # test na ukon az po skonceni behu lhuty
-def test8():
+def test7():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
     ukon2 = Odst2(datum='14.8.2021')
@@ -93,7 +93,7 @@ def test8():
 
 # testovani soubehu odst.4 s dalsima udalostma
 # soubeh s odst. 2 bez vlivu na delku lhuty
-def test9():
+def test8():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
     ukon4 = Odst4(datum='15.3.2022')
@@ -105,7 +105,7 @@ def test9():
 
 
 # soubeh s odst. 2 s vlivem na delku lhuty
-def test10():
+def test9():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
     ukon2 = Odst2(datum='14.8.2021')
@@ -118,7 +118,7 @@ def test10():
 
 
 # soubeh s odst. 3
-def test11():
+def test10():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
     ukon3 = Odst3(datum='1.2.2023')
@@ -130,7 +130,7 @@ def test11():
 
 
 # soubeh s odst. 3 i odst. 2
-def test12():
+def test11():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
     ukon2 = Odst2(datum='14.8.2021')
@@ -144,7 +144,7 @@ def test12():
 
 
 # soubeh s odst. 4
-def test13():
+def test12():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
     ukon4 = Odst4(datum='1.2.2023')
@@ -159,7 +159,7 @@ def test13():
 
 
 # soubeh s odst.4 i odst. 3
-def test14():
+def test13():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
     ukon4 = Odst4(datum='1.2.2023')
@@ -173,7 +173,7 @@ def test14():
 
 
 # test na soubeh vice odst.4 a odst.3
-def test15():
+def test14():
     ukony = list()
     ukon1 = Odst1(datum='1.4.2020')
     ukon3 = Odst3(datum='9.8.2020')
@@ -192,9 +192,14 @@ def test15():
     ukon4e.zadej_konec_staveni(konec_staveni='19.8.2022')
     ukon4f = Odst4(datum='21.5.2022')
     ukon4f.zadej_konec_staveni(konec_staveni='11.9.2022')
-    #odst2 = Odst2(datum='16.4.2022')
-    ukony.extend([ukon1, ukon3, ukon4, ukon4a, ukon4b, ukon4c, ukon3a, ukon4d, ukon4e, ukon4f])
+    odst4z = Odst4(datum='3.9.2020')
+    odst4z.zadej_konec_staveni(konec_staveni='1.11.2020')
+    ukony.extend([ukon1, ukon3, ukon4, ukon4a, ukon4b, ukon4c, ukon3a, ukon4d, ukon4e, ukon4f, odst4z])
     ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2025, 5, 14)
+
+
+# test na soubeh vice odst. 4 a odst. 2 i 3
+
 
 
