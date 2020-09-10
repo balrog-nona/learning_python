@@ -1,3 +1,5 @@
+#!/bin/python3
+
 from main import spocitej_lhutu
 from lhuta_komplet import Lhuta148, Odst1, Odst2, Odst3, Odst4
 import datetime

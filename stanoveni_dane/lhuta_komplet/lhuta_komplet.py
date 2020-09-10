@@ -29,8 +29,8 @@ class Lhuta148:
     def _kontrola_pred_zacatkem(self, datum_ukonu, datum_zacatku):  # oba parametry jsou date object
         """
         po vytvoreni konecne fce main se tato podminka testuje jeste i ve fci, cili nize uvedeny kod neprobehne
-        :param datum_ukonu: datum provedeni ukonu, self._ukon
-        :param datum_zacatku: datum zacatku behu lhuty
+        :datum_ukonu: datum provedeni ukonu, self._ukon
+        :datum_zacatku: datum zacatku behu lhuty
         :return: bolean
         """
         if datum_ukonu < datum_zacatku:
@@ -74,9 +74,9 @@ class Odst2(Lhuta148):
 
     def konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
         """
-        :param datum_zacatku: 1. den zacatku behu lhuty
-        :param datum_konce: prozatimni den konce subjektivni lhuty
-        :param maximalni_delka: objektivni lhuta
+        :datum_zacatku: 1. den zacatku behu lhuty
+        :datum_konce: prozatimni den konce subjektivni lhuty
+        :maximalni_delka: objektivni lhuta
         :return: date object
         """
         if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
@@ -95,16 +95,16 @@ class Odst3(Lhuta148):
 
     def __init__(self, datum):  # datum je string
         self._ukon = super()._na_americke_datum(datum)
-        self.soubeh = False
+        self.soubeh = False  # atribut pro urceni soubehu s odst. 4
 
     def konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
         """
-        :param datum_zacatku: 1. den zacatku behu lhuty
-        :param datum_konce: prozatimni den konce subjektivni lhuty
-        :param maximalni_delka: objektivni lhuta
+        :datum_zacatku: 1. den zacatku behu lhuty
+        :datum_konce: prozatimni den konce subjektivni lhuty
+        :maximalni_delka: objektivni lhuta
         :return: date object
         """
-        if not self.soubeh:
+        if not self.soubeh:  # vypocet pro pripad neexistence soubehu s odst. 4
             if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
                     super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce):
                 # nasledujici den po ukonu + 3 roky
@@ -116,7 +116,7 @@ class Odst3(Lhuta148):
                 self._konec = super()._kontrola_vikendu(self._konec)
             if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
                 self._konec = maximalni_delka
-        else:
+        else:  # vypocet pro pripad soubehu s odst. 4 - nutne odstranit kontrolu po konci
             if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku):
                 # nasledujici den po ukonu + 3 roky
                 # nelze jen tak zvysit cislo dne o 1, kazdy mesic ma jiny pocet dnu, hrozilo by 31.4.
@@ -141,9 +141,9 @@ class Odst4(Lhuta148):  # datum je string
 
     def konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):  # parametry jsou date object
         """
-        :param datum_zacatku: 1. den zacatku behu lhuty
-        :param datum_konce: prozatimni den konce subjektivni lhuty
-        :param maximalni_delka: objektivni lhuta
+        :datum_zacatku: 1. den zacatku behu lhuty
+        :datum_konce: prozatimni den konce subjektivni lhuty
+        :maximalni_delka: objektivni lhuta
         :return: date object
         """
         if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
