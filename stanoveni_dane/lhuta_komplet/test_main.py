@@ -12,7 +12,7 @@ def test1():
     ukon1 = Odst1(datum='1.4.2020')
     ukon2 = Odst2(datum='14.8.2021')
     ukony.extend([ukon1, ukon2])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2023, 4, 3)
 
 
@@ -23,7 +23,7 @@ def test2():
     ukon2 = Odst2(datum='14.8.2021')
     ukon2a = Odst2(datum='14.12.2022')
     ukony.extend([ukon1,ukon2,ukon2a])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2024, 4, 3)
 
 
@@ -35,7 +35,7 @@ def test3():
     ukon2a = Odst2(datum='14.12.2022')
     ukon3 = Odst3(datum='1.2.2024')
     ukony.extend([ukon1, ukon2, ukon2a, ukon3])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2027, 2, 2)
 
 
@@ -49,7 +49,7 @@ def test4():
     ukon4 = Odst4(datum='15.9.2026')
     ukon4.zadej_konec_staveni(konec_staveni='4.8.2027')
     ukony.extend([ukon1, ukon2, ukon2a, ukon3, ukon4])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2027, 12, 23)
 
 
@@ -61,7 +61,7 @@ def test5():
     ukon3a = Odst3(datum='1.2.2026')
     ukon3b = Odst3(datum='3.1.2029')
     ukony.extend([ukon1, ukon3, ukon3a, ukon3b])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2030, 4, 1)
 
 
@@ -72,7 +72,7 @@ def test6():
     ukon3 = Odst3(datum='1.3.2023')
     ukon3a = Odst3(datum='1.2.2020')
     ukony.extend([ukon1, ukon3, ukon3a])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
 
     with pytest.raises(Exception) as error:
         spocitej_lhutu(ukony_sorted)
@@ -87,7 +87,7 @@ def test7():
     ukon2a = Odst2(datum='14.12.2022')
     ukon3 = Odst3(datum='4.4.2024')
     ukony.extend([ukon1, ukon2, ukon2a, ukon3])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     with pytest.raises(Exception) as error:
         spocitej_lhutu(ukony_sorted)
     assert 'Ukon ze dne 04.04.2024 nemuze nastat po konci behu lhuty dne 03.04.2024.' == str(error.value)
@@ -102,7 +102,7 @@ def test8():
     ukon2 = Odst2(datum='12.1.2023')
     ukon4.zadej_konec_staveni(konec_staveni='4.8.2023')
     ukony.extend([ukon1, ukon2, ukon4])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2024, 8, 23)
 
 
@@ -115,7 +115,7 @@ def test9():
     ukon2a = Odst2(datum='12.1.2023')
     ukon4.zadej_konec_staveni(konec_staveni='4.8.2023')
     ukony.extend([ukon1, ukon2, ukon4, ukon2a])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2025, 1, 22)
 
 
@@ -127,7 +127,7 @@ def test10():
     ukon4 = Odst4(datum='1.2.2023')
     ukon4.zadej_konec_staveni(konec_staveni='4.8.2024')
     ukony.extend([ukon1, ukon3, ukon4])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2027, 8, 5)
 
 
@@ -141,7 +141,7 @@ def test11():
     ukon4.zadej_konec_staveni(konec_staveni='4.8.2024')
     odst2a = Odst2(datum='11.7.2023')
     ukony.extend([ukon1, ukon2, ukon3, ukon4, odst2a])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2027, 8, 5)
 
 
@@ -156,7 +156,7 @@ def test12():
     ukon4b = Odst4(datum='11.9.2024')
     ukon4b.zadej_konec_staveni(konec_staveni='1.5.2025')
     ukony.extend([ukon1, ukon4, ukon4a, ukon4b])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2025, 6, 23)
 
 
@@ -170,7 +170,7 @@ def test13():
     ukon4a.zadej_konec_staveni(konec_staveni='30.8.2024')
     odst3 = Odst3(datum='15.8.2024')
     ukony.extend([ukon1, ukon4, ukon4a, odst3])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2027, 8, 31)
 
 
@@ -197,7 +197,7 @@ def test14():
     odst4z = Odst4(datum='3.9.2020')
     odst4z.zadej_konec_staveni(konec_staveni='1.11.2020')
     ukony.extend([ukon1, ukon3, ukon4, ukon4a, ukon4b, ukon4c, ukon3a, ukon4d, ukon4e, ukon4f, odst4z])
-    ukony_sorted = sorted(ukony, key=lambda i: i._ukon)
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2025, 5, 14)
 
 

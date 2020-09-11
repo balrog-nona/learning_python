@@ -18,9 +18,10 @@ Tyto objekty musi byt odpovidajici tridy a musi obsahovat datum sveho zacatku.
 Nasledne se vsechny objekty vlozi do seznamu, a ten se musi
 setridit chronologicky dle toho, kdy jednotlive ukony nastaly, tzn.
 setridit vsechny objekty podle atributu ukon.
+
 V realnem vypoctu behu lhuty musi vzdy mezi objekty existovat odst. 1
 a musi nastat najdrive ze vsech ostatnich objektu. Kontrola, jestli je nejdrivejsi ukon
-opravdu odst. 1 je v hlavni fci v modulu main.py
+opravdu odst. 1, je v hlavni fci v modulu main.py
 """
 
 import datetime
@@ -69,7 +70,7 @@ class Lhuta148:
         po vytvoreni konecne fce main se tato podminka testuje jeste i ve fci,
         cili nize uvedeny kod neprobehne
         oba parametry jsou date object
-        :datum_ukonu: datum provedeni ukonu, self._ukon
+        :datum_ukonu: datum provedeni ukonu, self.ukon
         :datum_zacatku: datum zacatku behu lhuty
         :return: bolean
         """
@@ -107,26 +108,26 @@ class Odst1(Lhuta148):
 
     def __init__(self, datum):
         """datum je string"""
-        self._ukon = super()._na_americke_datum(datum=datum)
-        self._konec = None  # vypocita se az v ramci metody na vypocet
-        self._maximalni = None  # vypocita se az v ramci metody na vypocet
+        self.ukon = super()._na_americke_datum(datum=datum)
+        self.konec = None  # vypocita se az v ramci metody na vypocet
+        self.maximalni = None  # vypocita se az v ramci metody na vypocet
 
     def konec_lhuty(self):
         """
         metoda pro vypocet subjektivni lhuty
         normalne dle odst. 1; presne datum
         """
-        self._konec = self._ukon.replace(year=self._ukon.year + 3)
-        self._konec = super()._kontrola_vikendu(self._konec)
+        self.konec = self.ukon.replace(year=self.ukon.year + 3)
+        self.konec = super()._kontrola_vikendu(self.konec)
 
-    def _maximalni_delka(self):
+    def maximalni_delka(self):
         """
         metoda pro vypocet objektivni lhuty dle odst. 5 na
         presne datum
         """
-        self._maximalni = self._ukon.replace(year=self._ukon.year + 10)
+        self.maximalni = self.ukon.replace(year=self.ukon.year + 10)
         # konec lhuty po pravni strance
-        self._maximalni = super()._kontrola_vikendu(self._maximalni)
+        self.maximalni = super()._kontrola_vikendu(self.maximalni)
 
 
 class Odst2(Lhuta148):
@@ -136,8 +137,8 @@ class Odst2(Lhuta148):
 
     def __init__(self, datum):
         """datum je string"""
-        self._ukon = super()._na_americke_datum(datum=datum)
-        self._konec = None  # vypocita se az v ramci metody na vypocet
+        self.ukon = super()._na_americke_datum(datum=datum)
+        self.konec = None  # vypocita se az v ramci metody na vypocet
 
     def konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):
         """
@@ -147,17 +148,17 @@ class Odst2(Lhuta148):
         :maximalni_delka: objektivni lhuta
         :return: date object
         """
-        if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) \
-                and super()._kontrola_po_konci(datum_ukonu=self._ukon,
+        if super()._kontrola_pred_zacatkem(datum_ukonu=self.ukon, datum_zacatku=datum_zacatku) \
+                and super()._kontrola_po_konci(datum_ukonu=self.ukon,
                                                datum_konce=datum_konce):
-            if datum_konce.replace(year=datum_konce.year - 1) <= self._ukon <= datum_konce:
+            if datum_konce.replace(year=datum_konce.year - 1) <= self.ukon <= datum_konce:
                 # kdyz nastal v poslednich 12 mesicich, prodluz lhutu o rok
-                self._konec = datum_konce.replace(year=datum_konce.year + 1)
-                self._konec = super()._kontrola_vikendu(self._konec)
+                self.konec = datum_konce.replace(year=datum_konce.year + 1)
+                self.konec = super()._kontrola_vikendu(self.konec)
             else:
-                self._konec = datum_konce
-        if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
-            self._konec = maximalni_delka
+                self.konec = datum_konce
+        if not super()._kontrola_odst5(konec=self.konec, maximalni_delka=maximalni_delka):
+            self.konec = maximalni_delka
 
 
 class Odst3(Lhuta148):
@@ -171,8 +172,8 @@ class Odst3(Lhuta148):
 
     def __init__(self, datum):
         """datum je string"""
-        self._ukon = super()._na_americke_datum(datum=datum)
-        self._konec = None  # vypocita se az v ramci metody na vypocet
+        self.ukon = super()._na_americke_datum(datum=datum)
+        self.konec = None  # vypocita se az v ramci metody na vypocet
         self.soubeh = False  # atribut pro urceni soubehu s odst. 4
 
     def konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):
@@ -184,29 +185,29 @@ class Odst3(Lhuta148):
         :return: date object
         """
         if not self.soubeh:  # vypocet pro pripad neexistence soubehu s odst. 4
-            if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) \
-                    and super()._kontrola_po_konci(datum_ukonu=self._ukon,
+            if super()._kontrola_pred_zacatkem(datum_ukonu=self.ukon, datum_zacatku=datum_zacatku) \
+                    and super()._kontrola_po_konci(datum_ukonu=self.ukon,
                                                    datum_konce=datum_konce):
                 # nasledujici den po ukonu + 3 roky
                 # nelze jen tak zvysit cislo dne o 1, kazdy mesic ma jiny pocet dnu, hrozilo by 31.4.
                 # vytvori nasledujici den prirozene podle kalendare
-                druhy_den = self._ukon + datetime.timedelta(days=1)  # vraci datetime object
+                druhy_den = self.ukon + datetime.timedelta(days=1)  # vraci datetime object
                 druhy_den = super()._prevod_data(datum=druhy_den)  # prevod datetime na date object
-                self._konec = druhy_den.replace(year=druhy_den.year + 3)
-                self._konec = super()._kontrola_vikendu(self._konec)
-            if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
-                self._konec = maximalni_delka
+                self.konec = druhy_den.replace(year=druhy_den.year + 3)
+                self.konec = super()._kontrola_vikendu(self.konec)
+            if not super()._kontrola_odst5(konec=self.konec, maximalni_delka=maximalni_delka):
+                self.konec = maximalni_delka
         else:  # vypocet pro pripad soubehu s odst. 4 - nepouziva kontrolu po konci
-            if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku):
+            if super()._kontrola_pred_zacatkem(datum_ukonu=self.ukon, datum_zacatku=datum_zacatku):
                 # nasledujici den po ukonu + 3 roky
                 # nelze jen tak zvysit cislo dne o 1, kazdy mesic ma jiny pocet dnu, hrozilo by 31.4.
                 # vytvori nasledujici den prirozene podle kalendare
-                druhy_den = self._ukon + datetime.timedelta(days=1)  # vraci datetime object
+                druhy_den = self.ukon + datetime.timedelta(days=1)  # vraci datetime object
                 druhy_den = super()._prevod_data(datum=druhy_den)  # prevod datetime na date object
-                self._konec = druhy_den.replace(year=druhy_den.year + 3)
-                self._konec = super()._kontrola_vikendu(self._konec)
-            if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
-                self._konec = maximalni_delka
+                self.konec = druhy_den.replace(year=druhy_den.year + 3)
+                self.konec = super()._kontrola_vikendu(self.konec)
+            if not super()._kontrola_odst5(konec=self.konec, maximalni_delka=maximalni_delka):
+                self.konec = maximalni_delka
 
 
 class Odst4(Lhuta148):
@@ -220,9 +221,9 @@ class Odst4(Lhuta148):
         datum je zacatek staveni - string
         konec_lhuty je aktualni konec lhuty pred zacatkem staveni
         """
-        self._ukon = super()._na_americke_datum(datum=datum)
-        self._konec_staveni = None  # zada se az pozdeji v ramci metody
-        self._konec = None  # vypocita se az v ramci metody na vypocet
+        self.ukon = super()._na_americke_datum(datum=datum)
+        self.konec_staveni = None  # zada se az pozdeji v ramci metody
+        self.konec = None  # vypocita se az v ramci metody na vypocet
 
     def zadej_konec_staveni(self, konec_staveni):
         """
@@ -232,7 +233,7 @@ class Odst4(Lhuta148):
         jen prida k jich existujicimu objektu
         :konec_staveni: string
         """
-        self._konec_staveni = super()._na_americke_datum(datum=konec_staveni)
+        self.konec_staveni = super()._na_americke_datum(datum=konec_staveni)
 
     def konec_lhuty(self, datum_zacatku, datum_konce, maximalni_delka):
         """
@@ -242,14 +243,14 @@ class Odst4(Lhuta148):
         :maximalni_delka: objektivni lhuta
         :return: date object
         """
-        if super()._kontrola_pred_zacatkem(datum_ukonu=self._ukon, datum_zacatku=datum_zacatku) and \
-                super()._kontrola_po_konci(datum_ukonu=self._ukon, datum_konce=datum_konce) and \
-                super()._kontrola_pred_zacatkem(datum_ukonu=self._konec_staveni,
+        if super()._kontrola_pred_zacatkem(datum_ukonu=self.ukon, datum_zacatku=datum_zacatku) and \
+                super()._kontrola_po_konci(datum_ukonu=self.ukon, datum_konce=datum_konce) and \
+                super()._kontrola_pred_zacatkem(datum_ukonu=self.konec_staveni,
                                                 datum_zacatku=datum_zacatku):
             # odcitaci metoda - po konci staveni se pricte, co ze lhuty zbyvalo v dobe zacatku staveni
             # 1 den je treba pricist rucne, aby lhuta nebezela i po oba hranicni dny
-            kolik_zbyvalo = (datum_konce - self._ukon) + datetime.timedelta(days=1)  # timedelta object
-            self._konec = self._konec_staveni + kolik_zbyvalo  # date object
-            self._konec = super()._kontrola_vikendu(self._konec)
-        if not super()._kontrola_odst5(konec=self._konec, maximalni_delka=maximalni_delka):
-            self._konec = maximalni_delka
+            kolik_zbyvalo = (datum_konce - self.ukon) + datetime.timedelta(days=1)  # timedelta object
+            self.konec = self.konec_staveni + kolik_zbyvalo  # date object
+            self.konec = super()._kontrola_vikendu(self.konec)
+        if not super()._kontrola_odst5(konec=self.konec, maximalni_delka=maximalni_delka):
+            self.konec = maximalni_delka

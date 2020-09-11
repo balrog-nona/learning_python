@@ -9,9 +9,9 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
         raise Exception('Prvnim ukonem musi byt zahajeni behu lhuty dle § 148 odst.1.')
     else:
         seznam_ukonu[0].konec_lhuty()
-        seznam_ukonu[0]._maximalni_delka()
-    subjektivni_lhuta = seznam_ukonu[0]._konec
-    objektivni_lhuta = seznam_ukonu[0]._maximalni
+        seznam_ukonu[0].maximalni_delka()
+    subjektivni_lhuta = seznam_ukonu[0].konec
+    objektivni_lhuta = seznam_ukonu[0].maximalni
 
     # 1. sesbiram intervaly staveni, tj. vsechny objekty odst4
     odstavce4 = list()
@@ -28,7 +28,7 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
     new_list = list()
     for odstavec in odstavce4:
         for ukon in seznam_ukonu[1:]:  # iterace ukonama uz bez objektu odst4
-            if odstavec._ukon <= ukon._ukon <= odstavec._konec_staveni:
+            if odstavec.ukon <= ukon.ukon <= odstavec.konec_staveni:
                 ukony_soubehu.append(ukon)
             else:
                 new_list.append(ukon)
@@ -41,14 +41,14 @@ def spocitej_lhutu(seznam_ukonu):  # seznam ukonu jde do fce srovnany dle data p
 
     if new_list:
         for i in new_list:
-            i.konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
+            i.konec_lhuty(datum_zacatku=seznam_ukonu[0].ukon, datum_konce=subjektivni_lhuta,
                           maximalni_delka=objektivni_lhuta)
-            subjektivni_lhuta = i._konec
+            subjektivni_lhuta = i.konec
     else:
         for i in seznam_ukonu[1:]:
-            i.konec_lhuty(datum_zacatku=seznam_ukonu[0]._ukon, datum_konce=subjektivni_lhuta,
+            i.konec_lhuty(datum_zacatku=seznam_ukonu[0].ukon, datum_konce=subjektivni_lhuta,
                           maximalni_delka=objektivni_lhuta)
-            subjektivni_lhuta = i._konec
+            subjektivni_lhuta = i.konec
 
     return subjektivni_lhuta
 
