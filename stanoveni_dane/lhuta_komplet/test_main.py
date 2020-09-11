@@ -22,7 +22,7 @@ def test2():
     ukon1 = Odst1(datum='1.4.2020')
     ukon2 = Odst2(datum='14.8.2021')
     ukon2a = Odst2(datum='14.12.2022')
-    ukony.extend([ukon1,ukon2,ukon2a])
+    ukony.extend([ukon1, ukon2, ukon2a])
     ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     assert spocitej_lhutu(ukony_sorted) == datetime.date(2024, 4, 3)
 
