@@ -260,12 +260,15 @@ class Odst4(Lhuta148):
             # po konci staveni se pricte jeste jeden rok
             if super()._kontrola_pred_zacatkem(datum_ukonu=self.ukon, datum_zacatku=datum_zacatku) and \
                     super()._kontrola_po_konci(datum_ukonu=self.ukon, datum_konce=datum_konce) and \
-                    super()._kontrola_pred_zacatkem(datum_ukonu=self.konec_staveni, datum_zacatku=datum_zacatku):
+                    super()._kontrola_pred_zacatkem(datum_ukonu=self.konec_staveni,
+                                                    datum_zacatku=datum_zacatku):
                 # odcitaci metoda - po konci staveni se pricte, co ze lhuty zbyvalo v dobe zacatku staveni
                 # 1 den je treba pricist rucne, aby lhuta nebezela i po oba hranicni dny
-                kolik_zbyvalo = (datum_konce - self.ukon) + datetime.timedelta(days=1)  # timedelta object
+                # kolik_zbyvalo - timedelta object
+                kolik_zbyvalo = (datum_konce - self.ukon) + datetime.timedelta(days=1)
                 self.konec = self.konec_staveni + kolik_zbyvalo  # date object
-                self.konec = self.konec.replace(year=self.konec.year + 1)  # pricteni toho 1 roku za odst. 2
+                # pricteni toho 1 roku za odst. 2
+                self.konec = self.konec.replace(year=self.konec.year + 1)
                 self.konec = super()._kontrola_vikendu(self.konec)
             if not super()._kontrola_odst5(konec=self.konec, maximalni_delka=maximalni_delka):
                 self.konec = maximalni_delka
