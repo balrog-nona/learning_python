@@ -1,6 +1,4 @@
 from lhuta_komplet import Lhuta148, Odst1, Odst2, Odst3, Odst4
-import datetime
-import types
 
 
 def vytrid_odstavce4(vsechny_ukony):
@@ -70,70 +68,87 @@ def vytrid_ukony(seznam_odstavce4, seznam_ukonu):
     """
     kompletne pripravene odstavce4 se porovnaji s tim, jestli nejake ukony ze seznamu_ukonu nastaly
     v dobe staveni:
-    pokud ano, vlozi se do ukony_soubehu
-    pokud ne, vlozi se do finalniho seznamu new_list - tam se prirazuji uz finalni ukony ke konecnemu
-    vypoctu
-    :seznam_odstavce4: vytridene a upravene odstavce4 nebo prazdny seznam
+    pokud ano, vlozi se do ukony_soubehu a vyradi ze seznamu ukonu
+    pokud ne - nic se nestane a ukony_soubehu muzou byt prazdne
+    :seznam_odstavce4: vytridene a upravene odstavce4
     :seznam_ukonu: celkovy seznam ukonu uz bez vytridenych odstavcu4
-    :return: ukony_soubehu a new_list (finalni seznam ukonu k vypoctu)
+    :return: ukony_soubehu
     """
     ukony_soubehu = list()
-    new_list = list()
-    for odstavec4 in seznam_odstavce4:  # seznam_odstavce4 muze byt prazdny - logika upravena TO DO
+    for odstavec4 in seznam_odstavce4:
         for ukon in seznam_ukonu[1:]:
             # iterace od 2. prvku, protoze prvni je odst.1, uz zpracovany
             if odstavec4.ukon <= ukon.ukon <= odstavec4.konec_staveni:  # vycleneni ukonu ze soubehu
                 ukony_soubehu.append(ukon)
-            else:
-                new_list.append(ukon)
-    return ukony_soubehu, new_list  # ukony soubehu muzou byt prazdne
+                seznam_ukonu.remove(ukon)
+    return ukony_soubehu, seznam_ukonu  # ukony soubehu muzou byt prazdne
 
 
-def konec_lhuty_nove_odst4(self, datum_zacatku, datum_konce, maximalni_delka):
-    if super(Odst4, self)._kontrola_pred_zacatkem(datum_ukonu=self.ukon, datum_zacatku=datum_zacatku) and \
-            super(Odst4, self)._kontrola_po_konci(datum_ukonu=self.ukon, datum_konce=datum_konce) and \
-            super(Odst4, self)._kontrola_pred_zacatkem(datum_ukonu=self.konec_staveni, datum_zacatku=datum_zacatku):
-        # odcitaci metoda - po konci staveni se pricte, co ze lhuty zbyvalo v dobe zacatku staveni
-        # 1 den je treba pricist rucne, aby lhuta nebezela i po oba hranicni dny
-        kolik_zbyvalo = (datum_konce - self.ukon) + datetime.timedelta(days=1)  # timedelta object
-        self.konec = self.konec_staveni + kolik_zbyvalo  # date object
-        self.konec = self.konec.replace(year=self.konec.year + 1)  # pricteni toho 1 roku za odst. 2
-        self.konec = super(Odst4, self)._kontrola_vikendu(self.konec)
-    if not super(Odst4, self)._kontrola_odst5(konec=self.konec, maximalni_delka=maximalni_delka):
-        self.konec = maximalni_delka
-
-
-# 3. roztridim jednotlive soubehy k odstavcum 4 a upravim prislusne hodnoty na objektu - TO DO!
-def uprava_ukonu_pri_soubehu(odstavce4, ukony_soubehu, new_list, seznam_ukonu, subjektivni_lhuta, objektivni_lhuta):
-    for i in odstavce4:
+def uprava_ukonu_pri_soubehu(odstavce4, ukony_soubehu, seznam_ukonu, subjektivni_lhuta, objektivni_lhuta):
+    """
+    ukony v soubehu se musi priradit konkretne k urcitemu odstavci4 - az potom lze posoudit vliv na delku lhuty
+    :odstavce4: sezbirane odstavce4
+    :ukony_soubehu: sezbirane ukony v soubehu
+    :seznam_ukonu: ukony zadane v pripadu uz bez odstavcu4 a ukonu v soubehu
+    :param subjektivni_lhuta: subjektivni lhuta v pripadu dle odst. 1
+    :param objektivni_lhuta: objektivni lhuta v pripadu dle odst. 1
+    :return: seznam ukonu doplneny o zpracovane ukony - osetreny vsechny soubehy
+    """
+    for odstavec4 in odstavce4:
+        """kazda iterace je pro jednotlivy odstavec4 - vuci nemu se posuzuje soubeh
+        """
         odstavec3 = False
         soubeh = list()
-        # 1. posbirat vsechny ukony soubehu k jednotlivym odstavcum 4
-        for ukon in ukony_soubehu:  # porovnani
-            if i.ukon <= ukon.ukon <= i.konec_staveni:
+
+        # 1. posbirat vsechny ukony soubehu k aktualnimu odstavci4
+        for ukon in ukony_soubehu:
+            if odstavec4.ukon <= ukon.ukon <= odstavec4.konec_staveni:
+                # soubeh obsahuje vsechny ukony v soubehu s aktualne porovnavanym odstavcem4
                 soubeh.append(ukon)
         if not soubeh:
-            new_list.append(i)
-        # 2. jednotlive akce pri soubehu s ruznymi ukony
+            # zadny ukon neni v soubehu s aktualnim odstavcem4 - prida se do celkoveho seznamu
+            seznam_ukonu.append(odstavec4)
+
+        # 2. jednotlive akce pri soubehu - varianty s ruznymi ukony
         if soubeh:
             for ukon in soubeh:
-                if isinstance(ukon, Odst3):  # soubeh s odst. 3
+                # iteruje se vsemi ukony, ktere jsou v soubehu s aktualne porovnavanym odtavcem4
+                if isinstance(ukon, Odst3):
+                    """soubeh s odst. 3 - toto posouzeni ma prioritu, a to i pokud je v soubehu
+                    zaroven s odstavcem2 - odstavec2 a odstavec4 jsou irelevantni
+                    uprava: zmeni se, kdy odstavec3 nastal = konec staveni odstavce4 + ten je pak irelevantni
+                    """
+                    # kontrola na existenci odstavce3 v soubehu - prednost posouzeni
                     odstavec3 = True
+                    # nastaveni atributu na odstavci3 - jiny zpusob vypoctu konce lhuty (metoda konec_lhuty)
                     ukon.soubeh = True
-                    ukon.ukon = ukon.ukon.replace(year=i.konec_staveni.year, month=i.konec_staveni.month,
-                                                    day=i.konec_staveni.day)
-                    new_list.append(ukon)
-                elif isinstance(ukon, Odst2) and not odstavec3:  # soubeh s odst. 2, pokud neni pritomen odst. 3
-                    for u in new_list:
+                    # prepsani zacatku odstavce3
+                    ukon.ukon = ukon.ukon.replace(year=odstavec4.konec_staveni.year,
+                                                  month=odstavec4.konec_staveni.month,
+                                                    day=odstavec4.konec_staveni.day)
+                    # do celkoveho vypoctu se prida jen odstavec3
+                    seznam_ukonu.append(ukon)
+                elif isinstance(ukon, Odst2) and not odstavec3:
+                    """soubeh s odst. 2, pokud neni pritomen odst. 3
+                    musi se spocitat dosavadni konec lhuty - pokud odstavec4 zacal drive nez v poslednich
+                    12 mesicich pred koncem lhuty -> po ukonceni staveni se lhuta normalne prodlouzi
+                    dle staveni + rok prida
+                    pokud odstavec4 nezacal drive nez v poslednich 12 mesicich pred koncem lhuty 
+                    -> nic se nemeni, ale odstavec2 je irelevantni
+                    """
+                    for u in seznam_ukonu[1:]:
                         u.konec_lhuty(datum_zacatku=seznam_ukonu[0].ukon, datum_konce=subjektivni_lhuta,
                                       maximalni_delka=objektivni_lhuta)
                         subjektivni_lhuta = u.konec
-                    prozatimni_konec = subjektivni_lhuta
-                    if i.ukon >= prozatimni_konec.replace(year=prozatimni_konec.year - 1):
-                        i.konec_lhuty = types.MethodType(konec_lhuty_nove_odst4, i)
-                        new_list.append(i)
+                    # prozatimni konec lhuty pro porovnani, jestli odstavec4 nastal drive nez
+                    # v poslednich 12 mesicich pred koncem
+                    if odstavec4.ukon >= subjektivni_lhuta.replace(year=subjektivni_lhuta.year - 1):
+                        odstavec4.soubeh = True
+                        # do celkoveho seznamu se prida odstavec4 s atributem na modifikaci konec_lhuty
+                        seznam_ukonu.append(odstavec4)
                     else:
-                        new_list.append(i)
-    return new_list
+                        # do celkoveho seznamu se prida odstavec4 bez atributu na modifikaci konec_lhuty
+                        seznam_ukonu.append(odstavec4)
+    return seznam_ukonu
 
 
