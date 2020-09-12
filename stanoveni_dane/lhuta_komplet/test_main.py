@@ -1,9 +1,10 @@
 #!/bin/python3
 
-from main import spocitej_lhutu
-from lhuta_komplet import Lhuta148, Odst1, Odst2, Odst3, Odst4
 import datetime
 import pytest
+from main import spocitej_lhutu
+from lhuta_komplet import Odst1, Odst2, Odst3, Odst4
+
 
 
 # test na odst. 1
@@ -76,7 +77,7 @@ def test6():
 
     with pytest.raises(Exception) as error:
         spocitej_lhutu(ukony_sorted)
-    assert 'Prvnim ukonem musi byt zahajeni behu lhuty dle § 148 odst.1.' == str(error.value)
+    assert str(error.value) == 'Prvnim ukonem musi byt zahajeni behu lhuty dle § 148 odst.1.'
 
 
 # test na ukon az po skonceni behu lhuty
@@ -90,7 +91,7 @@ def test7():
     ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
     with pytest.raises(Exception) as error:
         spocitej_lhutu(ukony_sorted)
-    assert 'Ukon ze dne 04.04.2024 nemuze nastat po konci behu lhuty dne 03.04.2024.' == str(error.value)
+    assert str(error.value) == 'Ukon ze dne 04.04.2024 nemuze nastat po konci behu lhuty dne 03.04.2024.'
 
 
 # testovani soubehu odst.4 s dalsima udalostma
