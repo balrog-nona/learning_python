@@ -203,6 +203,23 @@ def test14():
 
 
 # test na soubeh vice odst. 4 a odst. 2 i 3
-
-
-
+def test_15():
+    ukony = list()
+    ukon1 = Odst1(datum='1.4.2020')
+    ukon4a = Odst4(datum='1.7.2021')
+    ukon4a.zadej_konec_staveni(konec_staveni='1.11.2021')
+    ukon4b = Odst4(datum='1.8.2021')
+    ukon4b.zadej_konec_staveni(konec_staveni='1.9.2021')
+    ukon4c = Odst4(datum='1.10.2022')
+    ukon4c.zadej_konec_staveni(konec_staveni='10.12.2022')
+    ukon4d = Odst4(datum='10.10.2022')
+    ukon4d.zadej_konec_staveni(konec_staveni='12.12.2022')
+    ukon4e = Odst4(datum='12.12.2022')
+    ukon4e.zadej_konec_staveni(konec_staveni='3.3.2023')
+    ukon4f = Odst4(datum='8.9.2023')
+    ukon4f.zadej_konec_staveni(konec_staveni='1.12.2023')
+    ukon2 = Odst2(datum='17.11.2023')
+    ukony.extend([ukon1, ukon4a, ukon4b, ukon4c, ukon2, ukon4d, ukon4e, ukon4f])
+    ukony_sorted = sorted(ukony, key=lambda i: i.ukon)
+    assert spocitej_lhutu(ukony_sorted) == datetime.date(2025, 4, 2)
+    
