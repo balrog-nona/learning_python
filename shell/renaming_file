@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# u zadaneho souboru zmeni v nazvu mezery za _
+# pozor na pripadne presunuti souboru do jine slozky stejneho jmena
+
+echo "$1" | tr -s ' ' '_' | xargs -I {} mv "$1" {}
