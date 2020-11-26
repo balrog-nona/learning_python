@@ -117,7 +117,7 @@ cp -p /tmp/test/pkgs ~/pkgs-`date '+%Y%m%d'` - option -p zachova i vsechny dalsi
 
 while IFS=: read login pwd uid gid full home shell; do if (( $iud > 500 )); then echo $login; fi; done < /etc/passwd
 while IFS=: read username x uid x; do if [ $uid -gt 500 ]; then echo $username; fi; done < /etc/passwd
-awk -F: ‘$3 > 500’ < /etc/passwd | awk -F: '{print $1}'
+awk -F: '$3 > 500' < /etc/passwd | awk -F: '{print $1}'
 awk -F: '$3 > 500 { print $1 }' /etc/passwd
 
 Misovo:
