@@ -12,8 +12,7 @@ from send_email import msg as msg
 from send_email import smtpObj as smtpObj
 from send_email import sender as sender
 from email.mime.text import MIMEText
-import pandas as pd
-import altair as alt
+import create_chart 
 
 
 """
@@ -113,18 +112,13 @@ smtpObj.sendmail(sender, sender, text)  # from, to, message
 smtpObj.quit()
 
 
-# print the table
+# update the table
 with open('kms.csv', encoding='utf-8', mode='a') as file:
     file.write('{},{},{}\n'.format(making_date.start_date, this_month, total))
-
-data_df = pd.read_csv('kms.csv')  # DataFrame object
-print(data_df)
+    table = file.read()
+    print(table)
+    file.close()
 
 
 # data visualization
-base = alt.Chart(data_df).properties(width=500)  # creating Chart object
-line = base.mark_line(color='crimson').encode(x='date', y='kms')  # data visualization using Line Chart
-rule = base.mark_rule(color='coral').encode(y='average(kms)', size=alt.value(2))  # line for average kms
-
-my_chart = line + rule
-my_chart.save('chart.png')
+create_chart.chart_creation('kms.csv')
