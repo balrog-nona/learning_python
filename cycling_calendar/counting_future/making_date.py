@@ -1,4 +1,5 @@
-"""TO DO: DOCSTIRING
+"""This module calculates the dates and creates
+variables used by main.py
 """
 
 

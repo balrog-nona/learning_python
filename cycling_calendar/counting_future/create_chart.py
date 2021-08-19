@@ -14,7 +14,7 @@ def chart_creation(csv_file):
     """The function makes a chart taking csv file
     and saves the chart.
 
-    csv_file: it will always be kms.cvs created by main.py
+    :param csv_file: it will always be kms.cvs created by main.py
     """
     x_date = list()
     y_distance = list()
