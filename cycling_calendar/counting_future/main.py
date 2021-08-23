@@ -29,9 +29,9 @@ from httplib2 import Http  # HTTP object for signed requests
 from oauth2client import file, client, tools  # for token storage
 import calendar_access
 import making_date
-from send_email import msg as msg
-from send_email import smtpObj as smtpObj
-from send_email import sender as sender
+from send_email import msg
+from send_email import smtpObj
+from send_email import sender
 import create_chart
 
 
@@ -48,8 +48,8 @@ if not credz or credz.invalid:  # if the credentials are missing or invalid
 SERVICE = build("calendar", "v3", http=credz.authorize(Http()))
 
 # 1. call to the Calendar API - gathering events from the previous month to count
-calendar_ID = calendar_access.ID  # calendar Cviceni
-events_result = SERVICE.events().list(calendarId=calendar_ID, timeMax=making_date.time_max1,
+CALENDAR_ID = calendar_access.ID  # calendar Cviceni
+events_result = SERVICE.events().list(calendarId=CALENDAR_ID, timeMax=making_date.time_max1,
                                       timeMin=making_date.time_min1, maxResults=60,
                                       singleEvents=True,
                                       orderBy='startTime').execute()
@@ -81,7 +81,7 @@ Accessing the last event called "rotoped soucet" from the penultimate month
 This event has a start date last day the penultimate month and an end date the first day of last month
 """
 # 2. call to the calendar API - accessing event "rotoped soucet" from previous month
-events_result2 = SERVICE.events().list(calendarId=calendar_ID, timeMax=making_date.time_max2,
+events_result2 = SERVICE.events().list(calendarId=CALENDAR_ID, timeMax=making_date.time_max2,
                                        timeMin=making_date.time_min2, maxResults=6,
                                        singleEvents=True).execute()
 events2 = events_result2.get('items', [])
@@ -103,12 +103,12 @@ EVENT = {
     "end": {"date": making_date.end_date}
 }
 
-e = SERVICE.events().insert(calendarId=calendar_ID, body=EVENT).execute()
+e = SERVICE.events().insert(calendarId=CALENDAR_ID, body=EVENT).execute()
 
 
 # sending email with the result
-body = 'Statistics:\nLast month: {} km\nTotal: {} km'.format(this_month, total)
-msg.attach(MIMEText(body, 'plain'))
+BODY = 'Statistics:\nLast month: {} km\nTotal: {} km'.format(this_month, total)
+msg.attach(MIMEText(BODY, 'plain'))
 text = msg.as_string()
 
 smtpObj.sendmail(sender, sender, text)  # from, to, message
