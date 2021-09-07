@@ -23,6 +23,7 @@ from __future__ import print_function
 from decimal import Decimal
 import re
 import os
+import pandas as pd
 from email.mime.text import MIMEText
 from googleapiclient.discovery import build
 from httplib2 import Http  # HTTP object for signed requests
@@ -119,10 +120,12 @@ smtpObj.quit()
 # update the table
 with open('kms.csv', encoding='utf-8', mode='a') as file:
     file.write('{},{},{}\n'.format(making_date.start_date, this_month, total))
-    table = file.read()
-    print(table)
     file.close()
 
+data_df = pd.read_csv('kms.csv')
+print(data_df)
 
 # data visualization
 create_chart.chart_creation('kms.csv')
+
+print("It's all done :)")
