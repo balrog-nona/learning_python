@@ -6,6 +6,11 @@ __pycache__/
 .pytest_cache/
 /.pytest_cache/
 venv/
+bin/
+lib/
+lib64
+pyvenv.cfg
+share/
 .idea/
 uceni_soubory/pisne/
 cycling_calendar/*/*.json
