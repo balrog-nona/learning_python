@@ -1,38 +1,46 @@
 #!/usr/bin/python3
 
-import pytest
 import fifo
 
-transakce1 = {'type': 'nakup', 'datum': '1.1.2021', 'mena': 'ETH', 'pocet': 0.8, 'cena_za_kus': 1000.0,
-              'hodnota': None}
-transakce1['hodnota'] = transakce1['cena_za_kus'] * transakce1['pocet']
 
-transakce2 = {'type': 'nakup', 'datum': '1.2.2021', 'mena': 'ETH', 'pocet': 0.5, 'cena_za_kus': 2000.0,
-              'hodnota': None}
-transakce2['hodnota'] = transakce2['cena_za_kus'] * transakce2['pocet']
+# TEST CASE 1
+transaction1 = {'type': 'buy', 'date': '1.1.2021', 'currency': 'ETH', 'quantity': 0.8, 'price': 1000.0,
+              'value': None}
+transaction1['value'] = transaction1['price'] * transaction1['quantity']
 
-transakce3 = {'type': 'prodej', 'datum': '1.3.2021', 'mena': 'ETH', 'pocet': 0.3, 'cena_za_kus': 3000.0,
-              'hodnota': None}
-transakce3['hodnota'] = transakce3['cena_za_kus'] * transakce3['pocet']
+transaction2 = {'type': 'buy', 'date': '1.2.2021', 'currency': 'ETH', 'quantity': 0.5, 'price': 2000.0,
+              'value': None}
+transaction2['value'] = transaction2['price'] * transaction2['quantity']
 
-transakce4 = {'type': 'prodej', 'datum': '1.4.2021', 'mena': 'ETH', 'pocet': 0.9, 'cena_za_kus': 4000.0,
-              'hodnota': None}
-transakce4['hodnota'] = transakce4['cena_za_kus'] * transakce4['pocet']
+transaction3 = {'type': 'sale', 'date': '1.3.2021', 'currency': 'ETH', 'quantity': 0.3, 'price': 3000.0,
+              'value': None}
+transaction3['value'] = transaction3['price'] * transaction3['quantity']
 
-nakupy = list()
-prodeje = list()
+transaction4 = {'type': 'sale', 'date': '1.4.2021', 'currency': 'ETH', 'quantity': 0.9, 'price': 4000.0,
+              'value': None}
+transaction4['value'] = transaction4['price'] * transaction4['quantity']
 
-def roztrid_transakce(transakce, seznam_nakupu, seznam_prodeju):
-    if transakce['type'] == 'nakup':
-        seznam_nakupu.append(transakce)
-    elif transakce['type'] == 'prodej':
-        seznam_prodeju.append(transakce)
+purchases = list()
+sales = list()
 
-roztrid_transakce(transakce1, nakupy, prodeje)
-roztrid_transakce(transakce2, nakupy, prodeje)
-roztrid_transakce(transakce3, nakupy, prodeje)
-roztrid_transakce(transakce4, nakupy, prodeje)
+def classify_transaction(transaction, all_purchases, all_sales):
+    """
+    This function classifies if a transaction is a purchase or a sale
+    :param transaction: transaction with currency, dictionary
+    :param all_purchases: list of purchases
+    :param all_sales: list of sales
+    :return: both lists modified - all year of purchases and all year of sales
+    """
+    if transaction['type'] == 'buy':
+        all_purchases.append(transaction)
+    elif transaction['type'] == 'sale':
+        all_sales.append(transaction)
+
+classify_transaction(transaction1, purchases, sales)
+classify_transaction(transaction2, purchases, sales)
+classify_transaction(transaction3, purchases, sales)
+classify_transaction(transaction4, purchases, sales)
 
 def test_fifo_coin():
-    assert fifo.fifo_coin(nakupy, prodeje) == 2900
+    assert fifo.fifo_coin(purchases, sales) == 2900.0
 
