@@ -55,5 +55,3 @@ def fifo_coin(all_purchases, all_sales):
 
         profit_loss += sales_revenue - cost_of_sales
     return profit_loss
-
-
